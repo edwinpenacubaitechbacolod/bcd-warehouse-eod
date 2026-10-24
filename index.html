@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#10253a">
+  <meta name="description" content="Mobile end-of-day reporting for the Bacolod Warehouse team.">
+  <title>BCD Warehouse | End-of-Day Report</title>
+  <style>
+    :root{--navy:#10253a;--navy2:#1c3d56;--teal:#0a806f;--tealDark:#096958;--mint:#eaf6f1;--ink:#1b2f3e;--muted:#677985;--edge:#dce5eb;--bg:#f3f6f8;--white:#fff;--warning:#fff3da;--shadow:0 12px 34px rgba(16,37,58,.07)}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-width:310px;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.45}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #60b9a7;outline-offset:2px}
+    .shell{max-width:1050px;margin:0 auto;padding:0 16px 65px}
+    .hero{background:linear-gradient(138deg,#10253a 5%,#164b56 95%);color:#fff;padding:22px 0 84px;position:relative;overflow:hidden}
+    .hero:after{content:"";position:absolute;width:290px;height:290px;border:1px solid rgba(255,255,255,.10);border-radius:50%;top:-160px;right:-50px;box-shadow:0 0 0 60px rgba(255,255,255,.026),0 0 0 120px rgba(255,255,255,.016);pointer-events:none}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;z-index:1}
+    .brand{display:flex;align-items:center;gap:11px;font-weight:780;letter-spacing:.01em}
+    .mark{display:grid;place-items:center;width:41px;height:41px;border-radius:12px;background:#d9fff1;color:#105744;font-weight:900;font-size:13px;letter-spacing:-.03em}
+    .brand small{display:block;color:#bbd8db;font-size:11px;font-weight:550;letter-spacing:.06em;text-transform:uppercase}
+    .today{border:1px solid rgba(255,255,255,.22);color:#d9f6ef;padding:8px 12px;border-radius:999px;font-size:12px;white-space:nowrap}
+    .hero-title{margin:36px 0 6px;font-weight:800;font-size:clamp(26px,4vw,38px);letter-spacing:-.045em;line-height:1.12;position:relative;z-index:1}
+    .hero-sub{margin:0;color:#cee0e5;max-width:660px;font-size:14px;position:relative;z-index:1}
+    .main{margin-top:-54px;position:relative;z-index:2}
+    .tabs{display:flex;gap:6px;padding:6px;background:#fff;border:1px solid var(--edge);border-radius:16px;box-shadow:var(--shadow);margin-bottom:18px}
+    .tab{flex:1;border:0;background:transparent;border-radius:11px;padding:12px 10px;font-weight:750;color:#60727d;font-size:13px;min-height:45px}
+    .tab.active{background:var(--navy);color:#fff;box-shadow:0 4px 12px rgba(16,37,58,.2)}
+    .layout{display:grid;grid-template-columns:minmax(0,1.32fr) minmax(275px,.85fr);gap:20px;align-items:start}
+    .panel{background:#fff;border:1px solid var(--edge);border-radius:19px;padding:22px;box-shadow:var(--shadow);margin-bottom:18px}
+    .panel h2{margin:0 0 6px;font-size:18px;letter-spacing:-.03em;line-height:1.3}
+    .panel p.helper{margin:0 0 21px;color:var(--muted);font-size:13px}
+    .section-head{display:flex;align-items:center;gap:9px;margin:23px 0 12px;font-size:14px;font-weight:800;color:var(--navy)}
+    .step{display:grid;place-items:center;width:24px;height:24px;border-radius:8px;background:var(--mint);color:var(--tealDark);font-weight:850;font-size:12px}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    label{display:block;font-size:12px;font-weight:760;color:#3d5363;margin-bottom:6px}
+    label .optional{font-weight:500;color:#8596a2}
+    input,select,textarea{width:100%;border:1px solid #cfdbe3;border-radius:11px;padding:11px 12px;background:#fff;color:var(--ink);transition:border-color .15s,box-shadow .15s}
+    input,select{min-height:46px}
+    textarea{resize:vertical;min-height:96px;line-height:1.5}
+    input:focus,select:focus,textarea:focus{border-color:#39a893;box-shadow:0 0 0 3px rgba(10,128,111,.10);outline:0}
+    input::placeholder,textarea::placeholder{color:#98a8b1}
+    .field{min-width:0}
+    .field + .field{margin-top:0}
+    .stack{display:grid;gap:15px}
+    .hint{font-size:11px;color:#8495a0;margin-top:5px}
+    .role-note{border-radius:12px;background:#eef7f4;border:1px solid #cce7de;color:#326356;font-size:12px;padding:11px 12px;margin-top:12px}
+    .metric-wrap{border-radius:13px;background:#f8fafb;border:1px solid #e6edf0;padding:13px}
+    .metric-wrap .field label{min-height:33px}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:23px}
+    .btn{border-radius:12px;min-height:45px;padding:11px 16px;border:1px solid var(--edge);font-weight:750;font-size:13px;background:#fff;color:var(--navy);display:inline-flex;align-items:center;justify-content:center;gap:8px}
+    .btn.primary{color:#fff;background:var(--teal);border-color:var(--teal)}
+    .btn.primary:hover{background:var(--tealDark)}
+    .btn.dark{background:var(--navy);color:#fff;border-color:var(--navy)}
+    .btn.ghost{background:#f6f8f9}
+    .btn.danger{color:#a3443b;border-color:#efcfcc}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .btn.full{width:100%}
+    .divider{height:1px;background:#e9eef1;margin:22px 0}
+    .eyebrow{font-size:11px;letter-spacing:.1em;font-weight:800;color:var(--teal);text-transform:uppercase;margin-bottom:7px}
+    .side{position:sticky;top:17px}
+    .preview{background:#fcfdfd;border:1px solid #d7e4e7;border-radius:13px;padding:16px;margin-top:14px;min-height:220px;max-height:520px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12.5px;line-height:1.6;color:#314b56;font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace}
+    .preview.empty{font-family:inherit;color:#8397a0;font-size:13px;display:flex;align-items:center;justify-content:center;text-align:center}
+    .autosave{display:flex;align-items:center;gap:6px;color:#6b8b7f;font-size:11px;font-weight:600;margin-top:14px}
+    .dot{width:7px;height:7px;border-radius:50%;background:#39aa8e;display:inline-block}
+    .info{font-size:12px;color:#637782;background:#f5f8fa;border:1px solid #e2ebef;border-radius:12px;padding:13px}
+    .info strong{color:#1d4654}
+    .email-box{border:1px solid #cce7de;border-radius:14px;background:#f1faf6;padding:15px;margin-top:17px}
+    .email-box h3{font-size:14px;color:#175444;margin:0 0 5px}
+    .email-box p{margin:0 0 13px;font-size:12px;color:#527367;line-height:1.5}
+    .email-box .field{margin-bottom:12px}
+    .email-box .btn{width:100%}
+    .email-box .email-status{font-size:11.5px;margin-top:10px;color:#7b6651}
+    .how{margin:0;padding-left:19px;font-size:12.5px;color:#536b79}
+    .how li{margin:8px 0}
+    .hide{display:none!important}
+    .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#183b46;color:#fff;padding:11px 17px;border-radius:12px;box-shadow:0 15px 38px rgba(0,0,0,.22);font-size:13px;max-width:min(90vw,500px);text-align:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .2s}
+    .toast.show{opacity:1}
+    footer{color:#82919d;font-size:11px;text-align:center;padding:22px 0 5px}
+    @media(max-width:780px){.layout{grid-template-columns:1fr}.side{position:static}.hero{padding-bottom:78px}.panel{padding:19px}.main{margin-top:-54px}}
+    @media(max-width:540px){.shell{padding-left:13px;padding-right:13px}.hero{padding-top:17px}.brand{font-size:13px}.mark{width:36px;height:36px}.today{font-size:11px;padding:7px 9px}.hero-title{margin-top:30px}.hero-sub{font-size:13px}.panel{border-radius:17px;padding:17px}.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:repeat(3,1fr);gap:7px}.metric-wrap{padding:10px}.metric-wrap .field label{font-size:10.5px;min-height:45px}.metric-wrap input{padding:9px;text-align:center}.actions .btn{flex:1 1 calc(50% - 10px)}.actions .btn.primary{flex-basis:100%}.tab{font-size:12px;padding:10px 5px}.preview{max-height:430px}}
+    @media(max-width:365px){.grid3{grid-template-columns:1fr}.metric-wrap .field label{min-height:0}.actions .btn{flex-basis:100%}}
+    @media print{body{background:#fff}.hero,.tabs,.hide-print,footer,.actions,.info,.autosave,.how,.field,.section-head,.panel.form-panel{display:none!important}.shell{max-width:none;margin:0;padding:0}.main{margin:0}.layout{display:block}.side{position:static}.panel{border:0;box-shadow:none;padding:0;margin:0}.preview{border:0;padding:0;max-height:none;min-height:0;overflow:visible;font-size:12pt;color:#000;white-space:pre-wrap}.panel h2{display:none}.eyebrow{display:none}}
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="shell">
+      <div class="top">
+        <div class="brand"><span class="mark">BCD</span><span>Warehouse Operations<small>Daily reporting</small></span></div>
+        <span class="today" id="today">Today</span>
+      </div>
+      <h1 class="hero-title">End-of-Day Report</h1>
+      <p class="hero-sub">A simple phone-friendly form for the Bacolod Warehouse team: Warehouse In-Charge, Processing Staff, Driver, and Warehouse Staff.</p>
+    </div>
+  </header>
+
+  <main class="shell main">
+    <div class="tabs hide-print" role="tablist" aria-label="Report mode">
+      <button class="tab active" type="button" id="tab-staff" role="tab" aria-selected="true" aria-controls="staff-view">Staff report</button>
+      <button class="tab" type="button" id="tab-supervisor" role="tab" aria-selected="false" aria-controls="supervisor-view">Supervisor summary</button>
+    </div>
+
+    <section id="staff-view" aria-labelledby="tab-staff">
+      <div class="layout">
+        <div class="panel form-panel">
+          <h2>My daily report</h2>
+          <p class="helper">Complete the fields below. Your draft is saved on this phone as you type.</p>
+          <form id="staff-form">
+            <div class="section-head"><span class="step">1</span> Reporter details</div>
+            <div class="stack">
+              <div class="field"><label for="role">Select your role</label><select id="role" name="role" required>
+                <option value="processing">Processing Staff</option>
+                <option value="driver">Driver</option>
+                <option value="warehouse">Warehouse Staff</option>
+                <option value="incharge">Warehouse In-Charge</option>
+              </select></div>
+              <div class="grid2">
+                <div class="field"><label for="employee">Full name</label><input id="employee" name="employee" autocomplete="name" required maxlength="90" placeholder="Enter your name"></div>
+                <div class="field"><label for="workdate">Report date</label><input type="date" id="workdate" name="workdate" required></div>
+              </div>
+              <div class="grid2">
+                <div class="field"><label for="attendance">Attendance status</label><select id="attendance" name="attendance"><option>Present</option><option>Half Day</option><option>On Leave</option><option>Absent</option></select></div>
+                <div class="field"><label for="shift">Work schedule <span class="optional">optional</span></label><input id="shift" name="shift" maxlength="35" placeholder="e.g. 8:00 AM - 5:00 PM"></div>
+              </div>
+            </div>
+            <div class="role-note" id="role-note">Record processed transactions, prepared documents and other assigned tasks.</div>
+
+            <div class="section-head"><span class="step">2</span> Today's figures <span style="font-size:11px;font-weight:500;color:#8698a2">(if applicable)</span></div>
+            <div class="metric-wrap grid3">
+              <div class="field"><label id="metric-label-1" for="metric-1">Transactions processed</label><input id="metric-1" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></div>
+              <div class="field"><label id="metric-label-2" for="metric-2">Documents prepared</label><input id="metric-2" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></div>
+              <div class="field"><label id="metric-label-3" for="metric-3">Items encoded</label><input id="metric-3" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></div>
+            </div>
+
+            <div class="section-head"><span class="step">3</span> Work and follow-ups</div>
+            <div class="stack">
+              <div class="field"><label for="completed">Work completed today</label><textarea id="completed" rows="4" maxlength="4000" placeholder="List your tasks completed today, including quantities or reference numbers when appropriate."></textarea><div class="hint">One task per line makes your report easier to review.</div></div>
+              <div class="field"><label for="pending">Pending or unfinished tasks</label><textarea id="pending" rows="3" maxlength="3000" placeholder="What is still pending? Why? Type None if there is nothing pending."></textarea></div>
+              <div class="field"><label for="issues">Discrepancies or concerns</label><textarea id="issues" rows="3" maxlength="3000" placeholder="Report stock differences, damaged items, delays, or other concerns. Type None if none."></textarea></div>
+              <div class="field"><label for="tomorrow">Next working day's priority</label><textarea id="tomorrow" rows="3" maxlength="2000" placeholder="What should be followed up or completed next?"></textarea></div>
+            </div>
+            <div class="actions hide-print">
+              <button class="btn primary" type="submit">Review my report</button>
+              <button class="btn ghost" id="clear-staff" type="button">Clear this draft</button>
+            </div>
+          </form>
+          <div class="autosave"><span class="dot"></span><span id="save-state">Draft stays on this device</span></div>
+        </div>
+
+        <aside class="side">
+          <div class="panel">
+            <div class="eyebrow">Ready to send</div>
+            <h2>Report preview</h2>
+            <p class="helper">Review the details before submitting your report.</p>
+            <div class="preview empty" id="staff-preview" aria-live="polite">Your report will appear here after you tap “Review my report.”</div>
+            <div class="email-box hide-print">
+              <h3>Send directly to Warehouse In-Charge</h3>
+              <p>Enter your team's access code and submit. A new tab will display whether the report was emailed successfully.</p>
+              <div class="field"><label for="staff-access-code">Team access code</label><input type="password" id="staff-access-code" autocomplete="off" placeholder="Code provided by Edwin" maxlength="100"></div>
+              <button class="btn primary" id="staff-email" type="button">Submit EOD report by email</button>
+              <div class="email-status" id="staff-email-status" aria-live="polite">Email delivery needs one-time setup by the Warehouse In-Charge.</div>
+            </div>
+            <div class="actions hide-print">
+              <button class="btn dark full" id="staff-share" type="button">Backup: Share to Viber / other app</button>
+              <button class="btn" id="staff-copy" type="button">Copy report</button>
+              <button class="btn" id="staff-download" type="button">Download text</button>
+              <button class="btn" id="staff-print" type="button">Print / Save PDF</button>
+            </div>
+          </div>
+          <div class="panel hide-print">
+            <h2>How it works</h2>
+            <ol class="how"><li>Fill out your report using your phone.</li><li>Tap <strong>Review my report</strong> and check the details.</li><li>Enter the team code and tap <strong>Submit EOD report by email</strong>.</li><li>Check for the successful email confirmation in the newly opened tab. Viber sharing remains available as a backup.</li></ol>
+            <div class="info" style="margin-top:15px"><strong>Privacy:</strong> Drafts stay in this phone's browser. On email submission, the report is sent to an authorized Google Apps Script to be emailed to the Warehouse In-Charge; the script does not create a database. Avoid including confidential customer details.</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="supervisor-view" class="hide" aria-labelledby="tab-supervisor">
+      <div class="layout">
+        <div class="panel form-panel">
+          <h2>Consolidate your team's reports</h2>
+          <p class="helper">When staff send their reports through Viber, copy each message into the matching box below. Add your warehouse summary before forwarding to management.</p>
+          <form id="supervisor-form">
+            <div class="grid2">
+              <div class="field"><label for="s-date">Report date</label><input type="date" id="s-date" required></div>
+              <div class="field"><label for="s-name">Prepared by</label><input id="s-name" required maxlength="90" value="Edwin Penacuba Jr."></div>
+            </div>
+            <div class="section-head"><span class="step">1</span> Overall activity</div>
+            <div class="metric-wrap grid3">
+              <div class="field"><label for="s-receiving">Lines received</label><input id="s-receiving" min="0" type="number" inputmode="numeric"></div>
+              <div class="field"><label for="s-transfers">Transfers completed</label><input id="s-transfers" min="0" type="number" inputmode="numeric"></div>
+              <div class="field"><label for="s-orders">Orders / inquiries</label><input id="s-orders" min="0" type="number" inputmode="numeric"></div>
+            </div>
+            <div class="stack" style="margin-top:14px">
+              <div class="field"><label for="s-summary">Your completed activities and coordination</label><textarea id="s-summary" placeholder="Receiving monitored, transfers verified, e-commerce support, coordination, reports submitted..."></textarea></div>
+              <div class="field"><label for="s-concerns">Overall pending work or concerns</label><textarea id="s-concerns" placeholder="List critical open issues, responsible persons, and actions taken."></textarea></div>
+              <div class="field"><label for="s-next">Tomorrow's top priorities</label><textarea id="s-next" placeholder="1. ...&#10;2. ...&#10;3. ..."></textarea></div>
+            </div>
+            <div class="section-head"><span class="step">2</span> Paste staff submissions</div>
+            <div class="stack">
+              <div class="field"><label for="s-processing">Processing Staff report</label><textarea id="s-processing" rows="5" placeholder="Paste their completed report from Viber here."></textarea></div>
+              <div class="field"><label for="s-driver">Driver report</label><textarea id="s-driver" rows="5" placeholder="Paste the driver's completed report from Viber here."></textarea></div>
+              <div class="field"><label for="s-warehouse">Warehouse Staff report</label><textarea id="s-warehouse" rows="5" placeholder="Paste the warehouse staff's completed report from Viber here."></textarea></div>
+            </div>
+            <div class="actions hide-print"><button class="btn primary" type="submit">Review consolidated report</button><button class="btn ghost" type="button" id="clear-supervisor">Clear summary</button></div>
+          </form>
+          <div class="autosave"><span class="dot"></span><span id="supervisor-save-state">Draft stays on this device</span></div>
+        </div>
+        <aside class="side">
+          <div class="panel">
+            <div class="eyebrow">Management copy</div>
+            <h2>Consolidated preview</h2>
+            <p class="helper">Review pasted staff updates and your own notes.</p>
+            <div class="preview empty" id="supervisor-preview" aria-live="polite">Your consolidated report will appear here.</div>
+            <div class="email-box hide-print">
+              <h3>Email the consolidated report</h3>
+              <p>Use the same access code if you want a copy of your management summary sent to your inbox.</p>
+              <div class="field"><label for="supervisor-access-code">Team access code</label><input type="password" id="supervisor-access-code" autocomplete="off" placeholder="Team access code" maxlength="100"></div>
+              <button class="btn primary" id="supervisor-email" type="button">Submit summary by email</button>
+              <div class="email-status" id="supervisor-email-status" aria-live="polite">Email delivery needs one-time setup.</div>
+            </div>
+            <div class="actions hide-print">
+              <button class="btn dark full" id="supervisor-share" type="button">Backup: Share consolidated report</button>
+              <button class="btn" id="supervisor-copy" type="button">Copy report</button>
+              <button class="btn" id="supervisor-download" type="button">Download text</button>
+              <button class="btn" id="supervisor-print" type="button">Print / Save PDF</button>
+            </div>
+          </div>
+          <div class="info hide-print"><strong>Consolidation is manual.</strong> Individual reports arrive by email once the email service is configured, but are not synchronized into this screen. Copy them from your email, verify the figures, then share or email your final management report.</div>
+        </aside>
+      </div>
+    </section>
+    <footer class="hide-print">BCD Warehouse Operations · Mobile reporting template · No account required</footer>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <form id="email-transport" method="POST" target="_blank" class="hide" aria-hidden="true">
+    <input type="hidden" name="report_kind" id="send-kind">
+    <input type="hidden" name="role" id="send-role">
+    <input type="hidden" name="report_date" id="send-date">
+    <input type="hidden" name="reporter" id="send-reporter">
+    <input type="hidden" name="report_body" id="send-body">
+    <input type="hidden" name="team_code" id="send-code">
+  </form>
+  <script>
+    (()=>{
+      'use strict';
+      // Google Apps Script Web App endpoint for emailed EOD submissions.
+      const EMAIL_ENDPOINT='https://script.google.com/macros/s/AKfycbyB8KcG2g7MzFeQ02oleNx3x1qnRhfLsBHUfusZ2XQxDnMUkUjKFm_pBpQ9OpFWFEvkbQ/exec';
+      const $=id=>document.getElementById(id);
+      const STAFF_PREFIX='bcd-eod-staff-v1:';
+      const SUPERVISOR_KEY='bcd-eod-supervisor-v1';
+      const defs={
+        processing:{name:'Processing Staff',note:'Record processed transactions, prepared documents and other assigned tasks.',labels:['Transactions processed','Documents prepared','Items encoded']},
+        driver:{name:'Driver',note:'Record completed delivery runs, stores served, items delivered, delays, vehicle concerns, and pending trips.',labels:['Delivery runs','Stops / Stores served','Items delivered']},
+        warehouse:{name:'Warehouse Staff',note:'Record receiving, checking, labeling, picking, packing, and stock organization.',labels:['Items received','Items checked','Items packed']},
+        incharge:{name:'Warehouse In-Charge',note:'Record supervision, processing verification, e-commerce support, and coordination.',labels:['Transfers reviewed','Orders / inquiries','Reports prepared']}
+      };
+      const staffIds=['role','employee','workdate','attendance','shift','metric-1','metric-2','metric-3','completed','pending','issues','tomorrow'];
+      const supIds=['s-date','s-name','s-receiving','s-transfers','s-orders','s-summary','s-concerns','s-next','s-processing','s-driver','s-warehouse'];
+      let mode='staff', staffText='', supervisorText='', toastTimer;
+      const storage={get(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch{return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch{return false}},remove(k){try{localStorage.removeItem(k)}catch{}}};
+      function localDate(){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Manila',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const get=t=>parts.find(x=>x.type===t)?.value||'';return `${get('year')}-${get('month')}-${get('day')}`}
+      function displayDate(s){if(!s)return 'Not specified';const [y,m,d]=s.split('-');const date=new Date(Number(y),Number(m)-1,Number(d));return Number.isNaN(date.getTime())?s:new Intl.DateTimeFormat('en-PH',{month:'long',day:'numeric',year:'numeric'}).format(date)}
+      function toast(t){$('toast').textContent=t;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),3500)}
+      function data(ids){const x={};ids.forEach(id=>x[id]=$(id).value);return x}
+      function hydrate(ids,source){ids.forEach(id=>{if(Object.prototype.hasOwnProperty.call(source||{},id))$(id).value=source[id]})}
+      function roleLabels(){const def=defs[$('role').value];for(let i=1;i<=3;i++)$('metric-label-'+i).textContent=def.labels[i-1];$('role-note').textContent=def.note}
+      function saveStaff(){storage.set(STAFF_PREFIX+$('role').value,data(staffIds));$('save-state').textContent='Draft saved on this device';staffText='';resetPreview('staff-preview','Changes saved. Review again before sharing.')}
+      function saveSup(){storage.set(SUPERVISOR_KEY,data(supIds));$('supervisor-save-state').textContent='Draft saved on this device';supervisorText='';resetPreview('supervisor-preview','Changes saved. Review again before sharing.')}
+      function resetPreview(id,text){const p=$(id);p.textContent=text;p.classList.add('empty')}
+      function restoreStaff(role){const saved=storage.get(STAFF_PREFIX+role);const blank={role,employee:'',workdate:localDate(),attendance:'Present',shift:'', 'metric-1':'','metric-2':'','metric-3':'',completed:'',pending:'',issues:'',tomorrow:''};hydrate(staffIds,Object.assign(blank,saved||{}));$('role').value=role;roleLabels();staffText='';resetPreview('staff-preview','Fill out the form, then review your report.')}
+      function restoreSup(){const saved=storage.get(SUPERVISOR_KEY);hydrate(supIds,Object.assign({'s-date':localDate(),'s-name':'Edwin Penacuba Jr.'},saved||{}));supervisorText='';resetPreview('supervisor-preview','Fill out the summary, then review it.')}
+      function section(name,value){return `${name}\n${(value||'None').trim()||'None'}\n`}
+      function generateStaff(){const x=data(staffIds),def=defs[x.role];const parts=['BACOLOD WAREHOUSE','DAILY END-OF-DAY STAFF REPORT','',`Date: ${displayDate(x.workdate)}`,`Name: ${x.employee.trim()}`,`Role: ${def.name}`,`Attendance: ${x.attendance}`,`Schedule: ${x.shift.trim()||'Not specified'}`,''];
+        const metrics=def.labels.map((t,i)=>({label:t,value:x['metric-'+(i+1)]})).filter(o=>o.value!=='');
+        if(metrics.length){parts.push('ACTIVITY TOTALS');metrics.forEach(o=>parts.push(`${o.label}: ${o.value}`));parts.push('')}
+        parts.push(section('COMPLETED WORK',x.completed),section('PENDING TASKS',x.pending),section('DISCREPANCIES / CONCERNS',x.issues),section('NEXT WORKING DAY',x.tomorrow));
+        return parts.join('\n').replace(/\n{3,}/g,'\n\n').trim()+'\n';
+      }
+      function generateSup(){const x=data(supIds);let p=['BACOLOD WAREHOUSE','CONSOLIDATED END-OF-DAY REPORT','',`Date: ${displayDate(x['s-date'])}`,`Prepared by: ${x['s-name'].trim()}`,''];
+        const metrics=[['Lines received',x['s-receiving']],['Transfers completed',x['s-transfers']],['Orders / inquiries',x['s-orders']]].filter(x=>x[1]!=='');
+        if(metrics.length){p.push('DAILY OPERATIONS TOTALS');metrics.forEach(([label,v])=>p.push(`${label}: ${v}`));p.push('')}
+        p.push(section('WAREHOUSE IN-CHARGE ACTIVITIES',x['s-summary']),section('PENDING / CONCERNS',x['s-concerns']),section('NEXT WORKING DAY PRIORITIES',x['s-next']));
+        const reports=[['PROCESSING STAFF REPORT',x['s-processing']],['DRIVER REPORT',x['s-driver']],['WAREHOUSE STAFF REPORT',x['s-warehouse']]];
+        reports.forEach(([t,v])=>{p.push('------------------------------');p.push(section(t,v))});
+        p.push(`Staff reports included: ${reports.filter(([,v])=>v.trim()).length} of 3`);
+        return p.join('\n').replace(/\n{3,}/g,'\n\n').trim()+'\n';
+      }
+      function showPreview(id,t){const p=$(id);p.textContent=t;p.classList.remove('empty');p.scrollTop=0;p.scrollIntoView({behavior:'smooth',block:'nearest'})}
+      function report(which){if(which==='staff'){
+          if(!$('staff-form').reportValidity()){toast('Please complete your name and date.');return ''}
+          staffText=generateStaff();showPreview('staff-preview',staffText);return staffText;
+        }
+        if(!$('supervisor-form').reportValidity()){toast('Please complete the report date and prepared-by field.');return ''}
+        supervisorText=generateSup();showPreview('supervisor-preview',supervisorText);return supervisorText;
+      }
+      async function share(which){const text=report(which);if(!text)return;try{
+          if(navigator.share){await navigator.share({title:which==='staff'?'BCD Warehouse Staff EOD':'BCD Warehouse Consolidated EOD',text});toast('Share sheet opened. Choose Viber or another app and send.');}
+          else{await copy(text);toast('Report copied. Open Viber and paste it into your message.')}
+        }catch(e){if(e.name==='AbortError'){toast('Sharing cancelled. Your draft is still here.')}else{await copy(text);toast('Sharing was unavailable. Report copied for pasting into Viber.')}}}
+      async function copy(text){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);return}throw Error('fallback')}catch{
+          const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();const ok=document.execCommand('copy');ta.remove();if(!ok)throw Error('Unable to copy')
+        }}
+      async function copyReport(which){const text=report(which);if(!text)return;try{await copy(text);toast('Report copied. You can paste it into Viber.')}catch{toast('Copy unavailable. Select the preview text and copy it manually.')}}
+      function download(which){const text=report(which);if(!text)return;const date=which==='staff'?$('workdate').value:$('s-date').value;const filename=`BCD_EOD_${which}_${date||'report'}.txt`;
+        const blob=new Blob([text],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Text report downloaded.')}
+      function printReport(which){const text=report(which);if(!text)return;mode=which;window.print()}
+      function isEmailReady(){return /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(EMAIL_ENDPOINT)}
+      function emailReport(which){
+        if(!isEmailReady()){toast('Email is not connected yet. Ask Edwin to complete setup.');return}
+        const text=report(which);if(!text)return;
+        const code=$(which+'-access-code').value.trim();
+        if(!code){toast('Enter the team access code before submitting.');$(which+'-access-code').focus();return}
+        const staff=which==='staff';
+        const values={
+          'send-kind':staff?'staff':'supervisor',
+          'send-role':staff?defs[$('role').value].name:'Warehouse In-Charge — Consolidated',
+          'send-date':staff?$('workdate').value:$('s-date').value,
+          'send-reporter':staff?$('employee').value.trim():$('s-name').value.trim(),
+          'send-body':text,
+          'send-code':code
+        };
+        Object.entries(values).forEach(([id,value])=>$(id).value=value);
+        const form=$('email-transport');form.action=EMAIL_ENDPOINT;
+        form.submit();
+        $(which+'-access-code').value='';$('send-code').value='';
+        toast('Submission opened. Check the new tab for email confirmation.');
+      }
+      function switchMode(to){mode=to;const isStaff=to==='staff';$('staff-view').classList.toggle('hide',!isStaff);$('supervisor-view').classList.toggle('hide',isStaff);$('tab-staff').classList.toggle('active',isStaff);$('tab-supervisor').classList.toggle('active',!isStaff);$('tab-staff').setAttribute('aria-selected',String(isStaff));$('tab-supervisor').setAttribute('aria-selected',String(!isStaff));window.scrollTo({top:0,behavior:'smooth'})}
+      $('today').textContent=new Intl.DateTimeFormat('en-PH',{timeZone:'Asia/Manila',month:'short',day:'numeric',year:'numeric'}).format(new Date());
+      restoreStaff('processing');restoreSup();
+      $('role').addEventListener('change',e=>{restoreStaff(e.target.value);toast('Switched to '+defs[e.target.value].name+' draft on this device.')});
+      staffIds.filter(x=>x!=='role').forEach(id=>$(id).addEventListener('input',saveStaff));
+      supIds.forEach(id=>$(id).addEventListener('input',saveSup));
+      $('staff-form').addEventListener('submit',e=>{e.preventDefault();report('staff')});
+      $('supervisor-form').addEventListener('submit',e=>{e.preventDefault();report('supervisor')});
+      $('staff-email').addEventListener('click',()=>emailReport('staff'));
+      $('supervisor-email').addEventListener('click',()=>emailReport('supervisor'));
+      if(isEmailReady()){
+        $('staff-email-status').textContent='Email service is configured. Submission requires the shared team access code.';
+        $('supervisor-email-status').textContent='Email service is configured. Look for the success message in the new tab.';
+      }else{
+        $('staff-email-status').textContent='Not connected yet. Edwin must add the Google Apps Script URL before publishing.';
+        $('supervisor-email-status').textContent='Not connected yet. Add the Google Apps Script URL before publishing.';
+      }
+      $('tab-staff').addEventListener('click',()=>switchMode('staff'));$('tab-supervisor').addEventListener('click',()=>switchMode('supervisor'));
+      for(const x of ['staff','supervisor']){
+        $(x+'-share').addEventListener('click',()=>share(x));$(x+'-copy').addEventListener('click',()=>copyReport(x));$(x+'-download').addEventListener('click',()=>download(x));$(x+'-print').addEventListener('click',()=>printReport(x));
+      }
+      $('clear-staff').addEventListener('click',()=>{if(!confirm('Clear this role\'s saved draft from this phone?'))return;const role=$('role').value;storage.remove(STAFF_PREFIX+role);restoreStaff(role);toast('This role\'s draft was cleared.')});
+      $('clear-supervisor').addEventListener('click',()=>{if(!confirm('Clear the saved consolidated report from this phone?'))return;storage.remove(SUPERVISOR_KEY);restoreSup();toast('Consolidated draft cleared.')});
+      window.addEventListener('beforeprint',()=>{if(mode==='staff'&&!staffText){$('staff-preview').textContent=generateStaff();$('staff-preview').classList.remove('empty')}if(mode==='supervisor'&&!supervisorText){$('supervisor-preview').textContent=generateSup();$('supervisor-preview').classList.remove('empty')}});
+    })();
+  </script>
+</body>
+</html>
