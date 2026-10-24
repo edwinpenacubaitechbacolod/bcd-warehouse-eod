@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#10253a">
   <meta name="description" content="Mobile end-of-day reporting for the Bacolod Warehouse team.">
+  <link rel="icon" type="image/png" href="./warehouse-logo.png">
   <title>BCD Warehouse | End-of-Day Report</title>
   <style>
     :root{--navy:#10253a;--navy2:#1c3d56;--teal:#0a806f;--tealDark:#096958;--mint:#eaf6f1;--ink:#1b2f3e;--muted:#677985;--edge:#dce5eb;--bg:#f3f6f8;--white:#fff;--warning:#fff3da;--shadow:0 12px 34px rgba(16,37,58,.07)}
@@ -19,11 +20,14 @@
     .hero:after{content:"";position:absolute;width:290px;height:290px;border:1px solid rgba(255,255,255,.10);border-radius:50%;top:-160px;right:-50px;box-shadow:0 0 0 60px rgba(255,255,255,.026),0 0 0 120px rgba(255,255,255,.016);pointer-events:none}
     .top{display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;z-index:1}
     .brand{display:flex;align-items:center;gap:11px;font-weight:780;letter-spacing:.01em}
-    .mark{display:grid;place-items:center;width:41px;height:41px;border-radius:12px;background:#d9fff1;color:#105744;font-weight:900;font-size:13px;letter-spacing:-.03em}
+    .mark{display:grid;place-items:center;width:48px;height:48px;border-radius:13px;background:#fff;overflow:hidden;flex-shrink:0}
+    .mark img{display:block;width:100%;height:100%;object-fit:contain}
     .brand small{display:block;color:#bbd8db;font-size:11px;font-weight:550;letter-spacing:.06em;text-transform:uppercase}
     .today{border:1px solid rgba(255,255,255,.22);color:#d9f6ef;padding:8px 12px;border-radius:999px;font-size:12px;white-space:nowrap}
     .hero-title{margin:36px 0 6px;font-weight:800;font-size:clamp(26px,4vw,38px);letter-spacing:-.045em;line-height:1.12;position:relative;z-index:1}
     .hero-sub{margin:0;color:#cee0e5;max-width:660px;font-size:14px;position:relative;z-index:1}
+    .prepared-by{display:inline-flex;align-items:center;gap:8px;margin-top:15px;color:#b7d5da;font-size:12px;font-weight:550;position:relative;z-index:1}
+    .prepared-by:before{content:"";display:inline-block;width:7px;height:7px;background:#5ad9bc;border-radius:50%}
     .main{margin-top:-54px;position:relative;z-index:2}
     .tabs{display:flex;gap:6px;padding:6px;background:#fff;border:1px solid var(--edge);border-radius:16px;box-shadow:var(--shadow);margin-bottom:18px}
     .tab{flex:1;border:0;background:transparent;border-radius:11px;padding:12px 10px;font-weight:750;color:#60727d;font-size:13px;min-height:45px}
@@ -81,7 +85,7 @@
     .toast.show{opacity:1}
     footer{color:#82919d;font-size:11px;text-align:center;padding:22px 0 5px}
     @media(max-width:780px){.layout{grid-template-columns:1fr}.side{position:static}.hero{padding-bottom:78px}.panel{padding:19px}.main{margin-top:-54px}}
-    @media(max-width:540px){.shell{padding-left:13px;padding-right:13px}.hero{padding-top:17px}.brand{font-size:13px}.mark{width:36px;height:36px}.today{font-size:11px;padding:7px 9px}.hero-title{margin-top:30px}.hero-sub{font-size:13px}.panel{border-radius:17px;padding:17px}.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:repeat(3,1fr);gap:7px}.metric-wrap{padding:10px}.metric-wrap .field label{font-size:10.5px;min-height:45px}.metric-wrap input{padding:9px;text-align:center}.actions .btn{flex:1 1 calc(50% - 10px)}.actions .btn.primary{flex-basis:100%}.tab{font-size:12px;padding:10px 5px}.preview{max-height:430px}}
+    @media(max-width:540px){.shell{padding-left:13px;padding-right:13px}.hero{padding-top:17px}.brand{font-size:13px}.mark{width:42px;height:42px}.today{font-size:11px;padding:7px 9px}.hero-title{margin-top:30px}.hero-sub{font-size:13px}.panel{border-radius:17px;padding:17px}.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:repeat(3,1fr);gap:7px}.metric-wrap{padding:10px}.metric-wrap .field label{font-size:10.5px;min-height:45px}.metric-wrap input{padding:9px;text-align:center}.actions .btn{flex:1 1 calc(50% - 10px)}.actions .btn.primary{flex-basis:100%}.tab{font-size:12px;padding:10px 5px}.preview{max-height:430px}}
     @media(max-width:365px){.grid3{grid-template-columns:1fr}.metric-wrap .field label{min-height:0}.actions .btn{flex-basis:100%}}
     @media print{body{background:#fff}.hero,.tabs,.hide-print,footer,.actions,.info,.autosave,.how,.field,.section-head,.panel.form-panel{display:none!important}.shell{max-width:none;margin:0;padding:0}.main{margin:0}.layout{display:block}.side{position:static}.panel{border:0;box-shadow:none;padding:0;margin:0}.preview{border:0;padding:0;max-height:none;min-height:0;overflow:visible;font-size:12pt;color:#000;white-space:pre-wrap}.panel h2{display:none}.eyebrow{display:none}}
   </style>
@@ -90,11 +94,12 @@
   <header class="hero">
     <div class="shell">
       <div class="top">
-        <div class="brand"><span class="mark">BCD</span><span>Warehouse Operations<small>Daily reporting</small></span></div>
+        <div class="brand"><span class="mark"><img src="./warehouse-logo.png" alt="Warehouse logo" width="48" height="48"></span><span>Warehouse Operations<small>Daily reporting</small></span></div>
         <span class="today" id="today">Today</span>
       </div>
       <h1 class="hero-title">End-of-Day Report</h1>
       <p class="hero-sub">A simple phone-friendly form for the Bacolod Warehouse team: Warehouse In-Charge, Processing Staff, Driver, and Warehouse Staff.</p>
+      <p class="prepared-by">Reporting system prepared by Edwin Penacuba Jr.</p>
     </div>
   </header>
 
@@ -235,7 +240,7 @@
         </aside>
       </div>
     </section>
-    <footer class="hide-print">BCD Warehouse Operations · Mobile reporting template · No account required</footer>
+    <footer class="hide-print">© 2026 Bacolod Warehouse EOD Reporting · Prepared by Edwin Penacuba Jr.</footer>
   </main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <form id="email-transport" method="POST" target="_blank" class="hide" aria-hidden="true">
