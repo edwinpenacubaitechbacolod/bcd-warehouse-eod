@@ -88,35 +88,6 @@
     @media(max-width:540px){.shell{padding-left:13px;padding-right:13px}.hero{padding-top:17px}.brand{font-size:13px}.mark{width:42px;height:42px}.today{font-size:11px;padding:7px 9px}.hero-title{margin-top:30px}.hero-sub{font-size:13px}.panel{border-radius:17px;padding:17px}.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:repeat(3,1fr);gap:7px}.metric-wrap{padding:10px}.metric-wrap .field label{font-size:10.5px;min-height:45px}.metric-wrap input{padding:9px;text-align:center}.actions .btn{flex:1 1 calc(50% - 10px)}.actions .btn.primary{flex-basis:100%}.tab{font-size:12px;padding:10px 5px}.preview{max-height:430px}}
     @media(max-width:365px){.grid3{grid-template-columns:1fr}.metric-wrap .field label{min-height:0}.actions .btn{flex-basis:100%}}
     @media print{body{background:#fff}.hero,.tabs,.hide-print,footer,.actions,.info,.autosave,.how,.field,.section-head,.panel.form-panel{display:none!important}.shell{max-width:none;margin:0;padding:0}.main{margin:0}.layout{display:block}.side{position:static}.panel{border:0;box-shadow:none;padding:0;margin:0}.preview{border:0;padding:0;max-height:none;min-height:0;overflow:visible;font-size:12pt;color:#000;white-space:pre-wrap}.panel h2{display:none}.eyebrow{display:none}}
-  
-    /* Compact header spacing; keep the original design and overlap */
-    .hero .shell { padding-bottom: 0; }
-    .hero { padding-bottom: 50px; }
-    .main { margin-top: -35px; }
-
-    /* Keep native date inputs within their mobile grid columns */
-    input[type="date"] {
-      display: block;
-      width: 100%;
-      max-width: 100%;
-      min-width: 0;
-      box-sizing: border-box;
-    }
-    @media (max-width: 780px) {
-      .hero { padding-bottom: 50px; }
-      .main { margin-top: -35px; }
-    }
-    @media (max-width: 540px) {
-      .grid2, .grid2 .field { min-width: 0; width: 100%; }
-      input[type="date"] {
-        width: 100%;
-        min-width: 0;
-        max-width: 100%;
-        font-size: 16px;
-        min-height: 46px;
-        padding: 10px 12px;
-      }
-    }
   </style>
 </head>
 <body>
