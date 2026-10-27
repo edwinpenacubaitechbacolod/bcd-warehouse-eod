@@ -144,6 +144,25 @@
       .layout { display:block; }
       .panel { padding:0; }
     }
+
+    /* Compact activity picker for all staff roles */
+    .activity-picker{border:1px solid #d8e6e8;border-radius:12px;background:#f7fafb;padding:0;margin-bottom:12px}
+    .activity-picker summary{cursor:pointer;list-style:none;padding:12px 14px;font-weight:700;font-size:13px;color:#254b59;display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .activity-picker summary::-webkit-details-marker{display:none}
+    .activity-picker summary::after{content:'▾';color:#40737c}
+    .activity-picker[open] summary::after{content:'▴'}
+    .activity-count{font-weight:500;font-size:11px;color:#66838c;margin-left:auto}
+    .activity-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:0 11px 12px}
+    .activity-choice{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #dfe9eb;border-radius:9px;padding:10px 9px;font-size:12px;line-height:1.3;cursor:pointer;min-width:0}
+    .activity-choice input{width:17px;height:17px;min-height:17px;flex:none;margin:0;accent-color:#168778}
+    @media(max-width:410px){.activity-options{grid-template-columns:1fr 1fr;gap:5px;padding:0 8px 10px}.activity-choice{font-size:11px;padding:9px 6px;gap:5px}}
+    /* Small-screen activity details; keep original visual language */
+    .activity-detail{display:grid;grid-template-columns:88px minmax(0,1fr);gap:6px;margin:6px 0 0 25px}
+    .activity-detail input{min-height:34px;padding:7px 8px;font-size:12px}
+    .activity-choice{flex-wrap:wrap}
+    .activity-choice .activity-detail{width:calc(100% - 25px);margin-left:25px}
+    .net-state{font-size:11px;color:#6b8b7f;margin-top:8px}
+    @media(max-width:540px){.activity-detail{grid-template-columns:70px minmax(0,1fr)}.activity-choice .activity-detail{width:100%;margin-left:0}}
   </style>
 </head>
 <body>
@@ -195,6 +214,7 @@
             </div>
             <div class="section-head"><span class="step">3</span> Work and follow-ups</div>
             <div class="stack">
+              <details class="activity-picker" id="processing-activities"><summary>Choose completed activities <span class="activity-count" id="activity-count">0 selected</span></summary><div class="activity-options" id="activity-options"></div></details>
               <div class="field"><label for="completed">Work completed today</label><textarea id="completed" rows="4" maxlength="4000" placeholder="List your tasks completed today, including quantities or reference numbers when appropriate."></textarea><div class="hint">One task per line makes your report easier to review.</div></div>
               <div class="field"><label for="pending">Pending or unfinished tasks</label><textarea id="pending" rows="3" maxlength="3000" placeholder="What is still pending? Why? Type None if there is nothing pending."></textarea></div>
               <div class="field"><label for="issues">Discrepancies or concerns</label><textarea id="issues" rows="3" maxlength="3000" placeholder="Report stock differences, damaged items, delays, or other concerns. Type None if none."></textarea></div>
@@ -205,7 +225,7 @@
               <button class="btn ghost" id="clear-staff" type="button">Clear this draft</button>
             </div>
           </form>
-          <div class="autosave"><span class="dot"></span><span id="save-state">Draft stays on this device</span></div>
+          <div class="autosave"><span class="dot"></span><span id="save-state">Draft stays on this device</span></div><div class="net-state" id="connection-state" aria-live="polite"></div>
         </div>
         <aside class="side">
           <div class="panel">
@@ -215,13 +235,13 @@
             <div class="preview empty" id="staff-preview" aria-live="polite">Your report will appear here after you tap “Review my report.”</div>
             <div class="email-box hide-print">
               <h3>Send directly to Warehouse In-Charge</h3>
-              <p>Enter your team's access code and submit. A new tab will display whether the report was emailed successfully.</p>
+              <p>Enter your team's access code and submit. A new tab will confirm whether the report was saved and emailed successfully.</p>
               <div class="field"><label for="staff-access-code">Team access code</label><input type="password" id="staff-access-code" autocomplete="off" placeholder="Code provided by Edwin" maxlength="100"></div>
               <button class="btn primary" id="staff-email" type="button">Submit EOD report by email</button>
               <div class="email-status" id="staff-email-status" aria-live="polite">Email delivery needs one-time setup by the Warehouse In-Charge.</div>
             </div>
             <div class="actions hide-print">
-              <button class="btn dark full" id="staff-share" type="button">Backup: Share to Viber / other app</button>
+              <button class="btn dark full" id="staff-share" type="button">Backup: Share / Copy for Viber</button>
               <button class="btn" id="staff-copy" type="button">Copy report</button>
               <button class="btn" id="staff-download" type="button">Download text</button>
               <button class="btn" id="staff-print" type="button">Print / Save PDF</button>
@@ -230,7 +250,7 @@
           <div class="panel hide-print">
             <h2>How it works</h2>
             <ol class="how"><li>Fill out your report using your phone.</li><li>Tap <strong>Review my report</strong> and check the details.</li><li>Enter the team code and tap <strong>Submit EOD report by email</strong>.</li><li>Check for the successful email confirmation in the newly opened tab. Viber sharing remains available as a backup.</li></ol>
-            <div class="info" style="margin-top:15px"><strong>Privacy:</strong> Drafts stay in this phone's browser. On email submission, the report is sent to an authorized Google Apps Script to be emailed to the Warehouse In-Charge; the script does not create a database. Avoid including confidential customer details.</div>
+            <div class="info" style="margin-top:15px"><strong>Privacy:</strong> Drafts stay in this phone's browser. On email submission, the report is sent to an authorized Google Apps Script to be emailed to the Warehouse In-Charge; the updated companion script stores submissions in a private Google Sheet. Avoid including confidential customer details.</div>
           </div>
         </aside>
       </div>
@@ -245,6 +265,7 @@
               <div class="field"><label for="s-date">Report date</label><input type="date" id="s-date" required></div>
               <div class="field"><label for="s-name">Prepared by</label><input id="s-name" required maxlength="90" value="Edwin Penacuba Jr."></div>
             </div>
+            <div class="info hide-print" style="margin:0 0 15px"><strong>Submission tracker &amp; auto-summary:</strong> Open your private tracker to check submissions and copy an automatically consolidated staff summary. <button type="button" class="btn" id="open-tracker" style="margin-top:10px">Open submission tracker</button><div class="hint">Use your supervisor access code in the tracker. Paste its generated summary into the fields below after reviewing it.</div></div>
             <div class="section-head"><span class="step">1</span> Overall activity</div>
             <div class="metric-wrap grid3">
               <div class="field"><label for="s-receiving">Lines received</label><input id="s-receiving" min="0" type="number" inputmode="numeric"></div>
@@ -282,13 +303,13 @@
               <div class="email-status" id="supervisor-email-status" aria-live="polite">Email delivery needs one-time setup.</div>
             </div>
             <div class="actions hide-print">
-              <button class="btn dark full" id="supervisor-share" type="button">Backup: Share consolidated report</button>
+              <button class="btn dark full" id="supervisor-share" type="button">Backup: Share / Copy summary</button>
               <button class="btn" id="supervisor-copy" type="button">Copy report</button>
               <button class="btn" id="supervisor-download" type="button">Download text</button>
               <button class="btn" id="supervisor-print" type="button">Print / Save PDF</button>
             </div>
           </div>
-          <div class="info hide-print"><strong>Consolidation is manual.</strong> Individual reports arrive by email once the email service is configured, but are not synchronized into this screen. Copy them from your email, verify the figures, then share or email your final management report.</div>
+          <div class="info hide-print"><strong>Consolidation can be assisted by the private submission tracker.</strong> After the companion script is deployed, use Open submission tracker to see received reports and generate a draft consolidation. Review and paste it into this form before sending your final management report.</div>
         </aside>
       </div>
     </section>
@@ -296,6 +317,7 @@
   </main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <form id="email-transport" method="POST" target="_blank" class="hide" aria-hidden="true">
+    <input type="hidden" name="submission_id" id="send-id">
     <input type="hidden" name="report_kind" id="send-kind">
     <input type="hidden" name="role" id="send-role">
     <input type="hidden" name="report_date" id="send-date">
@@ -307,14 +329,14 @@
     (()=>{
       'use strict';
       // Google Apps Script Web App endpoint for emailed EOD submissions.
-      const EMAIL_ENDPOINT='https\://script.google.com/macros/s/AKfycbyB8KcG2g7MzFeQ02oleNx3x1qnRhfLsBHUfusZ2XQxDnMUkUjKFm_pBpQ9OpFWFEvkbQ/exec';
+      const EMAIL_ENDPOINT='https://script.google.com/macros/s/AKfycbwf_86UZSeiwHCVcJbRpY4Y8cJHMBtUaSpoG5M039tt-di-MP95Gsh3A8aO8pwnsS799g/exec';
       const $=id=>document.getElementById(id);
       const STAFF_PREFIX='bcd-eod-staff-v1:';
       const SUPERVISOR_KEY='bcd-eod-supervisor-v1';
       const defs={
         processing:{name:'Processing Staff',note:'Record processed transactions, prepared documents and other assigned tasks.',labels:['Transactions processed','Documents prepared','Items encoded']},
         driver:{name:'Driver',note:'Record completed delivery runs, stores served, items delivered, delays, vehicle concerns, and pending trips.',labels:['Delivery runs','Stops / Stores served','Items delivered']},
-        warehouse:{name:'Warehouse Staff',note:'Record receiving, checking, labeling, picking, packing, and stock organization.',labels:['Items received','Items checked','Items packed']},
+        warehouse:{name:'Warehouse Staff',note:'Assist the driver during deliveries. When not on delivery, pack items for store replenishment and customer orders. When stocks arrive, help unload and unbox them, then arrange items in their designated storage racks.',labels:['Items received','Items checked','Items packed']},
         incharge:{name:'Warehouse In-Charge',note:'Record supervision, processing verification, e-commerce support, and coordination.',labels:['Transfers reviewed','Orders / inquiries','Reports prepared']}
       };
       const staffIds=['role','employee','workdate','attendance','shift','metric-1','metric-2','metric-3','completed','pending','issues','tomorrow'];
@@ -326,11 +348,11 @@
       function toast(t){$('toast').textContent=t;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),3500)}
       function data(ids){const x={};ids.forEach(id=>x[id]=$(id).value);return x}
       function hydrate(ids,source){ids.forEach(id=>{if(Object.prototype.hasOwnProperty.call(source||{},id))$(id).value=source[id]})}
-      function roleLabels(){const def=defs[$('role').value];for(let i=1;i<=3;i++)$('metric-label-'+i).textContent=def.labels[i-1];$('role-note').textContent=def.note}
+      function roleLabels(){const def=defs[$('role').value];for(let i=1;i<=3;i++)$('metric-label-'+i).textContent=def.labels[i-1];$('role-note').textContent=def.note;renderActivityChoices()}
       function saveStaff(){storage.set(STAFF_PREFIX+$('role').value,data(staffIds));$('save-state').textContent='Draft saved on this device';staffText='';resetPreview('staff-preview','Changes saved. Review again before sharing.')}
       function saveSup(){storage.set(SUPERVISOR_KEY,data(supIds));$('supervisor-save-state').textContent='Draft saved on this device';supervisorText='';resetPreview('supervisor-preview','Changes saved. Review again before sharing.')}
       function resetPreview(id,text){const p=$(id);p.textContent=text;p.classList.add('empty')}
-      function restoreStaff(role){const saved=storage.get(STAFF_PREFIX+role);const blank={role,employee:'',workdate:localDate(),attendance:'Present',shift:'', 'metric-1':'','metric-2':'','metric-3':'',completed:'',pending:'',issues:'',tomorrow:''};hydrate(staffIds,Object.assign(blank,saved||{}));$('role').value=role;roleLabels();staffText='';resetPreview('staff-preview','Fill out the form, then review your report.')}
+      function restoreStaff(role){const saved=storage.get(STAFF_PREFIX+role);const blank={role,employee:'',workdate:localDate(),attendance:'Present',shift:'', 'metric-1':'','metric-2':'','metric-3':'',completed:'',pending:'',issues:'',tomorrow:''};hydrate(staffIds,Object.assign(blank,saved||{}));$('role').value=role;roleLabels();syncActivityChoices();staffText='';resetPreview('staff-preview','Fill out the form, then review your report.')}
       function restoreSup(){const saved=storage.get(SUPERVISOR_KEY);hydrate(supIds,Object.assign({'s-date':localDate(),'s-name':'Edwin Penacuba Jr.'},saved||{}));supervisorText='';resetPreview('supervisor-preview','Fill out the summary, then review it.')}
       function section(name,value){return `${name}\n${(value||'None').trim()||'None'}\n`}
       function generateStaff(){const x=data(staffIds),def=defs[x.role];const parts=['BACOLOD WAREHOUSE','DAILY END-OF-DAY STAFF REPORT','',`Date: ${displayDate(x.workdate)}`,`Name: ${x.employee.trim()}`,`Role: ${def.name}`,`Attendance: ${x.attendance}`,`Schedule: ${x.shift.trim()||'Not specified'}`,''];
@@ -356,10 +378,33 @@
         if(!$('supervisor-form').reportValidity()){toast('Please complete the report date and prepared-by field.');return ''}
         supervisorText=generateSup();showPreview('supervisor-preview',supervisorText);return supervisorText;
       }
-      async function share(which){const text=report(which);if(!text)return;try{
-          if(navigator.share){await navigator.share({title:which==='staff'?'BCD Warehouse Staff EOD':'BCD Warehouse Consolidated EOD',text});toast('Share sheet opened. Choose Viber or another app and send.');}
-          else{await copy(text);toast('Report copied. Open Viber and paste it into your message.')}
-        }catch(e){if(e.name==='AbortError'){toast('Sharing cancelled. Your draft is still here.')}else{await copy(text);toast('Sharing was unavailable. Report copied for pasting into Viber.')}}}
+      async function share(which){
+        const text=report(which);
+        if(!text)return;
+        const title=which==='staff'?'BCD Warehouse Staff EOD':'BCD Warehouse Consolidated EOD';
+        // Mobile browsers can show the installed-app share sheet. Desktop browsers
+        // may not offer Viber there, so always provide a clear copy fallback.
+        if(typeof navigator.share==='function'){
+          try{
+            await navigator.share({title,text});
+            toast('Report shared.');
+            return;
+          }catch(e){
+            if(e && e.name==='AbortError'){
+              toast('Sharing cancelled. You can use Copy report to send via Viber.');
+              return;
+            }
+          }
+        }
+        try{
+          await copy(text);
+          toast('Report copied! Open Viber, choose your chat, and paste the report.');
+        }catch(e){
+          const preview=$(which==='staff'?'staff-preview':'supervisor-preview');
+          preview.scrollIntoView({behavior:'smooth',block:'center'});
+          toast('Automatic sharing is unavailable. Select and copy the report preview, then paste it into Viber.');
+        }
+      }
       async function copy(text){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);return}throw Error('fallback')}catch{
           const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();const ok=document.execCommand('copy');ta.remove();if(!ok)throw Error('Unable to copy')
         }}
@@ -369,6 +414,10 @@
       function printReport(which){const text=report(which);if(!text)return;mode=which;window.print()}
       function isEmailReady(){return /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(EMAIL_ENDPOINT)}
       function emailReport(which){
+        if(!navigator.onLine){toast('Offline: your draft is saved here. Reconnect before submitting.');return}
+        if(which==='staff' && !$('completed').value.trim() && $('attendance').value==='Present'){toast('Select a completed activity or describe the work done.');$('completed').focus();return}
+        if(which==='supervisor' && !$('s-summary').value.trim()){toast('Enter your Warehouse In-Charge activities before submitting.');$('s-summary').focus();return}
+
         if(!isEmailReady()){toast('Email is not connected yet. Ask Edwin to complete setup.');return}
         const text=report(which);if(!text)return;
         const code=$(which+'-access-code').value.trim();
@@ -383,13 +432,121 @@
           'send-code':code
         };
         Object.entries(values).forEach(([id,value])=>$(id).value=value);
+        const snapshot=values['send-kind']+'|'+values['send-date']+'|'+values['send-reporter']+'|'+text;
+        let token=storage.get('bcd-last-submission-token');
+        if(!token||token.snapshot!==snapshot){token={snapshot,id:(window.crypto&&crypto.randomUUID?crypto.randomUUID():'eod-'+Date.now()+'-'+Math.random().toString(36).slice(2))};storage.set('bcd-last-submission-token',token)}
+        $('send-id').value=token.id;
+
         const form=$('email-transport');form.action=EMAIL_ENDPOINT;
         form.submit();
         $(which+'-access-code').value='';$('send-code').value='';
-        toast('Submission opened. Check the new tab for email confirmation.');
+        toast('Check the new tab for server confirmation. Do not submit again until you see the result.');
       }
       function switchMode(to){mode=to;const isStaff=to==='staff';$('staff-view').classList.toggle('hide',!isStaff);$('supervisor-view').classList.toggle('hide',isStaff);$('tab-staff').classList.toggle('active',isStaff);$('tab-supervisor').classList.toggle('active',!isStaff);$('tab-staff').setAttribute('aria-selected',String(isStaff));$('tab-supervisor').setAttribute('aria-selected',String(!isStaff));window.scrollTo({top:0,behavior:'smooth'})}
       $('today').textContent=new Intl.DateTimeFormat('en-PH',{timeZone:'Asia/Manila',month:'short',day:'numeric',year:'numeric'}).format(new Date());
+
+      // Compact role-specific activity choices. The selected descriptions are
+      // stored in the existing completed-work field, so all existing report,
+      // draft, sharing and email workflows remain compatible.
+      const roleActivities={
+        processing:[
+          ['Stock Receiving','Received and checked incoming stocks'],
+          ['Unboxing','Unboxed and inspected newly arrived items'],
+          ['Stock Arrangement','Organized items in designated storage racks'],
+          ['Order Picking','Picked items based on requests'],
+          ['Replenishment Preparation','Prepared stocks for scheduled deliveries'],
+          ['Inventory Checking','Conducted physical stock counting'],
+          ['Warehouse Housekeeping','Cleaned and organized warehouse areas'],
+          ['Other Tasks','Completed other assigned warehouse duties']
+        ],
+        driver:[
+          ['Delivery Runs','Completed scheduled delivery runs'],
+          ['Store Deliveries','Delivered items to assigned stores'],
+          ['Loading Assistance','Assisted with loading items for delivery'],
+          ['Delivery Verification','Verified delivered items and delivery documents'],
+          ['Vehicle Inspection','Checked the delivery vehicle before or after trips'],
+          ['Delivery Coordination','Coordinated delivery schedules and routes'],
+          ['Delivery Concerns','Reported delivery delays or vehicle concerns'],
+          ['Other Tasks','Completed other assigned delivery duties']
+        ],
+        warehouse:[
+          ['Delivery Assistance','Accompanied the driver and assisted during deliveries'],
+          ['Replenishment Packing','Packed items for store replenishment'],
+          ['Order Packing','Packed items for customer orders'],
+          ['Stock Unloading','Assisted with unloading incoming stocks'],
+          ['Unboxing','Unboxed newly arrived stocks'],
+          ['Stock Arrangement','Arranged received items in designated storage racks'],
+          ['Warehouse Housekeeping','Cleaned and organized warehouse areas'],
+          ['Other Tasks','Completed other assigned warehouse duties']
+        ],
+        incharge:[
+          ['Team Supervision','Supervised daily warehouse operations and staff activities'],
+          ['Stock Verification','Verified received stocks and inventory records'],
+          ['Transfer Review','Reviewed stock transfers and replenishment requests'],
+          ['Order Coordination','Coordinated order processing and fulfillment'],
+          ['E-commerce Operations','Handled e-commerce inquiries and order coordination'],
+          ['Report Preparation','Prepared and reviewed warehouse reports'],
+          ['Delivery Coordination','Coordinated warehouse deliveries and schedules'],
+          ['Other Tasks','Completed other assigned warehouse management duties']
+        ]
+      };
+      // The activity checklist writes marked lines into the existing completed field.
+      // Unrelated free-text lines are left untouched.
+      
+      function parseActivityLine(line){
+        const m=line.match(/^• (.+?) — (.+?)(?: \[Qty: ([^\]]+)\])?(?: \[Note: ([^\]]+)\])?$/);
+        return m?{name:m[1],description:m[2],qty:m[3]||'',note:m[4]||''}:null;
+      }
+      function renderActivityChoices(){
+        const container=$('activity-options');container.replaceChildren();
+        (roleActivities[$('role').value]||[]).forEach(([name,description])=>{
+          const label=document.createElement('div');label.className='activity-choice';label.title=description;
+          const checkbox=document.createElement('input');checkbox.type='checkbox';checkbox.value=name;checkbox.dataset.description=description;
+          const span=document.createElement('span');span.textContent=name;
+          const toggle=document.createElement('label');toggle.style.cssText='display:flex;align-items:center;gap:8px;margin:0;cursor:pointer;flex:1;min-width:0';toggle.append(checkbox,span);label.append(toggle);
+          const detail=document.createElement('div');detail.className='activity-detail hide';
+          const qty=document.createElement('input');qty.type='number';qty.min='0';qty.step='1';qty.placeholder='Qty';qty.setAttribute('aria-label',name+' quantity');qty.className='activity-qty';
+          const note=document.createElement('input');note.type='text';note.maxLength=100;note.placeholder='Optional detail';note.setAttribute('aria-label',name+' note');note.className='activity-note';
+          detail.append(qty,note);label.append(detail);container.append(label);
+        });
+        syncActivityChoices();
+      }
+      function syncActivityChoices(){
+        const lines=$('completed').value.split('\n').map(s=>s.trim());
+        const boxes=[...document.querySelectorAll('#activity-options input[type="checkbox"]')];
+        boxes.forEach(box=>{
+          const existing=lines.map(parseActivityLine).find(x=>x&&x.name===box.value)
+            || (lines.includes(box.dataset.description)?{qty:'',note:''}:null);
+          box.checked=!!existing;
+          box.closest('.activity-choice').querySelector('.activity-detail').classList.toggle('hide',!box.checked);
+          if(existing){box.closest('.activity-choice').querySelector('.activity-qty').value=existing.qty;box.closest('.activity-choice').querySelector('.activity-note').value=existing.note;}
+        });
+        $('activity-count').textContent=boxes.filter(box=>box.checked).length+' selected';
+      }
+      function updateActivityText(){
+        const old=$('completed').value.split('\n').filter(x=>x.trim());
+        const names=new Set((roleActivities[$('role').value]||[]).map(x=>x[0]));
+        const descriptions=new Set((roleActivities[$('role').value]||[]).map(x=>x[1]));
+        const custom=old.filter(line=>{const parsed=parseActivityLine(line);return !(parsed&&names.has(parsed.name))&&!descriptions.has(line.trim())});
+        const selected=[...document.querySelectorAll('#activity-options input[type="checkbox"]:checked')].map(box=>{
+          const parent=box.closest('.activity-choice');const qty=parent.querySelector('.activity-qty').value.trim();const note=parent.querySelector('.activity-note').value.trim().replace(/[\[\]\\]/g,'');
+          return '• '+box.value+' — '+box.dataset.description+(qty?' [Qty: '+qty+']':'')+(note?' [Note: '+note+']':'');
+        });
+        $('completed').value=[...selected,...custom].join('\n');
+        saveStaff();staffText=generateStaff();
+        const preview=$('staff-preview');preview.textContent=staffText;preview.classList.remove('empty');
+        $('activity-count').textContent=selected.length+' selected';
+      }
+      $('activity-options').addEventListener('change',e=>{
+        if(e.target.matches('input[type="checkbox"]'))e.target.closest('.activity-choice').querySelector('.activity-detail').classList.toggle('hide',!e.target.checked);
+        updateActivityText();
+      });
+      $('activity-options').addEventListener('input',e=>{
+        if(e.target.matches('.activity-qty,.activity-note'))updateActivityText();
+      });
+      $('completed').addEventListener('input',syncActivityChoices);
+      function updateConnection(){const el=$('connection-state');if(el)el.textContent=navigator.onLine?'Online — ready to submit':'Offline — draft saved locally; submission unavailable';}
+      window.addEventListener('online',updateConnection);window.addEventListener('offline',updateConnection);updateConnection();
       restoreStaff('processing');restoreSup();
       $('role').addEventListener('change',e=>{restoreStaff(e.target.value);toast('Switched to '+defs[e.target.value].name+' draft on this device.')});
       staffIds.filter(x=>x!=='role').forEach(id=>$(id).addEventListener('input',saveStaff));
@@ -399,12 +556,16 @@
       $('staff-email').addEventListener('click',()=>emailReport('staff'));
       $('supervisor-email').addEventListener('click',()=>emailReport('supervisor'));
       if(isEmailReady()){
-        $('staff-email-status').textContent='Email service is configured. Submission requires the shared team access code.';
-        $('supervisor-email-status').textContent='Email service is configured. Look for the success message in the new tab.';
+        $('staff-email-status').textContent='Connected. Check the new tab for confirmed submission status.';
+        $('supervisor-email-status').textContent='Connected. Check the new tab for confirmed submission status.';
       }else{
         $('staff-email-status').textContent='Not connected yet. Edwin must add the Google Apps Script URL before publishing.';
         $('supervisor-email-status').textContent='Not connected yet. Add the Google Apps Script URL before publishing.';
       }
+      $('open-tracker').addEventListener('click',()=>{
+        if(!isEmailReady()){toast('Configure the new Google Apps Script URL first.');return}
+        window.open(EMAIL_ENDPOINT+'?view=dashboard','_blank','noopener');
+      });
       $('tab-staff').addEventListener('click',()=>switchMode('staff'));$('tab-supervisor').addEventListener('click',()=>switchMode('supervisor'));
       for(const x of ['staff','supervisor']){
         $(x+'-share').addEventListener('click',()=>share(x));$(x+'-copy').addEventListener('click',()=>copyReport(x));$(x+'-download').addEventListener('click',()=>download(x));$(x+'-print').addEventListener('click',()=>printReport(x));
