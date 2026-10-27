@@ -77,6 +77,11 @@
     .email-box p{margin:0 0 13px;font-size:12px;color:#527367;line-height:1.5}
     .email-box .field{margin-bottom:12px}
     .email-box .btn{width:100%}
+    .access-code-wrap{position:relative}
+    .access-code-wrap input{padding-right:52px}
+    .access-code-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:40px;height:40px;border:0;border-radius:9px;background:transparent;color:#527367;cursor:pointer}
+    .access-code-toggle:hover{background:#e3f1eb;color:#0a806f}
+    .access-code-toggle svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
     .email-box .email-status{font-size:11.5px;margin-top:10px;color:#7b6651}
     .how{margin:0;padding-left:19px;font-size:12.5px;color:#536b79}
     .how li{margin:8px 0}
@@ -289,7 +294,7 @@
             <div class="email-box hide-print">
               <h3>Send directly to Warehouse In-Charge</h3>
               <p>Enter your team's access code and submit. A new tab will confirm whether the report was saved and emailed successfully.</p>
-              <div class="field"><label for="staff-access-code">Team access code</label><input type="password" id="staff-access-code" autocomplete="off" placeholder="Code provided by Edwin" maxlength="100"></div>
+              <div class="field"><label for="staff-access-code">Team access code</label><div class="access-code-wrap"><input type="password" id="staff-access-code" autocomplete="off" placeholder="Code provided by Edwin" maxlength="100"><button type="button" class="access-code-toggle" data-toggle-code="staff-access-code" aria-label="Show access code" aria-pressed="false" title="Show access code"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/><path class="eye-slash" d="M3 3l18 18" style="display:none"/></svg></button></div></div>
               <button class="btn primary" id="staff-email" type="button">Submit EOD report by email</button>
               <div class="email-status" id="staff-email-status" aria-live="polite">Email delivery needs one-time setup by the Warehouse In-Charge.</div>
             </div>
@@ -351,7 +356,7 @@
             <div class="email-box hide-print">
               <h3>Email the consolidated report</h3>
               <p>Use the same access code if you want a copy of your management summary sent to your inbox.</p>
-              <div class="field"><label for="supervisor-access-code">Team access code</label><input type="password" id="supervisor-access-code" autocomplete="off" placeholder="Team access code" maxlength="100"></div>
+              <div class="field"><label for="supervisor-access-code">Team access code</label><div class="access-code-wrap"><input type="password" id="supervisor-access-code" autocomplete="off" placeholder="Team access code" maxlength="100"><button type="button" class="access-code-toggle" data-toggle-code="supervisor-access-code" aria-label="Show access code" aria-pressed="false" title="Show access code"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/><path class="eye-slash" d="M3 3l18 18" style="display:none"/></svg></button></div></div>
               <button class="btn primary" id="supervisor-email" type="button">Submit summary by email</button>
               <div class="email-status" id="supervisor-email-status" aria-live="polite">Email delivery needs one-time setup.</div>
             </div>
@@ -606,6 +611,17 @@
       supIds.forEach(id=>$(id).addEventListener('input',saveSup));
       $('staff-form').addEventListener('submit',e=>{e.preventDefault();report('staff')});
       $('supervisor-form').addEventListener('submit',e=>{e.preventDefault();report('supervisor')});
+      document.querySelectorAll('[data-toggle-code]').forEach(button=>{
+        button.addEventListener('click',()=>{
+          const field=$(button.dataset.toggleCode);
+          const show=field.type==='password';
+          field.type=show?'text':'password';
+          button.setAttribute('aria-label',show?'Hide access code':'Show access code');
+          button.setAttribute('aria-pressed',String(show));
+          button.title=show?'Hide access code':'Show access code';
+          button.querySelector('.eye-slash').style.display=show?'block':'none';
+        });
+      });
       $('staff-email').addEventListener('click',()=>emailReport('staff'));
       $('supervisor-email').addEventListener('click',()=>emailReport('supervisor'));
       if(isEmailReady()){
@@ -630,4 +646,3 @@
   </script>
 </body>
 </html>
-
