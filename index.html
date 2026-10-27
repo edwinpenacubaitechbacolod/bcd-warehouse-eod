@@ -113,6 +113,31 @@
       box-sizing:border-box;
     }
     .field, .grid2 > *, .grid3 > * { min-width:0; }
+    /* Consistent native iOS date fields in Staff and Supervisor forms */
+    #workdate, #s-date {
+      display:block;
+      inline-size:100%;
+      min-inline-size:0;
+      max-inline-size:100%;
+      -webkit-appearance:none;
+      appearance:none;
+      text-align:center;
+      text-align-last:center;
+      overflow:hidden;
+    }
+    #workdate::-webkit-date-and-time-value,
+    #s-date::-webkit-date-and-time-value {
+      text-align:center;
+      min-height:1em;
+      width:100%;
+    }
+    #workdate::-webkit-datetime-edit,
+    #s-date::-webkit-datetime-edit {
+      text-align:center;
+      width:100%;
+      padding:0;
+    }
+
     @media (min-width:1500px) {
       .shell { max-width:1360px; }
       .layout { grid-template-columns:minmax(0,1.45fr) minmax(350px,.95fr); }
