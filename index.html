@@ -164,6 +164,20 @@
     .net-state{font-size:11px;color:#6b8b7f;margin-top:8px}
     @media(max-width:540px){.activity-detail{grid-template-columns:70px minmax(0,1fr)}.activity-choice .activity-detail{width:100%;margin-left:0}}
 
+    /* Supervisor summary mobile alignment: prevent overflow and cramped metrics */
+    #supervisor-view, #supervisor-view .panel, #supervisor-view form,
+    #supervisor-view .field, #supervisor-view .info { min-width:0; max-width:100%; }
+    #supervisor-view input, #supervisor-view textarea, #supervisor-view select { box-sizing:border-box; max-width:100%; min-width:0; }
+    #supervisor-view .info .btn { max-width:100%; white-space:normal; }
+    @media(max-width:600px) {
+      #supervisor-view .grid2, #supervisor-view .grid3 { display:grid; grid-template-columns:minmax(0,1fr); gap:13px; }
+      #supervisor-view .metric-wrap { padding:14px; }
+      #supervisor-view .metric-wrap .field label { min-height:0; font-size:13px; }
+      #supervisor-view .metric-wrap input { text-align:left; padding:11px 12px; }
+      #supervisor-view input[type=date] { display:block; width:100%; min-width:0; max-width:100%; -webkit-appearance:none; appearance:none; }
+      #supervisor-view .info .btn { width:100%; }
+    }
+
     /* Activity detail input fix: override checkbox-only dimensions */
     .activity-choice .activity-detail { display:grid; grid-template-columns:minmax(76px, .8fr) minmax(0, 1.5fr); gap:8px; width:100%; margin:7px 0 0; min-width:0; }
     .activity-choice .activity-detail.hide { display:none!important; }
