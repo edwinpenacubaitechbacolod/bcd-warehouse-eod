@@ -221,6 +221,59 @@
       .activity-options { grid-template-columns:minmax(0,1fr); }
       .activity-choice .activity-detail { grid-template-columns:minmax(70px,.7fr) minmax(0,1.3fr); }
     }
+
+    /* Compact employee selector */
+    #role{width:100%;}
+    #employee{background:#f7fafb;}
+
+    /* Collapsible employee picker: compact until opened */
+    .employee-picker{border:1px solid #d7e3e9;border-radius:13px;background:#fff;overflow:hidden}
+    .employee-picker[open]{border-color:var(--teal);box-shadow:0 0 0 2px rgba(10,128,111,.07)}
+    .employee-picker-summary{list-style:none;display:flex;align-items:center;gap:11px;padding:10px 13px;min-height:56px;cursor:pointer}
+    .employee-picker-summary::-webkit-details-marker{display:none}
+    .employee-picker-summary::after{content:'⌄';margin-left:auto;color:var(--teal);font-size:22px;line-height:1}
+    .employee-picker[open] .employee-picker-summary::after{content:'⌃'}
+    .employee-picker-summary .employee-avatar{background:var(--teal);color:#fff}
+    .employee-picker-summary .employee-info strong{font-size:13px}
+    .employee-picker .employee-tiles{padding:10px;border-top:1px solid #e5ecef;background:#f8fbfa}
+    /* Compact profile tiles: visually engaging without tall employee cards */
+    .employee-role-hidden{position:absolute!important;width:1px!important;height:1px!important;min-height:0!important;padding:0!important;opacity:0;pointer-events:none;clip-path:inset(50%)}
+    .employee-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+    .employee-tile{position:relative;display:flex;align-items:center;text-align:left;gap:10px;min-width:0;min-height:70px;padding:11px 12px;border:1px solid #d7e3e9;border-radius:13px;background:#fff;color:var(--ink);transition:background .15s,border-color .15s,box-shadow .15s}
+    .employee-tile:hover{border-color:#55b2a1;background:#f5faf8}
+    .employee-tile.active{background:#eaf6f1;border:2px solid var(--teal);padding:10px 11px;box-shadow:0 2px 8px rgba(10,128,111,.06)}
+    .employee-avatar{display:grid;place-items:center;flex:0 0 32px;width:32px;height:32px;border-radius:50%;background:#e9f0f3;color:#254e61;font-size:13px;font-weight:800}
+    .employee-tile.active .employee-avatar{background:var(--teal);color:#fff}
+    .employee-info{display:grid;gap:3px;min-width:0}.employee-info strong{font-size:12.5px;line-height:1.2}.employee-info small{font-size:10.5px;color:#6a8290;line-height:1.25}
+    .employee-check{display:none;position:absolute;right:9px;top:7px;font-size:12px;font-weight:800;color:var(--teal)}.employee-tile.active .employee-check{display:block}
+    @media(max-width:400px){.employee-tiles{gap:7px}.employee-tile{padding:9px 8px;gap:7px;min-height:64px}.employee-tile.active{padding:8px 7px}.employee-avatar{flex-basis:27px;width:27px;height:27px}.employee-info strong{font-size:11.5px}.employee-info small{font-size:9.5px}}
+
+    /* Smooth, accessible employee picker animation */
+    .employee-picker-summary::after{transition:transform .28s ease;content:'⌄'!important;transform:rotate(0deg)}
+    .employee-picker[open] .employee-picker-summary::after{transform:rotate(180deg)}
+    .employee-picker{transition:border-color .25s ease,box-shadow .25s ease}
+    .employee-picker .employee-tiles{transform-origin:top;animation:employee-reveal .28s cubic-bezier(.2,.8,.2,1) both}
+    @keyframes employee-reveal{from{opacity:0;transform:translateY(-7px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+    .employee-tile{transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease}
+    .employee-tile:hover{transform:translateY(-2px);box-shadow:0 5px 14px rgba(16,37,58,.08)}
+    .employee-tile:active{transform:scale(.98)}
+    .employee-tile.active .employee-avatar{animation:employee-pop .26s ease-out}
+    @keyframes employee-pop{50%{transform:scale(1.12)}}
+    @media(prefers-reduced-motion:reduce){.employee-picker-summary::after,.employee-picker,.employee-tile{transition:none!important}.employee-picker .employee-tiles,.employee-tile.active .employee-avatar{animation:none!important}}
+
+    /* Refined minimalist selector — one visible field, animated menu */
+    .employee-name-hidden{display:none!important}
+    .reporter-date-row{grid-template-columns:minmax(0,1fr)!important}
+    .employee-picker-summary{transition:background .2s ease;user-select:none}
+    .employee-picker-summary:hover{background:#f4faf7}
+    .employee-picker-summary:focus-visible{outline:3px solid #60b9a7;outline-offset:-3px}
+    .employee-picker-summary::after{content:'⌄'!important;transform:rotate(0deg);transition:transform .25s ease!important}
+    .employee-picker.is-expanded .employee-picker-summary::after{transform:rotate(180deg)}
+    .employee-picker .employee-tiles{animation:none!important;max-height:0;opacity:0;transform:translateY(-9px);padding-top:0;padding-bottom:0;overflow:hidden;pointer-events:none;transition:max-height .28s cubic-bezier(.2,.8,.2,1),opacity .22s ease,transform .28s ease,padding .28s ease}
+    .employee-picker.is-expanded .employee-tiles{max-height:320px;opacity:1;transform:translateY(0);padding-top:10px;padding-bottom:10px;pointer-events:auto}
+    .employee-tile{transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease}
+    .employee-tile:focus-visible{outline:3px solid #60b9a7;outline-offset:1px}
+    @media(prefers-reduced-motion:reduce){.employee-picker .employee-tiles,.employee-picker-summary,.employee-picker-summary::after{transition:none!important}}
   </style>
 </head>
 <body>
@@ -248,14 +301,23 @@
           <form id="staff-form">
             <div class="section-head"><span class="step">1</span> Reporter details</div>
             <div class="stack">
-              <div class="field"><label for="role">Select your role</label><select id="role" name="role" required>
-                <option value="processing">Processing Staff</option>
-                <option value="driver">Driver</option>
-                <option value="warehouse">Warehouse Staff</option>
-                <option value="incharge">Warehouse In-Charge</option>
-              </select></div>
-              <div class="grid2">
-                <div class="field"><label for="employee">Full name</label><input id="employee" name="employee" autocomplete="name" required maxlength="90" placeholder="Enter your name"></div>
+              <div class="field">
+                <label id="employee-picker-label">Select your employee profile</label>
+                <details class="employee-picker" id="employee-picker">
+                  <summary class="employee-picker-summary"><span class="employee-avatar" id="selected-employee-initial">F</span><span class="employee-info"><strong id="selected-employee-name">Florendalyn Asis</strong><small id="selected-employee-role">Processing Staff · Tap to change</small></span></summary>
+                <div class="employee-tiles" role="group" aria-labelledby="employee-picker-label">
+                  <button class="employee-tile active" type="button" data-employee-role="processing" aria-pressed="true"><span class="employee-avatar">F</span><span class="employee-info"><strong>Florendalyn</strong><small>Processing Staff</small></span><span class="employee-check" aria-hidden="true">✓</span></button>
+                  <button class="employee-tile" type="button" data-employee-role="driver" aria-pressed="false"><span class="employee-avatar">R</span><span class="employee-info"><strong>Ronald</strong><small>Driver</small></span><span class="employee-check" aria-hidden="true">✓</span></button>
+                  <button class="employee-tile" type="button" data-employee-role="warehouse" aria-pressed="false"><span class="employee-avatar">J</span><span class="employee-info"><strong>Johnray</strong><small>Warehouse Staff</small></span><span class="employee-check" aria-hidden="true">✓</span></button>
+                  <button class="employee-tile" type="button" data-employee-role="incharge" aria-pressed="false"><span class="employee-avatar">E</span><span class="employee-info"><strong>Edwin</strong><small>Warehouse In-Charge</small></span><span class="employee-check" aria-hidden="true">✓</span></button>
+                </div>
+                </details>
+                <select id="role" name="role" required class="employee-role-hidden" aria-label="Selected employee role" tabindex="-1">
+                  <option value="processing">Processing Staff</option><option value="driver">Driver</option><option value="warehouse">Warehouse Staff</option><option value="incharge">Warehouse In-Charge</option>
+                </select>
+              </div>
+              <div class="grid2 reporter-date-row">
+                <div class="field employee-name-hidden"><label for="employee">Full name</label><input id="employee" name="employee" autocomplete="off" readonly required maxlength="90" placeholder="Enter your name"></div>
                 <div class="field"><label for="workdate">Report date</label><input type="date" id="workdate" name="workdate" required></div>
               </div>
               <div class="grid2">
@@ -321,7 +383,7 @@
           <form id="supervisor-form">
             <div class="grid2">
               <div class="field"><label for="s-date">Report date</label><input type="date" id="s-date" required></div>
-              <div class="field"><label for="s-name">Prepared by</label><input id="s-name" required maxlength="90" value="Edwin Penacuba Jr."></div>
+              <div class="field"><label for="s-name">Prepared by</label><input id="s-name" required maxlength="90" value="Edwin Peñacuba Jr."></div>
             </div>
             <div class="info hide-print" style="margin:0 0 15px"><strong>Submission tracker &amp; auto-summary:</strong> Open your private tracker to check submissions and copy an automatically consolidated staff summary. <button type="button" class="btn" id="open-tracker" style="margin-top:10px">Open submission tracker</button><div class="hint">Use your supervisor access code in the tracker. Paste its generated summary into the fields below after reviewing it.</div></div>
             <div class="section-head"><span class="step">1</span> Overall activity</div>
@@ -397,6 +459,7 @@
         warehouse:{name:'Warehouse Staff',note:'Assist the driver during deliveries. When not on delivery, pack items for store replenishment and customer orders. When stocks arrive, help unload and unbox them, then arrange items in their designated storage racks.',labels:['Items received','Items checked','Items packed']},
         incharge:{name:'Warehouse In-Charge',note:'Record supervision, processing verification, e-commerce support, and coordination.',labels:['Transfers reviewed','Orders / inquiries','Reports prepared']}
       };
+      const roleFirstNames={processing:'Florendalyn Asis',driver:'Ronald Dionesa',warehouse:'Johnray Gilles',incharge:'Edwin Peñacuba Jr.'};
       const staffIds=['role','employee','workdate','attendance','shift','metric-1','metric-2','metric-3','completed','pending','issues','tomorrow'];
       const supIds=['s-date','s-name','s-receiving','s-transfers','s-orders','s-summary','s-concerns','s-next','s-processing','s-driver','s-warehouse'];
       let mode='staff', staffText='', supervisorText='', toastTimer;
@@ -410,8 +473,9 @@
       function saveStaff(){storage.set(STAFF_PREFIX+$('role').value,data(staffIds));$('save-state').textContent='Draft saved on this device';staffText='';resetPreview('staff-preview','Changes saved. Review again before sharing.')}
       function saveSup(){storage.set(SUPERVISOR_KEY,data(supIds));$('supervisor-save-state').textContent='Draft saved on this device';supervisorText='';resetPreview('supervisor-preview','Changes saved. Review again before sharing.')}
       function resetPreview(id,text){const p=$(id);p.textContent=text;p.classList.add('empty')}
-      function restoreStaff(role){const saved=storage.get(STAFF_PREFIX+role);const blank={role,employee:'',workdate:localDate(),attendance:'Present',shift:'', 'metric-1':'','metric-2':'','metric-3':'',completed:'',pending:'',issues:'',tomorrow:''};hydrate(staffIds,Object.assign(blank,saved||{}));$('role').value=role;roleLabels();syncActivityChoices();staffText='';resetPreview('staff-preview','Fill out the form, then review your report.')}
-      function restoreSup(){const saved=storage.get(SUPERVISOR_KEY);hydrate(supIds,Object.assign({'s-date':localDate(),'s-name':'Edwin Penacuba Jr.'},saved||{}));supervisorText='';resetPreview('supervisor-preview','Fill out the summary, then review it.')}
+      function syncEmployeeTiles(){document.querySelectorAll('[data-employee-role]').forEach(tile=>{const active=tile.dataset.employeeRole===$('role').value;tile.classList.toggle('active',active);tile.setAttribute('aria-pressed',String(active));if(active){$('selected-employee-initial').textContent=tile.querySelector('.employee-avatar').textContent;$('selected-employee-name').textContent=$('employee').value||tile.querySelector('strong').textContent;$('selected-employee-role').textContent=tile.querySelector('small').textContent+' · Tap to change'}})}
+      function restoreStaff(role){const saved=storage.get(STAFF_PREFIX+role);const blank={role,employee:roleFirstNames[role]||'',workdate:localDate(),attendance:'Present',shift:'', 'metric-1':'','metric-2':'','metric-3':'',completed:'',pending:'',issues:'',tomorrow:''};hydrate(staffIds,Object.assign(blank,saved||{}));$('employee').value=roleFirstNames[role]||'';$('role').value=role;syncEmployeeTiles();roleLabels();syncActivityChoices();staffText='';resetPreview('staff-preview','Fill out the form, then review your report.')}
+      function restoreSup(){const saved=storage.get(SUPERVISOR_KEY);hydrate(supIds,Object.assign({'s-date':localDate(),'s-name':'Edwin Peñacuba Jr.'},saved||{}));supervisorText='';resetPreview('supervisor-preview','Fill out the summary, then review it.')}
       function section(name,value){return `${name}\n${(value||'None').trim()||'None'}\n`}
       function generateStaff(){const x=data(staffIds),def=defs[x.role];const parts=['BACOLOD WAREHOUSE','DAILY END-OF-DAY STAFF REPORT','',`Date: ${displayDate(x.workdate)}`,`Name: ${x.employee.trim()}`,`Role: ${def.name}`,`Attendance: ${x.attendance}`,`Schedule: ${x.shift.trim()||'Not specified'}`,''];
         const metrics=def.labels.map((t,i)=>({label:t,value:x['metric-'+(i+1)]})).filter(o=>o.value!=='');
@@ -606,6 +670,30 @@
       function updateConnection(){const el=$('connection-state');if(el)el.textContent=navigator.onLine?'Online — ready to submit':'Offline — draft saved locally; submission unavailable';}
       window.addEventListener('online',updateConnection);window.addEventListener('offline',updateConnection);updateConnection();
       restoreStaff('processing');restoreSup();
+      const employeePicker=$('employee-picker');
+      const pickerSummary=employeePicker.querySelector('summary');
+      let pickerCloseTimer;
+      function closeEmployeePicker(){
+        clearTimeout(pickerCloseTimer);
+        employeePicker.classList.remove('is-expanded');
+        pickerSummary.setAttribute('aria-expanded','false');
+        if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){employeePicker.open=false;return}
+        pickerCloseTimer=setTimeout(()=>{if(!employeePicker.classList.contains('is-expanded'))employeePicker.open=false},290);
+      }
+      pickerSummary.setAttribute('aria-expanded','false');
+      pickerSummary.addEventListener('click',event=>{
+        event.preventDefault();
+        clearTimeout(pickerCloseTimer);
+        if(employeePicker.classList.contains('is-expanded')){closeEmployeePicker();return}
+        employeePicker.open=true;
+        pickerSummary.setAttribute('aria-expanded','true');
+        requestAnimationFrame(()=>employeePicker.classList.add('is-expanded'));
+      });
+      document.querySelectorAll('[data-employee-role]').forEach(tile=>tile.addEventListener('click',()=>{
+        const role=tile.dataset.employeeRole;
+        if($('role').value!==role){$('role').value=role;$('role').dispatchEvent(new Event('change',{bubbles:true}))}
+        closeEmployeePicker();pickerSummary.focus({preventScroll:true});
+      }));
       $('role').addEventListener('change',e=>{restoreStaff(e.target.value);toast('Switched to '+defs[e.target.value].name+' draft on this device.')});
       staffIds.filter(x=>x!=='role').forEach(id=>$(id).addEventListener('input',saveStaff));
       supIds.forEach(id=>$(id).addEventListener('input',saveSup));
