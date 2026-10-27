@@ -117,6 +117,106 @@
         padding: 10px 12px;
       }
     }
+  
+    /* Mobile-first Operations Dashboard visual refresh — presentation only */
+    :root {
+      --bg:#eef4f6;
+      --edge:#dce9ed;
+      --shadow:0 8px 28px rgba(16,37,58,.075);
+    }
+    body { background:linear-gradient(180deg,#eaf2f5 0,#f5f8f9 420px); }
+    .hero {
+      background:linear-gradient(125deg,#10253a 0%,#164354 62%,#0c746d 100%);
+      padding-bottom:54px;
+    }
+    .hero:after { width:230px;height:230px;top:-115px;right:-45px; }
+    .hero .shell { padding-bottom:0; }
+    .hero-title { margin-top:25px; letter-spacing:-.035em; }
+    .hero-sub { line-height:1.65; }
+    .prepared-by { margin-top:11px; }
+    .main { margin-top:-32px; }
+    .tabs {
+      border:1px solid rgba(214,231,234,.95);
+      border-radius:17px;
+      padding:5px;
+      box-shadow:0 10px 26px rgba(14,50,65,.12);
+    }
+    .tab { transition:background-color .18s,color .18s,transform .18s; }
+    .tab:active,.btn:active { transform:scale(.985); }
+    .tab.active { background:linear-gradient(135deg,#102c43,#176174); }
+    .panel { border-radius:20px; box-shadow:var(--shadow); }
+    .panel h2 { font-size:19px; }
+    .section-head { margin-top:24px; }
+    .step { width:29px;height:29px;border-radius:10px;background:#dff4ed;color:#087b69; }
+    .role-note { border-left:3px solid #19a18b; }
+    .metric-wrap { background:#f4f9fa; }
+    input,select,textarea {
+      min-width:0;
+      max-width:100%;
+      border-color:#ccdde3;
+      background:#fff;
+      transition:border-color .18s,box-shadow .18s;
+    }
+    input[type="date"] {
+      display:block;width:100%;min-width:0;max-width:100%;
+      box-sizing:border-box;
+    }
+    .btn { min-height:48px;transition:background-color .18s,transform .18s; }
+    .btn.primary { background:linear-gradient(135deg,#0b927d,#087263);border-color:#087d6d; }
+    .email-box { background:linear-gradient(180deg,#effaf5,#f7fcfa); }
+    .autosave { color:#287b68; }
+    @media(max-width:780px) {
+      .hero { padding-bottom:52px; }
+      .main { margin-top:-30px; }
+      .layout { gap:12px; }
+      .side { position:static; }
+      .panel { margin-bottom:13px; }
+    }
+    @media(max-width:540px) {
+      .shell { padding-left:12px;padding-right:12px; }
+      .hero { padding-top:15px;padding-bottom:48px; }
+      .top { align-items:flex-start;gap:8px; }
+      .brand { min-width:0;gap:9px;font-size:12px; }
+      .brand small { font-size:10px; }
+      .mark { width:42px;height:42px; }
+      .today { font-size:10px;padding:7px 8px; }
+      .hero-title { margin-top:22px;font-size:29px;line-height:1.12; }
+      .hero-sub { font-size:12.5px;line-height:1.55; }
+      .prepared-by { font-size:11px;margin-top:11px; }
+      .main { margin-top:-28px; }
+      .tabs { margin-bottom:13px;border-radius:15px; }
+      .tab { font-size:12px;min-height:46px;padding:10px 5px; }
+      .panel { padding:16px;border-radius:17px; }
+      .panel h2 { font-size:18px; }
+      .panel p.helper { margin-bottom:15px; }
+      .section-head { margin:20px 0 11px;font-size:13.5px; }
+      .grid2 { grid-template-columns:minmax(0,1fr); }
+      .grid3 { grid-template-columns:repeat(3,minmax(0,1fr));gap:7px; }
+      .grid2 > *, .grid3 > *, .field { min-width:0;max-width:100%; }
+      .stack { gap:13px; }
+      input,select,textarea { font-size:16px;min-height:48px; }
+      input[type="date"] { width:100%;min-width:0;max-width:100%;padding:10px 12px; }
+      .metric-wrap { padding:9px; }
+      .metric-wrap input { font-size:16px;padding:9px 4px; }
+      .metric-wrap .field label { font-size:10.5px;min-height:43px; }
+      .actions { gap:9px; }
+      .actions .btn { min-height:49px; }
+      .preview { max-height:390px; }
+    }
+    @media(max-width:365px) {
+      .grid3 { grid-template-columns:1fr; }
+      .metric-wrap .field label { min-height:0; }
+      .today { white-space:normal;text-align:center; }
+    }
+    @media(prefers-reduced-motion:reduce) {
+      .tab,.btn,input,select,textarea { transition:none; }
+    }
+    @media print {
+      body { background:#fff; }
+      .main { margin:0; }
+      .panel { border:0;box-shadow:none;padding:0;margin:0; }
+    }
+
   </style>
 </head>
 <body>
