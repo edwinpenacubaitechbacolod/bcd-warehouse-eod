@@ -498,6 +498,39 @@ html[data-theme="dark"] .tab:not(.active){color:#e2f3f8!important}
 .activity-choice .activity-detail{display:block!important;width:100%!important;margin:7px 0 0!important;min-width:0}
 .activity-choice .activity-detail.hide{display:none!important}
 .activity-choice .activity-detail .activity-note{width:100%!important;max-width:100%!important;min-width:0!important}
+
+/* Professional report presentation — isolated from the editable forms */
+.preview.report-ready{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;white-space:normal;line-height:1.5;padding:18px;background:#fff;color:#203849;overflow:auto}
+.report-head{display:flex;align-items:center;gap:12px;border-bottom:2px solid #0c8075;padding-bottom:14px;margin-bottom:15px}
+.report-logo{width:48px;height:48px;object-fit:contain;flex:none}
+.report-head strong{display:block;font-size:15px;color:#102f44;letter-spacing:.035em}.report-head small{display:block;font-size:10px;color:#617787;letter-spacing:.07em;margin-top:3px}
+.report-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px;background:#f4f8fa;border:1px solid #e2ebef;border-radius:9px;margin-bottom:16px}
+.report-meta-item small{display:block;color:#627988;font-size:10px;text-transform:uppercase;letter-spacing:.045em}.report-meta-item strong{display:block;color:#203849;font-size:12px;overflow-wrap:anywhere;margin-top:3px}
+.report-section{margin:13px 0;break-inside:avoid-page}.report-section h3{font-size:11px;letter-spacing:.045em;text-transform:uppercase;color:#08796e;margin:0 0 7px;display:flex;align-items:center;gap:7px}
+.report-section h3 span{display:grid;place-items:center;width:22px;height:22px;background:#e4f5ef;border-radius:6px;font-size:10px}
+.report-content{border:1px solid #e0e8ed;border-radius:8px;padding:10px 12px;background:#fff;font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;color:#273e4e}
+.report-content.is-none{color:#6a7d88;background:#f8fafb}.report-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.report-metric{border:1px solid #dce9e8;border-radius:8px;padding:9px;min-width:0}.report-metric strong{display:block;font-size:16px;color:#08796e}.report-metric small{font-size:10px;color:#546d7b}
+.report-signatures{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:34px}.report-signature{border-top:1px solid #8da1aa;padding-top:7px;font-size:11px}.report-signature strong{display:block;color:#203849}.report-signature small{color:#687c89}
+.report-foot{border-top:1px solid #dce6e9;margin-top:19px;padding-top:9px;font-size:9px;color:#81929d;text-align:center}
+html[data-theme="dark"] .preview.report-ready{background:#102633!important;color:#eaf5f9!important}
+html[data-theme="dark"] .report-head strong,html[data-theme="dark"] .report-meta-item strong,html[data-theme="dark"] .report-signature strong{color:#f2fafc!important}
+html[data-theme="dark"] .report-meta,html[data-theme="dark"] .report-content,html[data-theme="dark"] .report-metric{background:#1c3745!important;border-color:#466473!important;color:#eaf5f9!important}
+html[data-theme="dark"] .report-content.is-none{color:#b6cbd6!important}
+html[data-theme="dark"] .report-head small,html[data-theme="dark"] .report-meta-item small,html[data-theme="dark"] .report-metric small{color:#bfd1da!important}
+@media(max-width:420px){.preview.report-ready{padding:12px}.report-meta{gap:8px}.report-metrics{gap:5px}.report-metric{padding:7px}.report-signatures{gap:12px}}
+@page{size:auto;margin:13mm}
+@media print{
+ html,body,html[data-theme="dark"] body{background:white!important;color:#111!important;color-scheme:light!important}
+ #staff-view,#supervisor-view{display:none!important}
+ body.print-staff #staff-view,body.print-supervisor #supervisor-view{display:block!important}
+ body.print-staff #staff-view .side,body.print-supervisor #supervisor-view .side{display:block!important}
+ .panel,.preview.report-ready,html[data-theme="dark"] .preview.report-ready{background:#fff!important;color:#111!important;border:0!important;box-shadow:none!important}
+ .preview.report-ready{padding:0!important;max-height:none!important;overflow:visible!important;font-size:11pt!important}
+ .report-head strong,.report-meta-item strong,.report-signature strong,html[data-theme="dark"] .report-head strong,html[data-theme="dark"] .report-meta-item strong,html[data-theme="dark"] .report-signature strong{color:#172d3c!important}
+ .report-meta,.report-content,.report-metric,html[data-theme="dark"] .report-meta,html[data-theme="dark"] .report-content,html[data-theme="dark"] .report-metric{background:#fff!important;color:#172d3c!important;border-color:#cbd6dc!important;print-color-adjust:exact}
+ .report-section{break-inside:avoid-page}.report-content{font-size:10pt}.report-foot{font-size:8pt}
+ .report-head,.report-meta,.report-metrics,.report-signatures{break-inside:avoid-page}
+}
 </style>
 </head>
 <body>
@@ -574,7 +607,7 @@ html[data-theme="dark"] .tab:not(.active){color:#e2f3f8!important}
             <div class="eyebrow">Ready to send</div>
             <h2>Report preview</h2>
             <p class="helper">Review the details before submitting your report.</p>
-            <div class="preview empty" id="staff-preview" aria-live="polite">Your report will appear here after you tap “Review my report.”</div>
+            <div class="preview empty" id="staff-preview" aria-live="polite">Your report updates as you type.</div>
             <div class="email-box hide-print">
               <h3>Send directly to Warehouse In-Charge</h3>
               <p>Enter your team's access code and submit. A new tab will confirm whether the report was saved and emailed successfully.</p>
@@ -692,9 +725,9 @@ html[data-theme="dark"] .tab:not(.active){color:#e2f3f8!important}
       function data(ids){const x={};ids.forEach(id=>x[id]=$(id).value);return x}
       function hydrate(ids,source){ids.forEach(id=>{if(Object.prototype.hasOwnProperty.call(source||{},id))$(id).value=source[id]})}
       function roleLabels(){const def=defs[$('role').value];for(let i=1;i<=3;i++)$('metric-label-'+i).textContent=def.labels[i-1];$('role-note').textContent=def.note;renderActivityChoices()}
-      function saveStaff(){storage.set(STAFF_PREFIX+$('role').value,data(staffIds));$('save-state').textContent='Draft saved on this device';staffText='';resetPreview('staff-preview','Changes saved. Review again before sharing.')}
-      function saveSup(){storage.set(SUPERVISOR_KEY,data(supIds));$('supervisor-save-state').textContent='Draft saved on this device';supervisorText='';resetPreview('supervisor-preview','Changes saved. Review again before sharing.')}
-      function resetPreview(id,text){const p=$(id);p.textContent=text;p.classList.add('empty')}
+      function saveStaff(){storage.set(STAFF_PREFIX+$('role').value,data(staffIds));$('save-state').textContent='Draft saved on this device';staffText='';renderReport('staff')}
+      function saveSup(){storage.set(SUPERVISOR_KEY,data(supIds));$('supervisor-save-state').textContent='Draft saved on this device';supervisorText='';renderReport('supervisor')}
+      function resetPreview(id,text){const p=$(id);p.textContent=text;p.classList.add('empty');p.classList.remove('report-ready')}
       function syncEmployeeTiles(){document.querySelectorAll('[data-employee-role]').forEach(tile=>{const active=tile.dataset.employeeRole===$('role').value;tile.classList.toggle('active',active);tile.setAttribute('aria-pressed',String(active));if(active){$('selected-employee-initial').textContent=tile.querySelector('.employee-avatar').textContent;$('selected-employee-name').textContent=$('employee').value||tile.querySelector('strong').textContent;$('selected-employee-role').textContent=tile.querySelector('small').textContent+' · Tap to change'}})}
       function restoreStaff(role){const saved=storage.get(STAFF_PREFIX+role);const blank={role,employee:roleFirstNames[role]||'',workdate:localDate(),attendance:'Present',shift:'', 'metric-1':'','metric-2':'','metric-3':'',completed:'',pending:'',issues:'',tomorrow:''};hydrate(staffIds,Object.assign(blank,saved||{}));$('employee').value=roleFirstNames[role]||'';$('role').value=role;syncEmployeeTiles();roleLabels();syncActivityChoices();staffText='';resetPreview('staff-preview','Fill out the form, then review your report.')}
       function restoreSup(){const saved=storage.get(SUPERVISOR_KEY);hydrate(supIds,Object.assign({'s-date':localDate(),'s-name':'Edwin Peñacuba Jr.'},saved||{}));supervisorText='';resetPreview('supervisor-preview','Fill out the summary, then review it.')}
@@ -714,7 +747,24 @@ html[data-theme="dark"] .tab:not(.active){color:#e2f3f8!important}
         p.push(`Staff reports included: ${reports.filter(([,v])=>v.trim()).length} of 3`);
         return p.join('\n').replace(/\n{3,}/g,'\n\n').trim()+'\n';
       }
-      function showPreview(id,t){const p=$(id);p.textContent=t;p.classList.remove('empty');p.scrollTop=0;p.scrollIntoView({behavior:'smooth',block:'nearest'})}
+      // Render the same data as the original plain-text report, without changing
+      // the email, Viber, copy or download payloads. All user text is escaped.
+      function escapeReport(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+      function reportSection(number,title,value){const v=String(value||'').trim();const empty=!v||v.toLowerCase()==='none';return `<section class="report-section"><h3><span>${number}</span>${escapeReport(title)}</h3><div class="report-content${empty?' is-none':''}">${escapeReport(v||'None reported')}</div></section>`}
+      function renderReport(which){
+        const staff=which==='staff',x=data(staff?staffIds:supIds);
+        const title=staff?'DAILY END-OF-DAY STAFF REPORT':'CONSOLIDATED END-OF-DAY REPORT';
+        const fields=staff?[['Report date',displayDate(x.workdate)],['Employee',x.employee],['Position',defs[x.role].name],['Attendance',x.attendance],['Work schedule',x.shift||'Not specified']]:[['Report date',displayDate(x['s-date'])],['Prepared by',x['s-name']],['Position','Warehouse In-Charge']];
+        const metrics=staff?defs[x.role].labels.map((label,i)=>[label,x['metric-'+(i+1)]]):[['Lines received',x['s-receiving']],['Transfers completed',x['s-transfers']],['Orders / inquiries',x['s-orders']]];
+        let html=`<div class="report-head"><img class="report-logo" src="./warehouse-logo.png" alt="" onerror="this.style.display='none'"><div><strong>BACOLOD WAREHOUSE</strong><small>${title}</small></div></div><div class="report-meta">${fields.map(([k,v])=>`<div class="report-meta-item"><small>${escapeReport(k)}</small><strong>${escapeReport(v||'Not specified')}</strong></div>`).join('')}</div>`;
+        const filled=metrics.filter(([,v])=>v!=='');
+        if(filled.length)html+=`<section class="report-section"><h3>Daily activity totals</h3><div class="report-metrics">${filled.map(([k,v])=>`<div class="report-metric"><strong>${escapeReport(v)}</strong><small>${escapeReport(k)}</small></div>`).join('')}</div></section>`;
+        if(staff){html+=reportSection('01','Completed work',x.completed)+reportSection('02','Pending tasks',x.pending)+reportSection('03','Discrepancies / concerns',x.issues)+reportSection('04','Next working day',x.tomorrow)}
+        else{html+=reportSection('01','Warehouse In-Charge activities',x['s-summary'])+reportSection('02','Pending work / concerns',x['s-concerns'])+reportSection('03','Next working day priorities',x['s-next']);[['Processing Staff report','s-processing'],['Driver report','s-driver'],['Warehouse Staff report','s-warehouse']].forEach(([label,key],i)=>{html+=reportSection(String(i+4).padStart(2,'0'),label,x[key])});html+=`<div class="report-foot">Staff reports included: ${['s-processing','s-driver','s-warehouse'].filter(k=>x[k].trim()).length} of 3</div>`}
+        html+=`<div class="report-signatures"><div class="report-signature"><strong>${escapeReport(staff?x.employee:x['s-name'])}</strong><small>Prepared by · ${escapeReport(staff?defs[x.role].name:'Warehouse In-Charge')}</small></div><div class="report-signature"><strong>${staff?'Edwin Peñacuba Jr.':'________________________'}</strong><small>Reviewed by · ${staff?'Warehouse In-Charge':'Authorized reviewer'}</small></div></div><div class="report-foot">BCD WAREHOUSE · END-OF-DAY REPORTING SYSTEM</div>`;
+        const preview=$(which+'-preview');preview.innerHTML=html;preview.classList.remove('empty');preview.classList.add('report-ready');
+      }
+      function showPreview(id,t){const p=$(id);renderReport(id==='staff-preview'?'staff':'supervisor');p.scrollTop=0;p.scrollIntoView({behavior:'smooth',block:'nearest'})}
       function report(which){if(which==='staff'){
           if(!$('staff-form').reportValidity()){toast('Please complete your name and date.');return ''}
           staffText=generateStaff();showPreview('staff-preview',staffText);return staffText;
@@ -755,7 +805,7 @@ html[data-theme="dark"] .tab:not(.active){color:#e2f3f8!important}
       async function copyReport(which){const text=report(which);if(!text)return;try{await copy(text);toast('Report copied. You can paste it into Viber.')}catch{toast('Copy unavailable. Select the preview text and copy it manually.')}}
       function download(which){const text=report(which);if(!text)return;const date=which==='staff'?$('workdate').value:$('s-date').value;const filename=`BCD_EOD_${which}_${date||'report'}.txt`;
         const blob=new Blob([text],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Text report downloaded.')}
-      function printReport(which){const text=report(which);if(!text)return;mode=which;window.print()}
+      function printReport(which){const text=report(which);if(!text)return;mode=which;document.body.classList.remove('print-staff','print-supervisor');document.body.classList.add('print-'+which);window.print()}
       function isEmailReady(){return /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(EMAIL_ENDPOINT)}
       function emailReport(which){
         if(!navigator.onLine){toast('Offline: your draft is saved here. Reconnect before submitting.');return}
@@ -891,7 +941,7 @@ html[data-theme="dark"] .tab:not(.active){color:#e2f3f8!important}
         });
         $('completed').value=[...selected,...custom].join('\n');
         saveStaff();staffText=generateStaff();
-        const preview=$('staff-preview');preview.textContent=staffText;preview.classList.remove('empty');
+        renderReport('staff');
         refreshActivityState();
       }
       $('activity-options').addEventListener('change',e=>{
@@ -964,7 +1014,9 @@ html[data-theme="dark"] .tab:not(.active){color:#e2f3f8!important}
       }
       $('clear-staff').addEventListener('click',()=>{if(!confirm('Clear this role\'s saved draft from this phone?'))return;const role=$('role').value;storage.remove(STAFF_PREFIX+role);restoreStaff(role);toast('This role\'s draft was cleared.')});
       $('clear-supervisor').addEventListener('click',()=>{if(!confirm('Clear the saved consolidated report from this phone?'))return;storage.remove(SUPERVISOR_KEY);restoreSup();toast('Consolidated draft cleared.')});
-      window.addEventListener('beforeprint',()=>{if(mode==='staff'&&!staffText){$('staff-preview').textContent=generateStaff();$('staff-preview').classList.remove('empty')}if(mode==='supervisor'&&!supervisorText){$('supervisor-preview').textContent=generateSup();$('supervisor-preview').classList.remove('empty')}});
+      window.addEventListener('beforeprint',()=>{document.body.classList.remove('print-staff','print-supervisor');document.body.classList.add('print-'+mode);renderReport(mode)});
+      window.addEventListener('afterprint',()=>document.body.classList.remove('print-staff','print-supervisor'));
+      renderReport('staff');renderReport('supervisor');
     })();
   </script>
 
