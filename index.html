@@ -88,6 +88,62 @@
     @media(max-width:540px){.shell{padding-left:13px;padding-right:13px}.hero{padding-top:17px}.brand{font-size:13px}.mark{width:42px;height:42px}.today{font-size:11px;padding:7px 9px}.hero-title{margin-top:30px}.hero-sub{font-size:13px}.panel{border-radius:17px;padding:17px}.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:repeat(3,1fr);gap:7px}.metric-wrap{padding:10px}.metric-wrap .field label{font-size:10.5px;min-height:45px}.metric-wrap input{padding:9px;text-align:center}.actions .btn{flex:1 1 calc(50% - 10px)}.actions .btn.primary{flex-basis:100%}.tab{font-size:12px;padding:10px 5px}.preview{max-height:430px}}
     @media(max-width:365px){.grid3{grid-template-columns:1fr}.metric-wrap .field label{min-height:0}.actions .btn{flex-basis:100%}}
     @media print{body{background:#fff}.hero,.tabs,.hide-print,footer,.actions,.info,.autosave,.how,.field,.section-head,.panel.form-panel{display:none!important}.shell{max-width:none;margin:0;padding:0}.main{margin:0}.layout{display:block}.side{position:static}.panel{border:0;box-shadow:none;padding:0;margin:0}.preview{border:0;padding:0;max-height:none;min-height:0;overflow:visible;font-size:12pt;color:#000;white-space:pre-wrap}.panel h2{display:none}.eyebrow{display:none}}
+
+    /* Responsive layout refinement: desktop workspace + staff mobile forms */
+    .shell { max-width:1280px; }
+    .hero .shell { padding-bottom:0; }
+    .hero { padding-bottom:69px; }
+    .hero-title { margin-top:30px; }
+    .main { margin-top:-43px; }
+    .tabs { margin-bottom:22px; }
+    .layout {
+      grid-template-columns:minmax(0,1.35fr) minmax(330px,.95fr);
+      gap:24px;
+    }
+    .layout > * { min-width:0; }
+    .panel { padding:26px; }
+    .side { top:20px; }
+    .grid2 { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .grid3 { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    input[type="date"] {
+      display:block;
+      min-width:0;
+      max-width:100%;
+      width:100%;
+      box-sizing:border-box;
+    }
+    .field, .grid2 > *, .grid3 > * { min-width:0; }
+    @media (min-width:1500px) {
+      .shell { max-width:1360px; }
+      .layout { grid-template-columns:minmax(0,1.45fr) minmax(350px,.95fr); }
+    }
+    @media (max-width:980px) {
+      .layout { grid-template-columns:minmax(0,1fr);gap:0; }
+      .side { position:static; }
+      .hero { padding-bottom:68px; }
+      .main { margin-top:-43px; }
+    }
+    @media (max-width:600px) {
+      .shell { padding-left:13px;padding-right:13px; }
+      .hero { padding-top:17px;padding-bottom:58px; }
+      .hero-title { margin-top:26px; }
+      .main { margin-top:-39px; }
+      .tabs { margin-bottom:16px; }
+      .panel { padding:17px; }
+      .grid2 { grid-template-columns:minmax(0,1fr); }
+      input[type="date"] { width:100%;min-width:0;max-width:100%; }
+      input,select,textarea { font-size:16px; }
+      .actions .btn { min-height:47px; }
+    }
+    @media (max-width:365px) {
+      .grid3 { grid-template-columns:minmax(0,1fr); }
+    }
+    @media print {
+      .shell { max-width:none;padding:0; }
+      .main { margin:0; }
+      .layout { display:block; }
+      .panel { padding:0; }
+    }
   </style>
 </head>
 <body>
@@ -102,13 +158,11 @@
       <p class="prepared-by">Reporting system prepared by Edwin Penacuba Jr.</p>
     </div>
   </header>
-<br>
   <main class="shell main">
     <div class="tabs hide-print" role="tablist" aria-label="Report mode">
       <button class="tab active" type="button" id="tab-staff" role="tab" aria-selected="true" aria-controls="staff-view">Staff report</button>
       <button class="tab" type="button" id="tab-supervisor" role="tab" aria-selected="false" aria-controls="supervisor-view">Supervisor summary</button>
     </div>
-<br>
     <section id="staff-view" aria-labelledby="tab-staff">
       <div class="layout">
         <div class="panel form-panel">
@@ -133,14 +187,12 @@
               </div>
             </div>
             <div class="role-note" id="role-note">Record processed transactions, prepared documents and other assigned tasks.</div>
-<br>
             <div class="section-head"><span class="step">2</span> Today's figures <span style="font-size:11px;font-weight:500;color:#8698a2">(if applicable)</span></div>
             <div class="metric-wrap grid3">
               <div class="field"><label id="metric-label-1" for="metric-1">Transactions processed</label><input id="metric-1" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></div>
               <div class="field"><label id="metric-label-2" for="metric-2">Documents prepared</label><input id="metric-2" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></div>
               <div class="field"><label id="metric-label-3" for="metric-3">Items encoded</label><input id="metric-3" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></div>
             </div>
-<br>
             <div class="section-head"><span class="step">3</span> Work and follow-ups</div>
             <div class="stack">
               <div class="field"><label for="completed">Work completed today</label><textarea id="completed" rows="4" maxlength="4000" placeholder="List your tasks completed today, including quantities or reference numbers when appropriate."></textarea><div class="hint">One task per line makes your report easier to review.</div></div>
@@ -155,7 +207,6 @@
           </form>
           <div class="autosave"><span class="dot"></span><span id="save-state">Draft stays on this device</span></div>
         </div>
-<br>
         <aside class="side">
           <div class="panel">
             <div class="eyebrow">Ready to send</div>
@@ -184,7 +235,6 @@
         </aside>
       </div>
     </section>
-<br>
     <section id="supervisor-view" class="hide" aria-labelledby="tab-supervisor">
       <div class="layout">
         <div class="panel form-panel">
