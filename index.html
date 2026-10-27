@@ -494,6 +494,10 @@ html[data-theme="dark"] .tab:not(.active){color:#e2f3f8!important}
   white-space: nowrap !important;
   line-height: 1.2 !important;
 }
+/* Only one optional detail field per selected activity, full card width. */
+.activity-choice .activity-detail{display:block!important;width:100%!important;margin:7px 0 0!important;min-width:0}
+.activity-choice .activity-detail.hide{display:none!important}
+.activity-choice .activity-detail .activity-note{width:100%!important;max-width:100%!important;min-width:0!important}
 </style>
 </head>
 <body>
@@ -845,9 +849,8 @@ html[data-theme="dark"] .tab:not(.active){color:#e2f3f8!important}
           const span=document.createElement('span');span.textContent=name;
           const toggle=document.createElement('label');toggle.style.cssText='display:flex;align-items:center;gap:8px;margin:0;cursor:pointer;flex:1;min-width:0';toggle.append(checkbox,span);label.append(toggle);
           const detail=document.createElement('div');detail.className='activity-detail hide';
-          const qty=document.createElement('input');qty.type='number';qty.min='0';qty.step='1';qty.placeholder='Qty';qty.setAttribute('aria-label',name+' quantity');qty.className='activity-qty';
           const note=document.createElement('input');note.type='text';note.maxLength=100;note.placeholder='Optional detail';note.setAttribute('aria-label',name+' note');note.className='activity-note';
-          detail.append(qty,note);label.append(detail);container.append(label);
+          detail.append(note);label.append(detail);container.append(label);
         });
         syncActivityChoices();
       }
@@ -873,7 +876,7 @@ html[data-theme="dark"] .tab:not(.active){color:#e2f3f8!important}
             || (lines.includes(box.dataset.description)?{qty:'',note:''}:null);
           box.checked=!!existing;
           box.closest('.activity-choice').querySelector('.activity-detail').classList.toggle('hide',!box.checked);
-          if(existing){box.closest('.activity-choice').querySelector('.activity-qty').value=existing.qty;box.closest('.activity-choice').querySelector('.activity-note').value=existing.note;}
+          if(existing){box.closest('.activity-choice').querySelector('.activity-note').value=existing.note;}
         });
         refreshActivityState();
       }
@@ -883,8 +886,8 @@ html[data-theme="dark"] .tab:not(.active){color:#e2f3f8!important}
         const descriptions=new Set((roleActivities[$('role').value]||[]).map(x=>x[1]));
         const custom=old.filter(line=>{const parsed=parseActivityLine(line);return !(parsed&&names.has(parsed.name))&&!descriptions.has(line.trim())});
         const selected=[...document.querySelectorAll('#activity-options input[type="checkbox"]:checked')].map(box=>{
-          const parent=box.closest('.activity-choice');const qty=parent.querySelector('.activity-qty').value.trim();const note=parent.querySelector('.activity-note').value.trim().replace(/[\[\]\\]/g,'');
-          return '• '+box.value+' — '+box.dataset.description+(qty?' [Qty: '+qty+']':'')+(note?' [Note: '+note+']':'');
+          const parent=box.closest('.activity-choice');const note=parent.querySelector('.activity-note').value.trim().replace(/[\[\]\\]/g,'');
+          return '• '+box.value+' — '+box.dataset.description+(note?' [Note: '+note+']':'');
         });
         $('completed').value=[...selected,...custom].join('\n');
         saveStaff();staffText=generateStaff();
@@ -896,7 +899,7 @@ html[data-theme="dark"] .tab:not(.active){color:#e2f3f8!important}
         updateActivityText();
       });
       $('activity-options').addEventListener('input',e=>{
-        if(e.target.matches('.activity-qty,.activity-note'))updateActivityText();
+        if(e.target.matches('.activity-note'))updateActivityText();
       });
       $('completed').addEventListener('input',syncActivityChoices);
       function updateConnection(){const el=$('connection-state');if(el)el.textContent=navigator.onLine?'Online — ready to submit':'Offline — draft saved locally; submission unavailable';}
