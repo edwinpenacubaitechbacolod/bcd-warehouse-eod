@@ -494,47 +494,6 @@ html[data-theme="dark"] .tab:not(.active){color:#e2f3f8!important}
   white-space: nowrap !important;
   line-height: 1.2 !important;
 }
-
-.employee-avatar svg{display:block;width:20px;height:20px;color:inherit;flex-shrink:0}
-.employee-picker-summary .employee-avatar svg{width:21px;height:21px}
-@media(max-width:400px){.employee-avatar svg{width:17px;height:17px}}
-.employee-end-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 28px;width:28px;height:28px;margin-left:auto;color:var(--teal)}
-.employee-end-icon svg{width:23px;height:23px;display:block}
-.employee-picker-summary .employee-end-icon{margin-left:auto;margin-right:18px}
-.employee-tile .employee-end-icon{margin-left:auto}
-html[data-theme="dark"] .employee-end-icon{color:#65ddcc}
-@media(max-width:400px){.employee-end-icon{width:23px;flex-basis:23px}.employee-end-icon svg{width:19px;height:19px}.employee-picker-summary .employee-end-icon{margin-right:12px}}
-
-/* Keep date, attendance, and schedule evenly distributed. */
-.report-details-row{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;align-items:end!important}
-.report-details-row>.field{grid-column:auto!important;min-width:0!important;width:100%!important}
-.report-details-row>.employee-name-hidden{display:none!important}
-.report-details-row>.field input,.report-details-row>.field select{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
-@media(max-width:540px){.report-details-row{grid-template-columns:repeat(2,minmax(0,1fr))!important}.report-details-row>.field:last-child{grid-column:1/-1!important}}
-@media(max-width:380px){.report-details-row{grid-template-columns:minmax(0,1fr)!important}.report-details-row>.field:last-child{grid-column:auto!important}}
-
-
-/* Supervisor totals: always show three equally sized fields, including mobile */
-#supervisor-view .metric-wrap.grid3 {
-  display:grid!important;
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  gap:clamp(5px,1.5vw,12px)!important;
-  padding:clamp(8px,2vw,14px)!important;
-}
-#supervisor-view .metric-wrap.grid3 > .field {min-width:0!important;width:100%!important;}
-#supervisor-view .metric-wrap.grid3 label {
-  display:block;min-height:2.8em!important;
-  font-size:clamp(9px,2.2vw,13px)!important;
-  line-height:1.35!important;
-  overflow-wrap:break-word;
-}
-#supervisor-view .metric-wrap.grid3 input {
-  box-sizing:border-box;width:100%;min-width:0;
-  padding:10px 5px!important;text-align:center!important;
-  font-size:clamp(13px,3vw,16px)!important;
-}
-@media(max-width:380px){#supervisor-view .metric-wrap.grid3 label{font-size:9px!important}}
-
 </style>
 </head>
 <body>
@@ -565,9 +524,9 @@ html[data-theme="dark"] .employee-end-icon{color:#65ddcc}
               <div class="field">
                 <label id="employee-picker-label">Select your employee profile</label>
                 <details class="employee-picker" id="employee-picker">
-                  <summary class="employee-picker-summary"><span class="employee-avatar" id="selected-employee-initial">F</span><span class="employee-info"><strong id="selected-employee-name">Florendalyn Asis</strong><small id="selected-employee-role">Processing Staff · Tap to change</small></span><span class="employee-end-icon" id="selected-employee-icon" aria-hidden="true"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 13c0-7 3-10 7-10s7 3 7 10v9H9z" fill="currentColor" opacity=".4"/><circle cx="16" cy="13" r="5.5" fill="currentColor"/><path d="M5 29c0-6 4-9 11-9s11 3 11 9" fill="currentColor"/></svg></span></summary>
+                  <summary class="employee-picker-summary"><span class="employee-avatar" id="selected-employee-initial">F</span><span class="employee-info"><strong id="selected-employee-name">Florendalyn Asis</strong><small id="selected-employee-role">Processing Staff · Tap to change</small></span></summary>
                 <div class="employee-tiles" role="group" aria-labelledby="employee-picker-label">
-                  <button class="employee-tile active" type="button" data-employee-role="processing" aria-pressed="true"><span class="employee-avatar">F</span><span class="employee-info"><strong>Florendalyn</strong><small>Processing Staff</small></span><span class="employee-end-icon" aria-hidden="true"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 13c0-7 3-10 7-10s7 3 7 10v9H9z" fill="currentColor" opacity=".4"/><circle cx="16" cy="13" r="5.5" fill="currentColor"/><path d="M5 29c0-6 4-9 11-9s11 3 11 9" fill="currentColor"/></svg></span><span class="employee-end-icon" aria-hidden="true"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M10 8q6-7 12 0l1 5H9z" fill="currentColor" opacity=".6"/><circle cx="16" cy="13" r="6" fill="currentColor"/><path d="M4 29c0-7 5-10 12-10s12 3 12 10" fill="currentColor"/></svg></span><span class="employee-end-icon" aria-hidden="true"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M10 8q6-7 12 0l1 5H9z" fill="currentColor" opacity=".6"/><circle cx="16" cy="13" r="6" fill="currentColor"/><path d="M4 29c0-7 5-10 12-10s12 3 12 10" fill="currentColor"/></svg></span><span class="employee-end-icon" aria-hidden="true"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M10 8q6-7 12 0l1 5H9z" fill="currentColor" opacity=".6"/><circle cx="16" cy="13" r="6" fill="currentColor"/><path d="M4 29c0-7 5-10 12-10s12 3 12 10" fill="currentColor"/></svg></span><span class="employee-check" aria-hidden="true">✓</span></button>
+                  <button class="employee-tile active" type="button" data-employee-role="processing" aria-pressed="true"><span class="employee-avatar">F</span><span class="employee-info"><strong>Florendalyn</strong><small>Processing Staff</small></span><span class="employee-check" aria-hidden="true">✓</span></button>
                   <button class="employee-tile" type="button" data-employee-role="driver" aria-pressed="false"><span class="employee-avatar">R</span><span class="employee-info"><strong>Ronald</strong><small>Driver</small></span><span class="employee-check" aria-hidden="true">✓</span></button>
                   <button class="employee-tile" type="button" data-employee-role="warehouse" aria-pressed="false"><span class="employee-avatar">J</span><span class="employee-info"><strong>Johnray</strong><small>Warehouse Staff</small></span><span class="employee-check" aria-hidden="true">✓</span></button>
                   <button class="employee-tile" type="button" data-employee-role="incharge" aria-pressed="false"><span class="employee-avatar">E</span><span class="employee-info"><strong>Edwin</strong><small>Warehouse In-Charge</small></span><span class="employee-check" aria-hidden="true">✓</span></button>
@@ -732,7 +691,7 @@ html[data-theme="dark"] .employee-end-icon{color:#65ddcc}
       function saveStaff(){storage.set(STAFF_PREFIX+$('role').value,data(staffIds));$('save-state').textContent='Draft saved on this device';staffText='';resetPreview('staff-preview','Changes saved. Review again before sharing.')}
       function saveSup(){storage.set(SUPERVISOR_KEY,data(supIds));$('supervisor-save-state').textContent='Draft saved on this device';supervisorText='';resetPreview('supervisor-preview','Changes saved. Review again before sharing.')}
       function resetPreview(id,text){const p=$(id);p.textContent=text;p.classList.add('empty')}
-      function syncEmployeeTiles(){document.querySelectorAll('[data-employee-role]').forEach(tile=>{const active=tile.dataset.employeeRole===$('role').value;tile.classList.toggle('active',active);tile.setAttribute('aria-pressed',String(active));if(active){$('selected-employee-initial').textContent=tile.querySelector('.employee-avatar').textContent;$('selected-employee-icon').innerHTML=tile.querySelector('.employee-end-icon').innerHTML;$('selected-employee-name').textContent=$('employee').value||tile.querySelector('strong').textContent;$('selected-employee-role').textContent=tile.querySelector('small').textContent+' · Tap to change'}})}
+      function syncEmployeeTiles(){document.querySelectorAll('[data-employee-role]').forEach(tile=>{const active=tile.dataset.employeeRole===$('role').value;tile.classList.toggle('active',active);tile.setAttribute('aria-pressed',String(active));if(active){$('selected-employee-initial').textContent=tile.querySelector('.employee-avatar').textContent;$('selected-employee-name').textContent=$('employee').value||tile.querySelector('strong').textContent;$('selected-employee-role').textContent=tile.querySelector('small').textContent+' · Tap to change'}})}
       function restoreStaff(role){const saved=storage.get(STAFF_PREFIX+role);const blank={role,employee:roleFirstNames[role]||'',workdate:localDate(),attendance:'Present',shift:'', 'metric-1':'','metric-2':'','metric-3':'',completed:'',pending:'',issues:'',tomorrow:''};hydrate(staffIds,Object.assign(blank,saved||{}));$('employee').value=roleFirstNames[role]||'';$('role').value=role;syncEmployeeTiles();roleLabels();syncActivityChoices();staffText='';resetPreview('staff-preview','Fill out the form, then review your report.')}
       function restoreSup(){const saved=storage.get(SUPERVISOR_KEY);hydrate(supIds,Object.assign({'s-date':localDate(),'s-name':'Edwin Peñacuba Jr.'},saved||{}));supervisorText='';resetPreview('supervisor-preview','Fill out the summary, then review it.')}
       function section(name,value){return `${name}\n${(value||'None').trim()||'None'}\n`}
