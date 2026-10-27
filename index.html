@@ -163,6 +163,20 @@
     .activity-choice .activity-detail{width:calc(100% - 25px);margin-left:25px}
     .net-state{font-size:11px;color:#6b8b7f;margin-top:8px}
     @media(max-width:540px){.activity-detail{grid-template-columns:70px minmax(0,1fr)}.activity-choice .activity-detail{width:100%;margin-left:0}}
+
+    /* Activity detail input fix: override checkbox-only dimensions */
+    .activity-choice .activity-detail { display:grid; grid-template-columns:minmax(76px, .8fr) minmax(0, 1.5fr); gap:8px; width:100%; margin:7px 0 0; min-width:0; }
+    .activity-choice .activity-detail.hide { display:none!important; }
+    .activity-choice .activity-detail input { display:block; width:100%; max-width:100%; min-width:0; height:38px; min-height:38px; box-sizing:border-box; flex:initial; margin:0; padding:8px 9px; font-size:13px; border-radius:8px; }
+    .activity-choice:has(.activity-detail:not(.hide)) { align-content:flex-start; }
+    @media(max-width:540px) {
+      .activity-choice .activity-detail { grid-template-columns:minmax(0,1fr); gap:6px; }
+      .activity-choice .activity-detail input { font-size:16px; min-height:42px; }
+    }
+    @media(max-width:410px) {
+      .activity-options { grid-template-columns:minmax(0,1fr); }
+      .activity-choice .activity-detail { grid-template-columns:minmax(70px,.7fr) minmax(0,1.3fr); }
+    }
   </style>
 </head>
 <body>
