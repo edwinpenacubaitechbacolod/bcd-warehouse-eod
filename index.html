@@ -531,6 +531,24 @@ html[data-theme="dark"] .report-head small,html[data-theme="dark"] .report-meta-
  .report-section{break-inside:avoid-page}.report-content{font-size:10pt}.report-foot{font-size:8pt}
  .report-head,.report-meta,.report-metrics,.report-signatures{break-inside:avoid-page}
 }
+
+/* Secure staff report loader */
+.staff-loader{border:1px solid #c8e3df;background:#eff9f6;border-radius:13px;padding:13px;margin:12px 0 16px}
+.staff-loader-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.staff-loader-head .btn{width:auto;flex:none}
+.staff-loader p{margin:5px 0 0;font-size:12px;color:#446a66}
+.staff-loader-status{margin-top:9px;font-size:12px;color:#24584f;overflow-wrap:anywhere}
+.staff-loader-frame{display:block;width:100%;height:170px;border:1px solid #c9dfdb;border-radius:10px;background:white;margin-top:12px}
+.staff-loader-frame.hide{display:none!important}
+html[data-theme="dark"] .staff-loader{background:#193a3b;border-color:#457b75}
+html[data-theme="dark"] .staff-loader p,html[data-theme="dark"] .staff-loader-status{color:#c8eee7}
+@media(max-width:430px){.staff-loader-head{align-items:stretch}.staff-loader-head .btn{width:100%}}
+@media print{.staff-loader{display:none!important}}
+/* Independent date picker for the staff report loader */
+.staff-loader-date{max-width:280px;margin:12px 0}
+.staff-loader-date input{width:100%;min-width:0;color-scheme:light}
+html[data-theme="dark"] .staff-loader-date input{color-scheme:dark}
+@media(max-width:480px){.staff-loader-date{max-width:100%}.staff-loader-head{flex-wrap:wrap;gap:10px}}
 </style>
 </head>
 <body>
@@ -654,7 +672,14 @@ html[data-theme="dark"] .report-head small,html[data-theme="dark"] .report-meta-
 2. ...
 3. ..."></textarea></div>
             </div>
-            <div class="section-head"><span class="step">2</span> Paste staff submissions</div>
+            <div class="section-head"><span class="step">2</span> Staff submissions</div><div class="staff-loader hide-print" id="staff-loader">
+  <div class="staff-loader-head"><strong>Automatic staff reports</strong><button type="button" class="btn primary" id="load-staff-reports">↻ Load Staff Reports</button></div>
+  <div class="field staff-loader-date"><label for="staff-load-date">Staff report date</label><input type="date" id="staff-load-date" aria-describedby="staff-load-help"><div class="hint" id="staff-load-help">Choose any date independently of the Supervisor Summary date.</div></div>
+  <p>Loads the latest Processing Staff, Driver, and Warehouse Staff submissions for the selected staff report date. Supervisor verification is required.</p>
+  <div id="staff-loader-status" class="staff-loader-status" role="status" aria-live="polite">Ready to load reports.</div>
+  <iframe id="staff-loader-frame" class="staff-loader-frame hide" title="Secure supervisor report loader" referrerpolicy="no-referrer" loading="lazy"></iframe>
+</div>
+
             <div class="stack">
               <div class="field"><label for="s-processing">Processing Staff report</label><textarea id="s-processing" rows="5" placeholder="Paste their completed report from Viber here."></textarea></div>
               <div class="field"><label for="s-driver">Driver report</label><textarea id="s-driver" rows="5" placeholder="Paste the driver's completed report from Viber here."></textarea></div>
@@ -1004,6 +1029,47 @@ html[data-theme="dark"] .report-head small,html[data-theme="dark"] .report-meta-
         $('staff-email-status').textContent='Not connected yet. Edwin must add the Google Apps Script URL before publishing.';
         $('supervisor-email-status').textContent='Not connected yet. Add the Google Apps Script URL before publishing.';
       }
+
+      // The supervisor code is entered INSIDE the Google-hosted iframe; never sent in a URL.
+      let staffLoaderNonce='';
+      const staffLoadDate=$('staff-load-date');
+      staffLoadDate.value=$('s-date').value||localDate();
+      staffLoadDate.addEventListener('change',()=>{
+        staffLoaderNonce='';
+        loaderFrame.classList.add('hide');loaderFrame.removeAttribute('src');
+        loaderStatus.textContent='Ready to load reports for the selected date.';
+      });
+      const loaderFrame=$('staff-loader-frame'), loaderStatus=$('staff-loader-status');
+      $('load-staff-reports').addEventListener('click',()=>{
+        if(!isEmailReady()){toast('Configure the Apps Script endpoint first.');return}
+        if(!/^\d{4}-\d{2}-\d{2}$/.test(staffLoadDate.value)){toast('Select a valid staff report date first.');return}
+        staffLoaderNonce=Array.from(crypto.getRandomValues(new Uint8Array(16)),x=>x.toString(16).padStart(2,'0')).join('');
+        loaderFrame.classList.remove('hide');
+        loaderStatus.textContent='Enter your supervisor access code below, then select Load reports.';
+        loaderFrame.src=EMAIL_ENDPOINT+'?view=staff-loader&date='+encodeURIComponent(staffLoadDate.value)+'&nonce='+encodeURIComponent(staffLoaderNonce);
+      });
+      window.addEventListener('message',event=>{
+        if(event.source!==loaderFrame.contentWindow)return;
+        // Apps Script HTML service runs on a googleusercontent.com origin.
+        if(!/^https:\/\/[a-z0-9.-]*googleusercontent\.com$/i.test(event.origin))return;
+        const m=event.data;
+        if(!m||m.type!=='bcd-staff-loader-v1'||m.nonce!==staffLoaderNonce||m.date!==staffLoadDate.value)return;
+        if(m.error){loaderStatus.textContent='Unable to load: '+String(m.error).slice(0,180);return}
+        const fields={'Processing Staff':'s-processing','Driver':'s-driver','Warehouse Staff':'s-warehouse'};
+        const items=m.reports||{};
+        if(!Object.keys(fields).some(role=>items[role])){loaderStatus.textContent='No staff submissions found for this date.';return}
+        const changes=Object.entries(fields).filter(([role,id])=>items[role]&&typeof items[role].body==='string');
+        const overwritten=changes.filter(([role,id])=>$(id).value.trim()&&$(id).value.trim()!==items[role].body.trim());
+        if(overwritten.length&&!confirm('Replace existing text in '+overwritten.map(([role])=>role).join(', ')+' with the latest saved submissions?')){
+          loaderStatus.textContent='Load canceled. Existing entries were kept.';return;
+        }
+        changes.forEach(([role,id])=>{$(id).value=items[role].body;$(id).dispatchEvent(new Event('input',{bubbles:true}))});
+        const missing=Object.keys(fields).filter(role=>!items[role]);
+        loaderStatus.textContent='Loaded '+changes.length+' of 3 staff reports.'+(missing.length?' Missing: '+missing.join(', ')+'.':' All reports received.');
+        loaderFrame.classList.add('hide');loaderFrame.removeAttribute('src');staffLoaderNonce='';
+        toast('Staff reports loaded. Review before submitting your summary.');
+      });
+
       $('open-tracker').addEventListener('click',()=>{
         if(!isEmailReady()){toast('Configure the new Google Apps Script URL first.');return}
         window.open(EMAIL_ENDPOINT+'?view=dashboard','_blank','noopener');
