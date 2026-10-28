@@ -1046,12 +1046,12 @@ html[data-theme="dark"] .staff-loader-date input{color-scheme:dark}
         staffLoaderNonce=Array.from(crypto.getRandomValues(new Uint8Array(16)),x=>x.toString(16).padStart(2,'0')).join('');
         loaderFrame.classList.remove('hide');
         loaderStatus.textContent='Enter your supervisor access code below, then select Load reports.';
-        loaderFrame.src=EMAIL_ENDPOINT+'?view=staff-loader&date='+encodeURIComponent(staffLoadDate.value)+'&nonce='+encodeURIComponent(staffLoaderNonce);
+        loaderFrame.src=EMAIL_ENDPOINT+'?view=staff-loader&date='+encodeURIComponent(staffLoadDate.value)+'&nonce='+encodeURIComponent(staffLoaderNonce)+'&origin='+encodeURIComponent(location.origin);
       });
       window.addEventListener('message',event=>{
         if(event.source!==loaderFrame.contentWindow)return;
         // Apps Script HTML service runs on a googleusercontent.com origin.
-        if(!/^https:\/\/[a-z0-9.-]*googleusercontent\.com$/i.test(event.origin))return;
+        if(!/^https:\/\/(?:[a-z0-9.-]*googleusercontent\.com|script\.google\.com)$/i.test(event.origin))return;
         const m=event.data;
         if(!m||m.type!=='bcd-staff-loader-v1'||m.nonce!==staffLoaderNonce||m.date!==staffLoadDate.value)return;
         if(m.error){loaderStatus.textContent='Unable to load: '+String(m.error).slice(0,180);return}
