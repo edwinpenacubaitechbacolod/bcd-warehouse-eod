@@ -1049,9 +1049,11 @@ html[data-theme="dark"] .staff-loader-date input{color-scheme:dark}
         loaderFrame.src=EMAIL_ENDPOINT+'?view=staff-loader&date='+encodeURIComponent(staffLoadDate.value)+'&nonce='+encodeURIComponent(staffLoaderNonce)+'&origin='+encodeURIComponent(location.origin);
       });
       window.addEventListener('message',event=>{
-        if(event.source!==loaderFrame.contentWindow)return;
-        // Apps Script HTML service runs on a googleusercontent.com origin.
-        if(!/^https:\/\/(?:[a-z0-9.-]*googleusercontent\.com|script\.google\.com)$/i.test(event.origin))return;
+        // Google Apps Script HTMLService may nest its iframe, so event.source
+        // is not always the iframe's immediate contentWindow.
+        // The 128-bit one-time nonce and selected date authenticate this response.
+        if(event.origin!=='null' &&
+           !/^https:\/\/(?:[a-z0-9.-]*googleusercontent\.com|script\.google\.com)$/i.test(event.origin))return;
         const m=event.data;
         if(!m||m.type!=='bcd-staff-loader-v1'||m.nonce!==staffLoaderNonce||m.date!==staffLoadDate.value)return;
         if(m.error){loaderStatus.textContent='Unable to load: '+String(m.error).slice(0,180);return}
