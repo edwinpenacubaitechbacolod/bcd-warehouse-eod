@@ -590,6 +590,23 @@ html[data-theme="dark"] .supervisor-activity-choice{background:#244553;border-co
 html[data-theme="dark"] .supervisor-activity-choice:has(input:checked){background:#19564f;border-color:#42bda9}
 html[data-theme="light"] .supervisor-activity-choice:has(input:checked){background:#e6f6f1;border-color:#48b4a2}
 @media(max-width:560px){.supervisor-activity-options{grid-template-columns:minmax(0,1fr);gap:8px}.supervisor-activity-choice{min-height:0}}
+
+/* Three compact role-specific activity dropdowns */
+.staff-activity-groups{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;padding:0 11px 12px}
+.staff-activity-group{border:1px solid #d8e6e8;border-radius:10px;background:#fff;overflow:hidden;min-width:0}
+.staff-activity-group>summary{display:flex;align-items:center;gap:8px;list-style:none;padding:11px 12px;font-size:12px;font-weight:750;cursor:pointer;color:#244858}
+.staff-activity-group>summary::-webkit-details-marker{display:none}
+.staff-activity-group>summary:before{content:'▸';color:#0a806f;font-size:12px}
+.staff-activity-group[open]>summary:before{content:'▾'}
+.staff-group-count{margin-left:auto;color:#647f88;font-size:11px;font-weight:500}
+.staff-activity-group .staff-group-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:9px;border-top:1px solid #e0e9ed}
+.staff-activity-group .activity-choice{margin:0;min-width:0}
+html[data-theme="dark"] .staff-activity-group{background:#1c3947;border-color:#4a6674}
+html[data-theme="dark"] .staff-activity-group>summary{color:#f0fafc;background:#213f4d}
+html[data-theme="dark"] .staff-group-count{color:#c0d9e1}
+html[data-theme="dark"] .staff-activity-group .staff-group-options{border-color:#4a6674}
+@media(max-width:550px){.staff-activity-group .staff-group-options{grid-template-columns:minmax(0,1fr)}}
+@media print{.staff-activity-groups{display:none!important}}
 </style>
 </head>
 <body>
@@ -648,7 +665,7 @@ html[data-theme="light"] .supervisor-activity-choice:has(input:checked){backgrou
             </div>
             <div class="section-head"><span class="step">3</span> Work and follow-ups</div>
             <div class="stack">
-              <details class="activity-picker" id="processing-activities"><summary>Choose completed activities <span class="activity-count" id="activity-count">0 selected</span></summary><div class="activity-options" id="activity-options"></div><div class="activity-footer"><span id="activity-progress">0 of 8 activities selected</span><button type="button" id="activity-select-all" class="activity-select-all">Select all</button></div></details>
+              <details class="activity-picker" id="processing-activities"><summary>Choose completed activities <span class="activity-count" id="activity-count">0 selected</span></summary><div class="activity-options" id="activity-options"></div><div class="activity-footer"><span id="activity-progress">0 activities selected</span><button type="button" id="activity-select-all" class="activity-select-all">Select all</button></div></details>
               <div class="field"><label for="completed">Work completed today</label><textarea id="completed" rows="4" maxlength="4000" placeholder="List your tasks completed today, including quantities or reference numbers when appropriate."></textarea><div class="hint">One task per line makes your report easier to review.</div></div>
               <div class="field"><label for="pending">Pending or unfinished tasks</label><textarea id="pending" rows="3" maxlength="3000" placeholder="What is still pending? Why? Type None if there is nothing pending."></textarea></div>
               <div class="field"><label for="issues">Discrepancies or concerns</label><textarea id="issues" rows="3" maxlength="3000" placeholder="Report stock differences, damaged items, delays, or other concerns. Type None if none."></textarea></div>
@@ -910,47 +927,211 @@ html[data-theme="light"] .supervisor-activity-choice:has(input:checked){backgrou
       // stored in the existing completed-work field, so all existing report,
       // draft, sharing and email workflows remain compatible.
       const roleActivities={
-        processing:[
-          ['Stock Receiving','Received and checked incoming stocks'],
-          ['Unboxing','Unboxed and inspected newly arrived items'],
-          ['Stock Arrangement','Organized items in designated storage racks'],
-          ['Order Picking','Picked items based on requests'],
-          ['Replenishment Preparation','Prepared stocks for scheduled deliveries'],
-          ['Inventory Checking','Conducted physical stock counting'],
-          ['Warehouse Housekeeping','Cleaned and organized warehouse areas'],
-          ['Other Tasks','Completed other assigned warehouse duties']
+        "processing": [
+                [
+                        "Stock Receiving",
+                        "Received and verified incoming stocks"
+                ],
+                [
+                        "Quantity Verification",
+                        "Checked quantities against delivery documents"
+                ],
+                [
+                        "Unboxing",
+                        "Unboxed and inspected newly arrived items"
+                ],
+                [
+                        "Serial Number Checking",
+                        "Verified product serial numbers and item details"
+                ],
+                [
+                        "Stock Arrangement",
+                        "Arranged stocks in designated storage locations"
+                ],
+                [
+                        "Stock Transfers",
+                        "Processed stock transfers and replenishment requests"
+                ],
+                [
+                        "Order Picking",
+                        "Picked items based on approved requests"
+                ],
+                [
+                        "Replenishment Preparation",
+                        "Prepared stocks for scheduled deliveries"
+                ],
+                [
+                        "Delivery Documentation",
+                        "Prepared or updated delivery documentation"
+                ],
+                [
+                        "Inventory Records",
+                        "Updated receiving and inventory records"
+                ],
+                [
+                        "Discrepancy Reporting",
+                        "Reported stock discrepancies or damaged items"
+                ],
+                [
+                        "Inventory Checking",
+                        "Conducted physical inventory checking"
+                ],
+                [
+                        "Stock Coordination",
+                        "Coordinated stock availability with Warehouse In-Charge"
+                ],
+                [
+                        "Processing Housekeeping",
+                        "Maintained an organized processing area"
+                ],
+                [
+                        "Other Tasks",
+                        "Completed other assigned processing tasks"
+                ]
         ],
-        driver:[
-          ['Delivery Runs','Completed scheduled delivery runs'],
-          ['Store Deliveries','Delivered items to assigned stores'],
-          ['Loading Assistance','Assisted with loading items for delivery'],
-          ['Delivery Verification','Verified delivered items and delivery documents'],
-          ['Vehicle Inspection','Checked the delivery vehicle before or after trips'],
-          ['Delivery Coordination','Coordinated delivery schedules and routes'],
-          ['Delivery Concerns','Reported delivery delays or vehicle concerns'],
-          ['Other Tasks','Completed other assigned delivery duties']
+        "driver": [
+                [
+                        "Delivery Runs",
+                        "Conducted scheduled store deliveries"
+                ],
+                [
+                        "Stock Transport",
+                        "Transported stocks to designated destinations"
+                ],
+                [
+                        "Pre-trip Inspection",
+                        "Checked vehicle condition before departure"
+                ],
+                [
+                        "Loading and Securing",
+                        "Assisted in loading and securing delivery items"
+                ],
+                [
+                        "Delivery Verification",
+                        "Verified delivered items with receiving personnel"
+                ],
+                [
+                        "Signed Documents",
+                        "Collected signed delivery receipts and documents"
+                ],
+                [
+                        "Schedule Coordination",
+                        "Coordinated delivery schedules with Warehouse In-Charge"
+                ],
+                [
+                        "Delay Reporting",
+                        "Reported delivery delays or route concerns"
+                ],
+                [
+                        "Fuel and Vehicle Monitoring",
+                        "Monitored fuel usage and vehicle condition"
+                ],
+                [
+                        "Unloading Assistance",
+                        "Assisted with unloading delivered items"
+                ],
+                [
+                        "Returns",
+                        "Returned undelivered items or documents to warehouse"
+                ],
+                [
+                        "Vehicle Housekeeping",
+                        "Maintained vehicle cleanliness"
+                ],
+                [
+                        "Maintenance Concerns",
+                        "Reported vehicle damage or maintenance concerns"
+                ],
+                [
+                        "Warehouse Assistance",
+                        "Assisted with warehouse tasks when no deliveries were scheduled"
+                ]
         ],
-        warehouse:[
-          ['Delivery Assistance','Accompanied the driver and assisted during deliveries'],
-          ['Replenishment Packing','Packed items for store replenishment'],
-          ['Order Packing','Packed items for customer orders'],
-          ['Stock Unloading','Assisted with unloading incoming stocks'],
-          ['Unboxing','Unboxed newly arrived stocks'],
-          ['Stock Arrangement','Arranged received items in designated storage racks'],
-          ['Warehouse Housekeeping','Cleaned and organized warehouse areas'],
-          ['Other Tasks','Completed other assigned warehouse duties']
+        "warehouse": [
+                [
+                        "Delivery Assistance",
+                        "Assisted driver during scheduled deliveries"
+                ],
+                [
+                        "Loading and Unloading",
+                        "Loaded and unloaded stocks from delivery vehicle"
+                ],
+                [
+                        "Store Replenishment Delivery",
+                        "Delivered replenishment and ordered items to stores"
+                ],
+                [
+                        "Replenishment Packing",
+                        "Prepared and packed stocks for replenishment"
+                ],
+                [
+                        "Order Picking",
+                        "Picked items based on store requests"
+                ],
+                [
+                        "Unboxing",
+                        "Unboxed newly arrived stocks"
+                ],
+                [
+                        "Stock Arrangement",
+                        "Arranged stocks in designated warehouse racks"
+                ],
+                [
+                        "Stock Checking",
+                        "Checked item quantities and physical condition"
+                ],
+                [
+                        "Inventory Assistance",
+                        "Assisted with inventory counting"
+                ],
+                [
+                        "Warehouse Housekeeping",
+                        "Maintained warehouse cleanliness and organization"
+                ],
+                [
+                        "Discrepancy Reporting",
+                        "Reported damaged or missing items"
+                ],
+                [
+                        "Other Tasks",
+                        "Performed other assigned warehouse tasks"
+                ]
         ],
-        incharge:[
-          ['Team Supervision','Supervised daily warehouse operations and staff activities'],
-          ['Stock Verification','Verified received stocks and inventory records'],
-          ['Transfer Review','Reviewed stock transfers and replenishment requests'],
-          ['Order Coordination','Coordinated order processing and fulfillment'],
-          ['E-commerce Operations','Handled e-commerce inquiries and order coordination'],
-          ['Report Preparation','Prepared and reviewed warehouse reports'],
-          ['Delivery Coordination','Coordinated warehouse deliveries and schedules'],
-          ['Other Tasks','Completed other assigned warehouse management duties']
+        "incharge": [
+                [
+                        "Team Supervision",
+                        "Supervised daily warehouse operations and staff activities"
+                ],
+                [
+                        "Stock Verification",
+                        "Verified received stocks and inventory records"
+                ],
+                [
+                        "Transfer Review",
+                        "Reviewed stock transfers and replenishment requests"
+                ],
+                [
+                        "Order Coordination",
+                        "Coordinated order processing and fulfillment"
+                ],
+                [
+                        "E-commerce Operations",
+                        "Handled e-commerce inquiries and order coordination"
+                ],
+                [
+                        "Report Preparation",
+                        "Prepared and reviewed warehouse reports"
+                ],
+                [
+                        "Delivery Coordination",
+                        "Coordinated warehouse deliveries and schedules"
+                ],
+                [
+                        "Other Tasks",
+                        "Completed other assigned warehouse management duties"
+                ]
         ]
-      };
+};
       // The activity checklist writes marked lines into the existing completed field.
       // Unrelated free-text lines are left untouched.
       
@@ -958,16 +1139,49 @@ html[data-theme="light"] .supervisor-activity-choice:has(input:checked){backgrou
         const m=line.match(/^• (.+?) — (.+?)(?: \[Qty: ([^\]]+)\])?(?: \[Note: ([^\]]+)\])?$/);
         return m?{name:m[1],description:m[2],qty:m[3]||'',note:m[4]||''}:null;
       }
+      const staffGroupNames={
+        processing:['Receiving & Stock Handling','Order & Replenishment','Inventory & Housekeeping'],
+        driver:['Delivery Operations','Loading & Documentation','Vehicle & Coordination'],
+        warehouse:['Delivery Assistance','Packing & Replenishment','Receiving & Organization'],
+        incharge:['Operations & Inventory','Orders & Coordination','Reporting & Supervision']
+      };
+      // Accordion behavior: opening one activity category closes its siblings.
+      // Staff and supervisor categories are independent.
+      function enableActivityAccordion(containerSelector, groupSelector){
+        const root=document.querySelector(containerSelector);
+        if(!root)return;
+        root.addEventListener('toggle',event=>{
+          const opened=event.target;
+          if(!(opened instanceof HTMLDetailsElement)||!opened.open||!opened.matches(groupSelector))return;
+          root.querySelectorAll(groupSelector).forEach(other=>{
+            if(other!==opened)other.open=false;
+          });
+        },true);
+      }
+      enableActivityAccordion('#activity-options','.staff-activity-group');
+      enableActivityAccordion('#supervisor-activities','.supervisor-activity-group');
       function renderActivityChoices(){
         const container=$('activity-options');container.replaceChildren();
-        (roleActivities[$('role').value]||[]).forEach(([name,description])=>{
+        container.classList.add('staff-activity-groups');
+        const role=$('role').value;
+        const names=staffGroupNames[role]||staffGroupNames.processing;
+        const groups=names.map(name=>{
+          const details=document.createElement('details');details.className='staff-activity-group';
+          const summary=document.createElement('summary');
+          const title=document.createElement('span');title.textContent=name;
+          const count=document.createElement('span');count.className='staff-group-count';count.textContent='0 selected';
+          summary.append(title,count);
+          const options=document.createElement('div');options.className='staff-group-options';
+          details.append(summary,options);container.append(details);return options;
+        });
+        (roleActivities[role]||[]).forEach(([name,description],index)=>{
           const label=document.createElement('div');label.className='activity-choice';label.title=description;
           const checkbox=document.createElement('input');checkbox.type='checkbox';checkbox.value=name;checkbox.dataset.description=description;
           const span=document.createElement('span');span.textContent=name;
           const toggle=document.createElement('label');toggle.style.cssText='display:flex;align-items:center;gap:8px;margin:0;cursor:pointer;flex:1;min-width:0';toggle.append(checkbox,span);label.append(toggle);
           const detail=document.createElement('div');detail.className='activity-detail hide';
           const note=document.createElement('input');note.type='text';note.maxLength=100;note.placeholder='Optional detail';note.setAttribute('aria-label',name+' note');note.className='activity-note';
-          detail.append(note);label.append(detail);container.append(label);
+          detail.append(note);label.append(detail);groups[Math.min(Math.floor(index * groups.length / (roleActivities[role]||[]).length),groups.length-1)].append(label);
         });
         syncActivityChoices();
       }
@@ -978,6 +1192,7 @@ html[data-theme="light"] .supervisor-activity-choice:has(input:checked){backgrou
         $('activity-count').textContent=count+' selected';
         $('activity-progress').textContent=count+' of '+boxes.length+' activities selected';
         $('activity-select-all').textContent=boxes.length&&count===boxes.length?'Clear all':'Select all';
+        document.querySelectorAll('#activity-options .staff-activity-group').forEach(group=>{const all=group.querySelectorAll('input[type=checkbox]');const selected=group.querySelectorAll('input[type=checkbox]:checked');group.querySelector('.staff-group-count').textContent=selected.length+' of '+all.length+' selected';});
       }
       $('activity-select-all').addEventListener('click',()=>{
         const boxes=[...document.querySelectorAll('#activity-options input[type="checkbox"]')];
@@ -1166,35 +1381,64 @@ html[data-theme="light"] .supervisor-activity-choice:has(input:checked){backgrou
  const checks=Array.from(panel.querySelectorAll('input[type="checkbox"]'));
  const START='[Selected daily activities]';
  const END='[/Selected daily activities]';
- function extractNotes(value){
-   const start=value.indexOf(START),end=value.indexOf(END);
-   if(start<0||end<start)return value;
-   return (value.slice(0,start)+value.slice(end+END.length)).trim();
+ let generated='';
+ function stripMarkers(value){
+   const start=value.indexOf(START),end=value.indexOf(END,start);
+   if(start>=0&&end>=start)return (value.slice(0,start)+value.slice(end+END.length)).trim();
+   return value;
+ }
+ function selectionLines(){return checks.filter(c=>c.checked).map((c,i)=>(i+1)+'. '+c.value).join('\n');}
+ function updateCounts(){
+   const count=checks.filter(c=>c.checked).length;
+   document.getElementById('supervisor-activity-count').textContent=count+' selected';
+   panel.querySelectorAll('.supervisor-activity-group').forEach(group=>{
+     const n=group.querySelectorAll('input:checked').length;
+     group.querySelector('.activity-group-count').textContent=n?'('+n+' selected)':'';
+   });
+ }
+ function removeGenerated(value){
+   let clean=stripMarkers(value);
+   if(generated&&clean.startsWith(generated))clean=clean.slice(generated.length).trim();
+   else {
+     // Recognize previously saved numbered selections without removing unrelated notes.
+     const lines=clean.split('\n');
+     const values=new Set(checks.map(c=>c.value));
+     let i=0;
+     while(i<lines.length&&new RegExp('^'+(i+1)+'\\.\\s+').test(lines[i])&&values.has(lines[i].replace(/^\d+\.\s*/,'')))i++;
+     if(i)clean=lines.slice(i).join('\n').trim();
+   }
+   return clean;
  }
  function sync(){
-   const picked=checks.filter(c=>c.checked).map(c=>c.value);
-   const notes=extractNotes(field.value);
-   const block=picked.length?START+'\n'+picked.map((v,i)=>(i+1)+'. '+v).join('\n')+'\n'+END:'';
-   field.value=[block,notes].filter(Boolean).join('\n\n');
+   const notes=removeGenerated(field.value);
+   generated=selectionLines();
+   field.value=[generated,notes].filter(Boolean).join('\n\n');
    field.dispatchEvent(new Event('input',{bubbles:true}));
-   document.getElementById('supervisor-activity-count').textContent=picked.length+' selected';
-   panel.querySelectorAll('.supervisor-activity-group').forEach(group=>{
-     const n=group.querySelectorAll('input:checked').length;
-     group.querySelector('.activity-group-count').textContent=n?'('+n+' selected)':'';
-   });
+   updateCounts();
  }
  function restore(){
-   const value=field.value;
-   if(!value.includes(START))return;
-   const start=value.indexOf(START)+START.length,end=value.indexOf(END,start);
-   if(end<0)return;
-   const selected=new Set(value.slice(start,end).split('\n').map(x=>x.trim().replace(/^\d+\.\s*/,'')));
-   checks.forEach(c=>c.checked=selected.has(c.value));
-   document.getElementById('supervisor-activity-count').textContent=checks.filter(c=>c.checked).length+' selected';
-   panel.querySelectorAll('.supervisor-activity-group').forEach(group=>{
-     const n=group.querySelectorAll('input:checked').length;
-     group.querySelector('.activity-group-count').textContent=n?'('+n+' selected)':'';
-   });
+   const raw=field.value;
+   const start=raw.indexOf(START),end=raw.indexOf(END,start);
+   let lines;
+   if(start>=0&&end>start){
+     lines=raw.slice(start+START.length,end).split('\n');
+   }else{
+     lines=raw.split('\n');
+   }
+   const values=new Set(checks.map(c=>c.value));
+   const selected=[];
+   for(const line of lines){
+     const m=line.trim().match(/^\d+\.\s+(.+)$/);
+     if(m&&values.has(m[1]))selected.push(m[1]);
+     else if(start<0)break;
+   }
+   checks.forEach(c=>c.checked=selected.includes(c.value));
+   generated=selected.map((v,i)=>(i+1)+'. '+v).join('\n');
+   if(raw.includes(START)){
+     field.value=[generated,stripMarkers(raw)].filter(Boolean).join('\n\n');
+     field.dispatchEvent(new Event('input',{bubbles:true}));
+   }
+   updateCounts();
  }
  checks.forEach(c=>c.addEventListener('change',sync));
  document.getElementById('supervisor-activity-clear').addEventListener('click',()=>{checks.forEach(c=>c.checked=false);sync()});
