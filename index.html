@@ -550,6 +550,47 @@ html[data-theme="dark"] .staff-loader p,html[data-theme="dark"] .staff-loader-st
 html[data-theme="dark"] .staff-loader-date input{color-scheme:dark}
 @media(max-width:480px){.staff-loader-date{max-width:100%}.staff-loader-head{flex-wrap:wrap;gap:10px}}
 </style>
+<style>
+.supervisor-activities{border:1px solid var(--line,#d9e5e8);background:var(--card,#f6faf9);padding:14px;border-radius:13px;margin-bottom:2px}
+.supervisor-activities-title{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px}
+#supervisor-activity-count{font-size:11px;color:var(--muted,#607d7b)}
+.supervisor-activity-group{border:1px solid var(--line,#dce8e7);border-radius:9px;margin-top:8px;overflow:hidden;background:var(--surface,#fff)}
+.supervisor-activity-group summary{padding:11px 12px;cursor:pointer;font-weight:700;font-size:12px;list-style-position:inside}
+.activity-group-count{font-weight:400;color:var(--muted,#688);font-size:11px;margin-left:6px}
+.supervisor-activity-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:9px;padding:4px 12px 13px}
+.supervisor-activity-choice{display:flex;align-items:flex-start;gap:8px;font-size:12px;line-height:1.5;cursor:pointer}
+.supervisor-activity-choice input{flex:0 0 auto;width:15px;height:15px;margin-top:2px;accent-color:#078a75}
+.supervisor-activity-actions{display:flex;justify-content:flex-end;margin-top:10px}
+@media(max-width:550px){.supervisor-activity-options{grid-template-columns:1fr}}
+/* Supervisor checklist theme compatibility */
+html[data-theme="light"] .supervisor-activities{background:#f1f8f6;border-color:#cfe3df;color:#203849}
+html[data-theme="light"] .supervisor-activity-group{background:#fff;border-color:#dce8e7}
+html[data-theme="light"] .supervisor-activity-group summary{color:#254b59}
+html[data-theme="light"] .supervisor-activity-choice{color:#294655}
+html[data-theme="dark"] .supervisor-activities{background:#1b3543;border-color:#466573;color:#eaf5f9}
+html[data-theme="dark"] .supervisor-activities-title,html[data-theme="dark"] .supervisor-activities-title strong{color:#f2fafc}
+html[data-theme="dark"] .supervisor-activity-group{background:#203e4c;border-color:#4b6a79;color:#eaf5f9}
+html[data-theme="dark"] .supervisor-activity-group summary{color:#eaf5f9}
+html[data-theme="dark"] .supervisor-activity-group[open] summary{background:#284b58}
+html[data-theme="dark"] .supervisor-activity-choice,html[data-theme="dark"] .supervisor-activity-choice span{color:#f0f8fa!important;-webkit-text-fill-color:#f0f8fa!important}
+html[data-theme="dark"] .supervisor-activity-choice input{accent-color:#43cbbb;color-scheme:dark}
+html[data-theme="dark"] .supervisor-activity-choice:has(input:checked){background:#19564f;border-radius:7px}
+html[data-theme="dark"] .supervisor-activity-choice:has(input:checked) span{color:#fff!important}
+html[data-theme="dark"] #supervisor-activity-count,html[data-theme="dark"] .activity-group-count{color:#bbd9df}
+html[data-theme="dark"] #supervisor-activity-clear{background:#244353!important;border-color:#567383!important;color:#f1fafc!important}
+@media print{.supervisor-activities{display:none!important}}
+
+/* Uniform supervisor checklist alignment and spacing */
+.supervisor-activity-options{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:12px;row-gap:9px;align-items:stretch;padding:12px!important}
+.supervisor-activity-choice{display:grid!important;grid-template-columns:18px minmax(0,1fr);align-items:start!important;column-gap:10px!important;min-width:0;margin:0!important;padding:10px!important;border:1px solid transparent;border-radius:9px;font-size:12px;line-height:1.45;min-height:56px;box-sizing:border-box}
+.supervisor-activity-choice input[type="checkbox"]{display:block!important;appearance:auto!important;width:17px!important;height:17px!important;min-width:17px!important;max-width:17px!important;min-height:17px!important;margin:1px 0 0!important;padding:0!important;flex:none!important;box-shadow:none!important}
+.supervisor-activity-choice span{display:block;min-width:0;overflow-wrap:break-word;line-height:1.45}
+html[data-theme="light"] .supervisor-activity-choice{background:#f7faf9;border-color:#e1ebe9}
+html[data-theme="dark"] .supervisor-activity-choice{background:#244553;border-color:#3d5e6b}
+html[data-theme="dark"] .supervisor-activity-choice:has(input:checked){background:#19564f;border-color:#42bda9}
+html[data-theme="light"] .supervisor-activity-choice:has(input:checked){background:#e6f6f1;border-color:#48b4a2}
+@media(max-width:560px){.supervisor-activity-options{grid-template-columns:minmax(0,1fr);gap:8px}.supervisor-activity-choice{min-height:0}}
+</style>
 </head>
 <body>
   <header class="hero">
@@ -666,6 +707,7 @@ html[data-theme="dark"] .staff-loader-date input{color-scheme:dark}
               <div class="field"><label for="s-orders">Orders / inquiries</label><input id="s-orders" min="0" type="number" inputmode="numeric"></div>
             </div>
             <div class="stack" style="margin-top:14px">
+              <div class="supervisor-activities hide-print" id="supervisor-activities"><div class="supervisor-activities-title"><strong>Quick activity checklist</strong><span id="supervisor-activity-count">0 selected</span></div><p class="hint">Select completed tasks by category. Selections automatically appear in the text box below; you can add your own notes.</p><details class="supervisor-activity-group"><summary>Warehouse Operations <span class="activity-group-count"></span></summary><div class="supervisor-activity-options"><label class="supervisor-activity-choice"><input type="checkbox" value="Monitored daily warehouse operations"><span>Monitored daily warehouse operations</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Supervised stock receiving and verification"><span>Supervised stock receiving and verification</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Checked stock arrangement and storage"><span>Checked stock arrangement and storage</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Monitored picking, packing, and replenishment"><span>Monitored picking, packing, and replenishment</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Verified warehouse cleanliness and organization"><span>Verified warehouse cleanliness and organization</span></label></div></details><details class="supervisor-activity-group"><summary>Inventory Management <span class="activity-group-count"></span></summary><div class="supervisor-activity-options"><label class="supervisor-activity-choice"><input type="checkbox" value="Monitored stock availability and inventory levels"><span>Monitored stock availability and inventory levels</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Conducted or supervised inventory checking"><span>Conducted or supervised inventory checking</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Investigated stock discrepancies"><span>Investigated stock discrepancies</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Verified product serial numbers and quantities"><span>Verified product serial numbers and quantities</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Coordinated stock adjustments or corrections"><span>Coordinated stock adjustments or corrections</span></label></div></details><details class="supervisor-activity-group"><summary>Logistics &amp; Deliveries <span class="activity-group-count"></span></summary><div class="supervisor-activity-options"><label class="supervisor-activity-choice"><input type="checkbox" value="Monitored incoming and outgoing transfers"><span>Monitored incoming and outgoing transfers</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Coordinated scheduled deliveries and dispatch"><span>Coordinated scheduled deliveries and dispatch</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Followed up delayed or pending shipments"><span>Followed up delayed or pending shipments</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Verified delivery receipts and documentation"><span>Verified delivery receipts and documentation</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Coordinated with driver and warehouse staff"><span>Coordinated with driver and warehouse staff</span></label></div></details><details class="supervisor-activity-group"><summary>Staff Supervision <span class="activity-group-count"></span></summary><div class="supervisor-activity-options"><label class="supervisor-activity-choice"><input type="checkbox" value="Assigned and monitored staff tasks"><span>Assigned and monitored staff tasks</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Checked staff attendance and performance"><span>Checked staff attendance and performance</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Reviewed staff EOD submissions"><span>Reviewed staff EOD submissions</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Provided staff instructions and follow-ups"><span>Provided staff instructions and follow-ups</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Resolved operational concerns"><span>Resolved operational concerns</span></label></div></details><details class="supervisor-activity-group"><summary>Documentation &amp; Administration <span class="activity-group-count"></span></summary><div class="supervisor-activity-options"><label class="supervisor-activity-choice"><input type="checkbox" value="Prepared or verified DRs and transmittals"><span>Prepared or verified DRs and transmittals</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Updated warehouse monitoring records"><span>Updated warehouse monitoring records</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Processed or followed up PTC and petty cash"><span>Processed or followed up PTC and petty cash</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Prepared operational reports"><span>Prepared operational reports</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Coordinated with management and other branches"><span>Coordinated with management and other branches</span></label></div></details><details class="supervisor-activity-group"><summary>E-commerce &amp; Order Coordination <span class="activity-group-count"></span></summary><div class="supervisor-activity-options"><label class="supervisor-activity-choice"><input type="checkbox" value="Handled product inquiries and reservations"><span>Handled product inquiries and reservations</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Checked stock availability for customer orders"><span>Checked stock availability for customer orders</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Coordinated order processing and fulfillment"><span>Coordinated order processing and fulfillment</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Followed up pending orders and requests"><span>Followed up pending orders and requests</span></label><label class="supervisor-activity-choice"><input type="checkbox" value="Verified product and pricing information"><span>Verified product and pricing information</span></label></div></details><div class="supervisor-activity-actions"><button type="button" id="supervisor-activity-clear" class="btn">Clear selections</button></div></div>
               <div class="field"><label for="s-summary">Your completed activities and coordination</label><textarea id="s-summary" placeholder="Receiving monitored, transfers verified, e-commerce support, coordination, reports submitted..."></textarea></div>
               <div class="field"><label for="s-concerns">Overall pending work or concerns</label><textarea id="s-concerns" placeholder="List critical open issues, responsible persons, and actions taken."></textarea></div>
               <div class="field"><label for="s-next">Tomorrow's top priorities</label><textarea id="s-next" placeholder="1. ...
@@ -1114,6 +1156,51 @@ html[data-theme="dark"] .staff-loader-date input{color-scheme:dark}
     const onChange=e=>{try{if(localStorage.getItem(key))return}catch(err){}apply(e.matches?'dark':'light')};
     if(mq.addEventListener)mq.addEventListener('change',onChange);
   }
+})();
+</script>
+<script>
+(function(){
+ const panel=document.getElementById('supervisor-activities');
+ const field=document.getElementById('s-summary');
+ if(!panel||!field)return;
+ const checks=Array.from(panel.querySelectorAll('input[type="checkbox"]'));
+ const START='[Selected daily activities]';
+ const END='[/Selected daily activities]';
+ function extractNotes(value){
+   const start=value.indexOf(START),end=value.indexOf(END);
+   if(start<0||end<start)return value;
+   return (value.slice(0,start)+value.slice(end+END.length)).trim();
+ }
+ function sync(){
+   const picked=checks.filter(c=>c.checked).map(c=>c.value);
+   const notes=extractNotes(field.value);
+   const block=picked.length?START+'\n'+picked.map((v,i)=>(i+1)+'. '+v).join('\n')+'\n'+END:'';
+   field.value=[block,notes].filter(Boolean).join('\n\n');
+   field.dispatchEvent(new Event('input',{bubbles:true}));
+   document.getElementById('supervisor-activity-count').textContent=picked.length+' selected';
+   panel.querySelectorAll('.supervisor-activity-group').forEach(group=>{
+     const n=group.querySelectorAll('input:checked').length;
+     group.querySelector('.activity-group-count').textContent=n?'('+n+' selected)':'';
+   });
+ }
+ function restore(){
+   const value=field.value;
+   if(!value.includes(START))return;
+   const start=value.indexOf(START)+START.length,end=value.indexOf(END,start);
+   if(end<0)return;
+   const selected=new Set(value.slice(start,end).split('\n').map(x=>x.trim().replace(/^\d+\.\s*/,'')));
+   checks.forEach(c=>c.checked=selected.has(c.value));
+   document.getElementById('supervisor-activity-count').textContent=checks.filter(c=>c.checked).length+' selected';
+   panel.querySelectorAll('.supervisor-activity-group').forEach(group=>{
+     const n=group.querySelectorAll('input:checked').length;
+     group.querySelector('.activity-group-count').textContent=n?'('+n+' selected)':'';
+   });
+ }
+ checks.forEach(c=>c.addEventListener('change',sync));
+ document.getElementById('supervisor-activity-clear').addEventListener('click',()=>{checks.forEach(c=>c.checked=false);sync()});
+ field.addEventListener('change',restore);
+ document.addEventListener('click',e=>{if(e.target&&e.target.closest&&e.target.closest('[id*="draft"], [id*="load"]'))setTimeout(restore,50)});
+ restore();
 })();
 </script>
 </body>
