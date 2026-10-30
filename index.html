@@ -942,7 +942,29 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
       function saveSup(){storage.set(SUPERVISOR_KEY,data(supIds));$('supervisor-save-state').textContent='Draft saved on this device';supervisorText='';renderReport('supervisor')}
       function resetPreview(id,text){const p=$(id);p.textContent=text;p.classList.add('empty');p.classList.remove('report-ready')}
       function syncEmployeeTiles(){document.querySelectorAll('[data-employee-role]').forEach(tile=>{const active=tile.dataset.employeeRole===$('role').value;tile.classList.toggle('active',active);tile.setAttribute('aria-pressed',String(active));if(active){$('selected-employee-initial').textContent=tile.querySelector('.employee-avatar').textContent;$('selected-employee-name').textContent=$('employee').value||tile.querySelector('strong').textContent;$('selected-employee-role').textContent=tile.querySelector('small').textContent+' · Tap to change'}})}
-      const followupConfig={pending:{none:'None',delivery:'Pending delivery / dispatch',stocks:'Pending stock preparation / checking',other:'Other pending tasks'},issues:{none:'None',stock:'Stock discrepancy / damaged items',delay:'Delivery or operational delays',other:'Other concerns'},tomorrow:{routine:'Continue regular warehouse operations',pending:'Complete pending tasks',delivery:'Prepare scheduled deliveries / replenishment',other:'Other priority'}};
+      // Role-specific follow-up options; keep existing field IDs and report payloads.
+      const followupByRole={
+        processing:{pending:{none:'No pending tasks',receiving:'Pending stock receiving / checking',picking:'Pending order picking / replenishment',documents:'Pending inventory documents',other:'Other pending tasks'},issues:{none:'No discrepancies or concerns',quantity:'Stock quantity mismatch',damage:'Damaged or missing items',documents:'Document / transaction concern',other:'Other concerns'},tomorrow:{routine:'Continue regular processing tasks',pending:'Complete pending tasks',receiving:'Finish receiving / stock checking',replenishment:'Prepare orders / replenishment',other:'Other priority'}},
+        driver:{pending:{none:'No pending tasks',delivery:'Pending deliveries / dispatch',pickup:'Pending pickup / collection',vehicle:'Pending vehicle-related task',other:'Other pending tasks'},issues:{none:'No discrepancies or concerns',delay:'Delivery / route delay',vehicle:'Vehicle issue / maintenance',handover:'Delivery handover concern',other:'Other concerns'},tomorrow:{routine:'Continue scheduled driving duties',pending:'Complete pending tasks',delivery:'Prepare scheduled deliveries',vehicle:'Check vehicle / delivery readiness',other:'Other priority'}},
+        warehouse:{pending:{none:'No pending tasks',packing:'Pending packing / replenishment',arrangement:'Pending stock arrangement',loading:'Pending loading / unloading',other:'Other pending tasks'},issues:{none:'No discrepancies or concerns',damage:'Damaged / missing stocks',handling:'Loading / handling concern',storage:'Storage / rack concern',other:'Other concerns'},tomorrow:{routine:'Continue regular warehouse duties',pending:'Complete pending tasks',packing:'Finish packing / replenishment',delivery:'Assist scheduled deliveries',other:'Other priority'}},
+        incharge:{pending:{none:'No pending tasks',documents:'Pending documents / reports',inventory:'Pending inventory reconciliation',coordination:'Pending staff / delivery follow-ups',other:'Other pending tasks'},issues:{none:'No discrepancies or concerns',inventory:'Inventory discrepancy',delivery:'Delivery / operational issue',staff:'Staff / documentation concern',other:'Other concerns'},tomorrow:{routine:'Continue warehouse supervision',pending:'Complete pending tasks',coordination:'Coordinate deliveries / staff',inventory:'Resolve inventory / documentation issues',other:'Other priority'}}
+      };
+      let followupConfig=followupByRole.processing;
+      function buildRoleFollowups(role){
+        followupConfig=followupByRole[role]||followupByRole.processing;
+        for(const [id,choices] of Object.entries(followupConfig)){
+          const box=document.querySelector(`[data-followup="${id}"] .followup-options`);
+          box.replaceChildren();
+          for(const [value,label] of Object.entries(choices)){
+            const wrapper=document.createElement('label');wrapper.className='followup-choice';
+            const radio=document.createElement('input');radio.type='radio';radio.name='quick-'+id;radio.value=value;
+            const span=document.createElement('span');span.textContent=label;
+            wrapper.append(radio,span);box.append(wrapper);
+            radio.addEventListener('change',()=>{if(id==='tomorrow'&&!syncingPriority)priorityCustomized=true;updateFollowup(id)});
+          }
+          box.querySelector('input').checked=true;
+        }
+      }
       // Keep the next-day suggestion in sync until staff explicitly customize it.
       let priorityCustomized=false;
       let syncingPriority=false;
@@ -989,16 +1011,12 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
         if(!priorityCustomized)syncNextDayPriority();
       }
       for(const id of Object.keys(followupConfig)){
-        document.querySelectorAll(`input[name="quick-${id}"]`).forEach(r=>r.addEventListener('change',()=>{
-          if(id==='tomorrow'&&!syncingPriority)priorityCustomized=true;
-          updateFollowup(id);
-        }));
         $('detail-'+id).addEventListener('input',()=>{
           if(id==='tomorrow'&&!syncingPriority)priorityCustomized=true;
           updateFollowup(id);
         });
       }
-      function restoreStaff(role){priorityCustomized=false;const previous=storage.get(STAFF_PREFIX+role);const saved=previous&&previous.workdate===localDate()?previous:null;if(previous&&!saved)storage.remove(STAFF_PREFIX+role);const blank={role,employee:roleFirstNames[role]||'',workdate:localDate(),attendance:'Present',shift:'', completed:'',pending:'',issues:'',tomorrow:''};hydrate(staffIds,Object.assign(blank,saved||{}));$('employee').value=roleFirstNames[role]||'';$('role').value=role;syncEmployeeTiles();roleLabels();syncActivityChoices();restoreFollowups();staffText='';resetPreview('staff-preview','Fill out the form, then review your report.')}
+      function restoreStaff(role){priorityCustomized=false;const previous=storage.get(STAFF_PREFIX+role);const saved=previous&&previous.workdate===localDate()?previous:null;if(previous&&!saved)storage.remove(STAFF_PREFIX+role);const blank={role,employee:roleFirstNames[role]||'',workdate:localDate(),attendance:'Present',shift:'', completed:'',pending:'',issues:'',tomorrow:''};hydrate(staffIds,Object.assign(blank,saved||{}));$('employee').value=roleFirstNames[role]||'';$('role').value=role;syncEmployeeTiles();roleLabels();syncActivityChoices();buildRoleFollowups(role);restoreFollowups();staffText='';resetPreview('staff-preview','Fill out the form, then review your report.')}
       function restoreSup(){const previous=storage.get(SUPERVISOR_KEY);const saved=previous&&previous['s-date']===localDate()?previous:null;if(previous&&!saved)storage.remove(SUPERVISOR_KEY);hydrate(supIds,Object.assign(Object.fromEntries(supIds.map(id=>[id,''])),{'s-date':localDate(),'s-name':'Edwin Peñacuba Jr.'},saved||{}));supervisorText='';resetPreview('supervisor-preview','Fill out the summary, then review it.')}
       function section(name,value){return `${name}\n${(value||'None').trim()||'None'}\n`}
       function generateStaff(){const x=data(staffIds),def=defs[x.role];const parts=['BACOLOD WAREHOUSE','DAILY END-OF-DAY STAFF REPORT','',`Date: ${displayDate(x.workdate)}`,`Name: ${x.employee.trim()}`,`Role: ${def.name}`,`Attendance: ${x.attendance}`,`Schedule: ${x.shift.trim()||'Not specified'}`,''];
@@ -1487,6 +1505,30 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
         loaderFrame.classList.remove('hide');
         loaderStatus.textContent='Enter your supervisor access code below, then select Load reports.';
         loaderFrame.src=EMAIL_ENDPOINT+'?view=staff-loader&date='+encodeURIComponent(staffLoadDate.value)+'&nonce='+encodeURIComponent(staffLoaderNonce)+'&origin='+encodeURIComponent(location.origin);
+      });
+      window.addEventListener('message',event=>{
+        if(event.origin!=='https://script.google.com'&&!/^https:\/\/[a-z0-9.-]*googleusercontent\.com$/i.test(event.origin))return;
+        const m=event.data;
+        if(!m||m.type!=='bcd-eod-submission-v1')return;
+        const token=storage.get('bcd-last-submission-token');
+        if(!token||token.id!==m.id)return;
+        storage.remove('bcd-last-submission-token');
+        if(m.kind==='staff'){
+          const role=Object.keys(defs).find(k=>defs[k].name===m.role);
+          if(!role)return;
+          const saved=storage.get(STAFF_PREFIX+role);
+          if(saved&&saved.workdate===m.date&&saved.employee===m.reporter){
+            storage.remove(STAFF_PREFIX+role);
+            if($('role').value===role&&$('workdate').value===m.date&&$('employee').value===m.reporter)restoreStaff(role);
+          }
+        }else if(m.kind==='supervisor'){
+          const saved=storage.get(SUPERVISOR_KEY);
+          if(saved&&saved['s-date']===m.date&&saved['s-name']===m.reporter){
+            storage.remove(SUPERVISOR_KEY);
+            if($('s-date').value===m.date&&$('s-name').value===m.reporter)restoreSup();
+          }
+        }
+        toast(m.emailStatus&&m.emailStatus.startsWith('Failed')?'Report saved to Sheets, but email failed. Check confirmation tab.':'Report confirmed saved. Draft cleared.');
       });
       window.addEventListener('message',event=>{
         // Google Apps Script HTMLService may nest its iframe, so event.source
