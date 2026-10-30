@@ -549,6 +549,27 @@ html[data-theme="dark"] .staff-loader p,html[data-theme="dark"] .staff-loader-st
 .staff-loader-date input{width:100%;min-width:0;color-scheme:light}
 html[data-theme="dark"] .staff-loader-date input{color-scheme:dark}
 @media(max-width:480px){.staff-loader-date{max-width:100%}.staff-loader-head{flex-wrap:wrap;gap:10px}}
+
+/* Mobile: report date and attendance status side by side */
+@media (max-width:720px){
+  #staff-view .report-details-row{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;}
+  #staff-view .report-details-row .field:first-of-type:not(.employee-name-hidden){grid-column:auto!important;}
+  #staff-view .report-details-row .field{min-width:0;}
+  #staff-view #workdate,#staff-view .attendance-trigger{width:100%;min-width:0;min-height:46px;box-sizing:border-box;}
+  #staff-view #workdate{font-size:13px;padding:9px 5px;}
+  #staff-view .attendance-trigger{font-size:13px;padding:9px 10px;}
+  #staff-view .report-details-row .field:has(#shift){grid-column:1/-1;}
+}
+
+/* Mobile-friendly quick follow-up controls */
+.followup-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.followup-choice{display:flex;align-items:center;gap:8px;padding:11px;border:1px solid var(--edge);border-radius:11px;background:var(--white);cursor:pointer;min-width:0;margin:0;font-size:12px;line-height:1.35;color:var(--ink)}
+.followup-choice input{width:17px;height:17px;min-height:17px;flex:0 0 17px;margin:0;accent-color:#0a806f}
+.followup-choice:has(input:checked){border-color:#0a806f;background:#e8f7f2;color:#164d46}
+.followup-detail{margin-top:9px;min-height:75px}
+html[data-theme="dark"] .followup-choice{background:#203b49;color:#eaf5f9;border-color:#456270}
+html[data-theme="dark"] .followup-choice:has(input:checked){background:#16544c;border-color:#4cd2bd;color:white}
+@media(max-width:480px){.followup-options{grid-template-columns:1fr}.followup-choice{min-height:42px}}
 </style>
 <style>
 .supervisor-activities{border:1px solid var(--line,#d9e5e8);background:var(--card,#f6faf9);padding:14px;border-radius:13px;margin-bottom:2px}
@@ -608,6 +629,105 @@ html[data-theme="dark"] .staff-activity-group .staff-group-options{border-color:
 @media(max-width:550px){.staff-activity-group .staff-group-options{grid-template-columns:minmax(0,1fr)}}
 @media print{.staff-activity-groups{display:none!important}}
 </style>
+<style>
+/* Modern attendance selector; original select remains the reporting source */
+.attendance-widget{position:relative}
+.attendance-widget select{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+.attendance-trigger{width:100%;min-height:46px;display:flex;align-items:center;justify-content:space-between;text-align:left;padding:11px 13px;border:1px solid #cfdbe3;border-radius:11px;background:#fff;color:#1b2f3e;font-weight:650;cursor:pointer}
+.attendance-trigger svg{width:17px;height:17px;transition:transform .2s}
+.attendance-widget.open .attendance-trigger svg{transform:rotate(180deg)}
+.attendance-menu{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:50;padding:6px;border:1px solid #cfdbe3;border-radius:13px;background:#fff;box-shadow:0 16px 35px rgba(0,0,0,.18);opacity:0;transform:translateY(-7px) scale(.98);visibility:hidden;pointer-events:none;transition:opacity .18s,transform .18s,visibility .18s}
+.attendance-widget.open .attendance-menu{opacity:1;transform:translateY(0) scale(1);visibility:visible;pointer-events:auto}
+.attendance-option{display:block;width:100%;border:0;background:transparent;color:#1b2f3e;text-align:left;padding:11px 12px;border-radius:9px;cursor:pointer;font-size:14px}
+.attendance-option:hover,.attendance-option[aria-selected=true]{background:#e7f7f3;color:#096958}
+html[data-theme=dark] .attendance-trigger,html[data-theme=dark] .attendance-menu{background:#102634;color:#f1f9fb;border-color:#567282}
+html[data-theme=dark] .attendance-option{color:#f1f9fb}
+html[data-theme=dark] .attendance-option:hover,html[data-theme=dark] .attendance-option[aria-selected=true]{background:#19564f;color:#fff}
+@media(prefers-reduced-motion:reduce){.attendance-menu,.attendance-trigger svg{transition:none}}
+</style>
+<style id="mobile-report-row-fix">
+/* Explicit placement avoids hidden employee field and older mobile rules. */
+@media (max-width:720px){
+ #staff-view .report-details-row{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:9px!important;align-items:start!important;width:100%!important;}
+ #staff-view .report-details-row>.field{min-width:0!important;width:100%!important;grid-column:auto!important;}
+ #staff-view .report-details-row>.field:has(#workdate){grid-column:1!important;grid-row:1!important;}
+ #staff-view .report-details-row>.field:has(#attendance){grid-column:2!important;grid-row:1!important;}
+ #staff-view .report-details-row>.field:has(#shift){grid-column:1 / -1!important;grid-row:2!important;}
+ #staff-view .report-details-row #workdate{display:block!important;width:100%!important;min-width:0!important;max-width:100%!important;font-size:12px!important;padding:8px 3px!important;box-sizing:border-box!important;}
+ #staff-view .report-details-row .attendance-widget{min-width:0!important;width:100%!important;}
+ #staff-view .report-details-row .attendance-trigger{width:100%!important;min-width:0!important;padding:8px 7px!important;font-size:12px!important;gap:4px!important;}
+ #staff-view .report-details-row label{font-size:11px!important;white-space:normal;}
+}
+</style>
+<style id="responsive-device-fit-20261030">
+/* Responsive refinements: preserve desktop, prevent horizontal overflow. */
+html,body{max-width:100%;overflow-x:clip}
+.shell,.main,.layout,.panel,.tabs,.report-details-row{min-width:0;max-width:100%}
+input,select,textarea,button{max-width:100%}
+@media(max-width:980px){.layout{grid-template-columns:minmax(0,1fr)!important}}
+@media(max-width:720px){
+ #staff-view .report-details-row{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;align-items:end!important}
+ #staff-view .report-details-row>.field{min-width:0!important;width:auto!important;grid-column:auto!important;grid-row:auto!important}
+ #staff-view .report-details-row>.field.employee-name-hidden{display:none!important}
+ #staff-view .report-details-row>.field:has(#workdate){grid-column:1!important;grid-row:1!important}
+ #staff-view .report-details-row>.field:has(#attendance){grid-column:2!important;grid-row:1!important}
+ #staff-view .report-details-row>.field:has(#shift){grid-column:1/-1!important;grid-row:2!important}
+ #staff-view .report-details-row label{font-size:clamp(10px,2.8vw,12px)!important;line-height:1.3;min-height:1.6em}
+ #staff-view #workdate,#staff-view .attendance-trigger,#staff-view #shift{width:100%!important;min-width:0!important;max-width:100%!important;height:44px!important;min-height:44px!important;box-sizing:border-box!important}
+ #staff-view #workdate{font-size:clamp(11px,3vw,14px)!important;padding:7px 4px!important;text-align:center!important}
+ #staff-view .attendance-widget{width:100%!important;min-width:0!important}
+ #staff-view .attendance-trigger{font-size:clamp(11px,3vw,14px)!important;padding:8px 9px!important;gap:3px!important}
+ #staff-view .attendance-trigger svg{flex:0 0 14px;width:14px}
+ .panel{padding:clamp(12px,3.5vw,19px)!important}
+ .tabs{min-width:0}.tab{min-width:0;overflow-wrap:anywhere}
+ .employee-tiles,.activity-options{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:360px){
+ #staff-view .report-details-row{gap:7px!important}
+ #staff-view #workdate{font-size:11px!important;padding:5px 1px!important}
+ #staff-view .attendance-trigger{padding:6px!important;font-size:11px!important}
+ .employee-tiles,.activity-options{grid-template-columns:minmax(0,1fr)!important}
+}
+@media(max-width:320px){#staff-view .report-details-row{grid-template-columns:minmax(0,1fr)!important}#staff-view .report-details-row>.field:has(#workdate),#staff-view .report-details-row>.field:has(#attendance),#staff-view .report-details-row>.field:has(#shift){grid-column:1!important;grid-row:auto!important}}
+</style>
+<style id="modern-followups-polish">
+/* Refined Work and Follow-ups: scoped to staff form only. */
+#staff-view .quick-followup{padding:clamp(14px,2.6vw,21px);border:1px solid #dbe8e8;border-radius:17px;background:linear-gradient(145deg,#ffffff,#f7fbfa);box-shadow:0 4px 18px rgba(16,55,65,.045);margin-bottom:13px;min-width:0}
+#staff-view .quick-followup>label{font-size:14px;font-weight:800;letter-spacing:-.015em;color:#183f49;margin-bottom:11px;display:flex;align-items:center;gap:9px}
+#staff-view .quick-followup>label:before{content:' ';display:inline-block;width:8px;height:8px;border-radius:50%;background:#0c9a87;box-shadow:0 0 0 4px #e3f5f0;flex:none}
+#staff-view .quick-followup[data-followup="issues"]>label:before{background:#d49a43;box-shadow:0 0 0 4px #fcf1df}
+#staff-view .quick-followup[data-followup="tomorrow"]>label:before{background:#5486bc;box-shadow:0 0 0 4px #e6f0fb}
+#staff-view .followup-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+#staff-view .followup-choice{position:relative;display:flex;align-items:center;gap:10px;min-height:55px;padding:12px 13px;border-radius:12px;border:1px solid #dbe6e8;background:#fff;color:#2c4b56;font-size:12.5px;font-weight:620;line-height:1.4;box-shadow:0 1px 3px rgba(16,37,58,.025);transition:background .18s,border-color .18s,box-shadow .18s,transform .18s;overflow-wrap:anywhere}
+#staff-view .followup-choice:hover{border-color:#7bc9ba;transform:translateY(-1px);box-shadow:0 5px 14px rgba(9,105,88,.08)}
+#staff-view .followup-choice:focus-within{outline:2px solid #159b8c;outline-offset:2px}
+#staff-view .followup-choice input[type=radio]{appearance:none;-webkit-appearance:none;display:grid;place-items:center;width:19px;height:19px;min-width:19px;min-height:19px;flex:0 0 19px;border:1.5px solid #9eb6bc;border-radius:50%;background:transparent;margin:0;padding:0;box-shadow:none}
+#staff-view .followup-choice input[type=radio]:checked{background:#0a806f;border-color:#0a806f}
+#staff-view .followup-choice input[type=radio]:checked:after{content:'';width:7px;height:7px;border-radius:50%;background:white}
+#staff-view .followup-choice:has(input:checked){background:#e9f7f2;border-color:#29a994;color:#145d53;box-shadow:inset 0 0 0 1px rgba(41,169,148,.22)}
+#staff-view .quick-followup .hint{margin:-3px 0 12px;color:#64808b;font-size:11.5px}
+#staff-view .quick-followup .followup-detail{margin-top:12px;border-radius:11px;min-height:82px;line-height:1.55}
+html[data-theme="dark"] #staff-view .quick-followup{background:linear-gradient(145deg,#1b3644,#162f3d);border-color:#42606c;box-shadow:0 5px 18px rgba(0,0,0,.12)}
+html[data-theme="dark"] #staff-view .quick-followup>label{color:#f0f8fb}
+html[data-theme="dark"] #staff-view .followup-choice{background:#223e4d;border-color:#456472;color:#e9f4f7}
+html[data-theme="dark"] #staff-view .followup-choice:hover{border-color:#54b9aa}
+html[data-theme="dark"] #staff-view .followup-choice:has(input:checked){background:#15564e;border-color:#54d3bd;color:#fff}
+html[data-theme="dark"] #staff-view .followup-choice input[type=radio]{border-color:#9cb7c1}
+html[data-theme="dark"] #staff-view .followup-choice input[type=radio]:checked{background:#22b49d;border-color:#22b49d}
+html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
+@media(max-width:650px){#staff-view .followup-options{grid-template-columns:minmax(0,1fr)}#staff-view .followup-choice{min-height:48px;padding:11px 12px}#staff-view .quick-followup{padding:14px;border-radius:14px}}
+@media(prefers-reduced-motion:reduce){#staff-view .followup-choice{transition:none}#staff-view .followup-choice:hover{transform:none}}
+</style>
+<style>
+/* Slim, fixed-size follow-up choices across devices */
+#staff-view .followup-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px!important}
+#staff-view .followup-choice{min-height:38px!important;padding:7px 9px!important;gap:7px!important;border-radius:8px!important;font-size:11.5px!important;line-height:1.25!important;transform:none!important;box-shadow:none!important}
+#staff-view .followup-choice input[type=radio]{width:15px!important;height:15px!important;min-width:15px!important;min-height:15px!important;flex-basis:15px!important}
+#staff-view .followup-choice input[type=radio]:checked:after{width:5px;height:5px}
+#staff-view .followup-choice:hover{transform:none!important;box-shadow:none!important}
+@media(max-width:650px){#staff-view .followup-options{grid-template-columns:minmax(0,1fr)!important}}
+@media(min-width:651px) and (max-width:850px){#staff-view .followup-options{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+</style>
 </head>
 <body>
   <header class="hero">
@@ -657,19 +777,28 @@ html[data-theme="dark"] .staff-activity-group .staff-group-options{border-color:
               </div>
             </div>
             <div class="role-note" id="role-note">Record processed transactions, prepared documents and other assigned tasks.</div>
-            <div class="section-head"><span class="step">2</span> Today's figures <span style="font-size:11px;font-weight:500;color:#8698a2">(if applicable)</span></div>
-            <div class="metric-wrap grid3">
-              <div class="field"><label id="metric-label-1" for="metric-1">Transactions processed</label><input id="metric-1" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></div>
-              <div class="field"><label id="metric-label-2" for="metric-2">Documents prepared</label><input id="metric-2" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></div>
-              <div class="field"><label id="metric-label-3" for="metric-3">Items encoded</label><input id="metric-3" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></div>
-            </div>
-            <div class="section-head"><span class="step">3</span> Work and follow-ups</div>
+<div class="section-head"><span class="step">2</span> Work and follow-ups</div>
             <div class="stack">
               <details class="activity-picker" id="processing-activities"><summary>Choose completed activities <span class="activity-count" id="activity-count">0 selected</span></summary><div class="activity-options" id="activity-options"></div><div class="activity-footer"><span id="activity-progress">0 activities selected</span><button type="button" id="activity-select-all" class="activity-select-all">Select all</button></div></details>
               <div class="field"><label for="completed">Work completed today</label><textarea id="completed" rows="4" maxlength="4000" placeholder="List your tasks completed today, including quantities or reference numbers when appropriate."></textarea><div class="hint">One task per line makes your report easier to review.</div></div>
-              <div class="field"><label for="pending">Pending or unfinished tasks</label><textarea id="pending" rows="3" maxlength="3000" placeholder="What is still pending? Why? Type None if there is nothing pending."></textarea></div>
-              <div class="field"><label for="issues">Discrepancies or concerns</label><textarea id="issues" rows="3" maxlength="3000" placeholder="Report stock differences, damaged items, delays, or other concerns. Type None if none."></textarea></div>
-              <div class="field"><label for="tomorrow">Next working day's priority</label><textarea id="tomorrow" rows="3" maxlength="2000" placeholder="What should be followed up or completed next?"></textarea></div>
+<div class="field quick-followup" data-followup="pending"><label>Pending or unfinished tasks</label><div class="followup-options" role="group" aria-label="Pending or unfinished tasks">
+<label class="followup-choice"><input type="radio" name="quick-pending" value="none" checked><span>No pending tasks</span></label>
+<label class="followup-choice"><input type="radio" name="quick-pending" value="delivery" ><span>Pending delivery / dispatch</span></label>
+<label class="followup-choice"><input type="radio" name="quick-pending" value="stocks" ><span>Pending stock preparation / checking</span></label>
+<label class="followup-choice"><input type="radio" name="quick-pending" value="other" ><span>Other pending tasks</span></label>
+</div><textarea class="followup-detail hide" id="detail-pending" rows="2" maxlength="1500" placeholder="Add specific details (required for this selection)"></textarea><textarea id="pending" class="hide" tabindex="-1" aria-hidden="true"></textarea></div>
+<div class="field quick-followup" data-followup="issues"><label>Discrepancies or concerns</label><div class="followup-options" role="group" aria-label="Discrepancies or concerns">
+<label class="followup-choice"><input type="radio" name="quick-issues" value="none" checked><span>No discrepancies or concerns</span></label>
+<label class="followup-choice"><input type="radio" name="quick-issues" value="stock" ><span>Stock discrepancy / damaged items</span></label>
+<label class="followup-choice"><input type="radio" name="quick-issues" value="delay" ><span>Delivery or operational delays</span></label>
+<label class="followup-choice"><input type="radio" name="quick-issues" value="other" ><span>Other concerns</span></label>
+</div><textarea class="followup-detail hide" id="detail-issues" rows="2" maxlength="1500" placeholder="Add specific details (required for this selection)"></textarea><textarea id="issues" class="hide" tabindex="-1" aria-hidden="true"></textarea></div>
+<div class="field quick-followup" data-followup="tomorrow"><label>Next working day's priority</label><div class="hint">Suggested automatically from pending tasks. You can change it anytime.</div><div class="followup-options" role="group" aria-label="Next working day's priority">
+<label class="followup-choice"><input type="radio" name="quick-tomorrow" value="routine" checked><span>Continue regular warehouse operations</span></label>
+<label class="followup-choice"><input type="radio" name="quick-tomorrow" value="pending" ><span>Complete pending tasks</span></label>
+<label class="followup-choice"><input type="radio" name="quick-tomorrow" value="delivery" ><span>Prepare scheduled deliveries / replenishment</span></label>
+<label class="followup-choice"><input type="radio" name="quick-tomorrow" value="other" ><span>Other priority</span></label>
+</div><textarea class="followup-detail hide" id="detail-tomorrow" rows="2" maxlength="1500" placeholder="Add specific details (required for this selection)"></textarea><textarea id="tomorrow" class="hide" tabindex="-1" aria-hidden="true"></textarea></div>
             </div>
             <div class="actions hide-print">
               <button class="btn primary" type="submit">Review my report</button>
@@ -799,7 +928,7 @@ html[data-theme="dark"] .staff-activity-group .staff-group-options{border-color:
         incharge:{name:'Warehouse In-Charge',note:'Record supervision, processing verification, e-commerce support, and coordination.',labels:['Transfers reviewed','Orders / inquiries','Reports prepared']}
       };
       const roleFirstNames={processing:'Florendalyn Asis',driver:'Ronald Dionesa',warehouse:'Johnray Gilles',incharge:'Edwin Peñacuba Jr.'};
-      const staffIds=['role','employee','workdate','attendance','shift','metric-1','metric-2','metric-3','completed','pending','issues','tomorrow'];
+      const staffIds=['role','employee','workdate','attendance','shift','completed','pending','issues','tomorrow'];
       const supIds=['s-date','s-name','s-receiving','s-transfers','s-orders','s-summary','s-concerns','s-next','s-processing','s-driver','s-warehouse'];
       let mode='staff', staffText='', supervisorText='', toastTimer;
       const storage={get(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch{return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch{return false}},remove(k){try{localStorage.removeItem(k)}catch{}}};
@@ -808,17 +937,71 @@ html[data-theme="dark"] .staff-activity-group .staff-group-options{border-color:
       function toast(t){$('toast').textContent=t;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),3500)}
       function data(ids){const x={};ids.forEach(id=>x[id]=$(id).value);return x}
       function hydrate(ids,source){ids.forEach(id=>{if(Object.prototype.hasOwnProperty.call(source||{},id))$(id).value=source[id]})}
-      function roleLabels(){const def=defs[$('role').value];for(let i=1;i<=3;i++)$('metric-label-'+i).textContent=def.labels[i-1];$('role-note').textContent=def.note;renderActivityChoices()}
+      function roleLabels(){const def=defs[$('role').value];$('role-note').textContent=def.note;renderActivityChoices()}
       function saveStaff(){storage.set(STAFF_PREFIX+$('role').value,data(staffIds));$('save-state').textContent='Draft saved on this device';staffText='';renderReport('staff')}
       function saveSup(){storage.set(SUPERVISOR_KEY,data(supIds));$('supervisor-save-state').textContent='Draft saved on this device';supervisorText='';renderReport('supervisor')}
       function resetPreview(id,text){const p=$(id);p.textContent=text;p.classList.add('empty');p.classList.remove('report-ready')}
       function syncEmployeeTiles(){document.querySelectorAll('[data-employee-role]').forEach(tile=>{const active=tile.dataset.employeeRole===$('role').value;tile.classList.toggle('active',active);tile.setAttribute('aria-pressed',String(active));if(active){$('selected-employee-initial').textContent=tile.querySelector('.employee-avatar').textContent;$('selected-employee-name').textContent=$('employee').value||tile.querySelector('strong').textContent;$('selected-employee-role').textContent=tile.querySelector('small').textContent+' · Tap to change'}})}
-      function restoreStaff(role){const previous=storage.get(STAFF_PREFIX+role);const saved=previous&&previous.workdate===localDate()?previous:null;if(previous&&!saved)storage.remove(STAFF_PREFIX+role);const blank={role,employee:roleFirstNames[role]||'',workdate:localDate(),attendance:'Present',shift:'', 'metric-1':'','metric-2':'','metric-3':'',completed:'',pending:'',issues:'',tomorrow:''};hydrate(staffIds,Object.assign(blank,saved||{}));$('employee').value=roleFirstNames[role]||'';$('role').value=role;syncEmployeeTiles();roleLabels();syncActivityChoices();staffText='';resetPreview('staff-preview','Fill out the form, then review your report.')}
+      const followupConfig={pending:{none:'None',delivery:'Pending delivery / dispatch',stocks:'Pending stock preparation / checking',other:'Other pending tasks'},issues:{none:'None',stock:'Stock discrepancy / damaged items',delay:'Delivery or operational delays',other:'Other concerns'},tomorrow:{routine:'Continue regular warehouse operations',pending:'Complete pending tasks',delivery:'Prepare scheduled deliveries / replenishment',other:'Other priority'}};
+      // Keep the next-day suggestion in sync until staff explicitly customize it.
+      let priorityCustomized=false;
+      let syncingPriority=false;
+      function syncNextDayPriority(){
+        if(priorityCustomized)return;
+        const pendingChoice=document.querySelector('input[name="quick-pending"]:checked')?.value||'none';
+        const pendingDetail=$('detail-pending').value.trim();
+        const nextChoice=pendingChoice==='none'?'routine':'pending';
+        const radio=document.querySelector(`input[name="quick-tomorrow"][value="${nextChoice}"]`);
+        if(radio)radio.checked=true;
+        $('detail-tomorrow').value=nextChoice==='pending'?pendingDetail:'';
+        syncingPriority=true;
+        updateFollowup('tomorrow',false);
+        syncingPriority=false;
+      }
+      function updateFollowup(id,save=true){
+        const selected=document.querySelector(`input[name="quick-${id}"]:checked`);
+        const value=selected?.value||Object.keys(followupConfig[id])[0];
+        const detail=$('detail-'+id);
+        const needsDetail=!['none','routine'].includes(value);
+        detail.classList.toggle('hide',!needsDetail);
+        detail.required=needsDetail;
+        if(!needsDetail)detail.value='';
+        $(id).value=followupConfig[id][value]+(needsDetail&&detail.value.trim()?': '+detail.value.trim():'');
+        if(id==='pending')syncNextDayPriority();
+        if(save)saveStaff();
+      }
+      function restoreFollowups(){
+        for(const [id,choices] of Object.entries(followupConfig)){
+          const saved=$(id).value||'';
+          let value=Object.keys(choices).find(key=>saved===choices[key]||saved.startsWith(choices[key]+': '));
+          if(!value)value=Object.keys(choices)[0];
+          const radio=document.querySelector(`input[name="quick-${id}"][value="${value}"]`);
+          if(radio)radio.checked=true;
+          $('detail-'+id).value=saved.startsWith(choices[value]+': ')?saved.slice(choices[value].length+2):'';
+          updateFollowup(id,false);
+        }
+        // Existing saved priorities are respected if they differ from the suggestion.
+        const pending=document.querySelector('input[name="quick-pending"]:checked')?.value||'none';
+        const expected=pending==='none'?'routine':'pending';
+        const selected=document.querySelector('input[name="quick-tomorrow"]:checked')?.value||'routine';
+        const detailExpected=pending==='none'?'':$('detail-pending').value.trim();
+        priorityCustomized=selected!==expected || (selected==='pending' && $('detail-tomorrow').value.trim()!==detailExpected);
+        if(!priorityCustomized)syncNextDayPriority();
+      }
+      for(const id of Object.keys(followupConfig)){
+        document.querySelectorAll(`input[name="quick-${id}"]`).forEach(r=>r.addEventListener('change',()=>{
+          if(id==='tomorrow'&&!syncingPriority)priorityCustomized=true;
+          updateFollowup(id);
+        }));
+        $('detail-'+id).addEventListener('input',()=>{
+          if(id==='tomorrow'&&!syncingPriority)priorityCustomized=true;
+          updateFollowup(id);
+        });
+      }
+      function restoreStaff(role){priorityCustomized=false;const previous=storage.get(STAFF_PREFIX+role);const saved=previous&&previous.workdate===localDate()?previous:null;if(previous&&!saved)storage.remove(STAFF_PREFIX+role);const blank={role,employee:roleFirstNames[role]||'',workdate:localDate(),attendance:'Present',shift:'', completed:'',pending:'',issues:'',tomorrow:''};hydrate(staffIds,Object.assign(blank,saved||{}));$('employee').value=roleFirstNames[role]||'';$('role').value=role;syncEmployeeTiles();roleLabels();syncActivityChoices();restoreFollowups();staffText='';resetPreview('staff-preview','Fill out the form, then review your report.')}
       function restoreSup(){const previous=storage.get(SUPERVISOR_KEY);const saved=previous&&previous['s-date']===localDate()?previous:null;if(previous&&!saved)storage.remove(SUPERVISOR_KEY);hydrate(supIds,Object.assign(Object.fromEntries(supIds.map(id=>[id,''])),{'s-date':localDate(),'s-name':'Edwin Peñacuba Jr.'},saved||{}));supervisorText='';resetPreview('supervisor-preview','Fill out the summary, then review it.')}
       function section(name,value){return `${name}\n${(value||'None').trim()||'None'}\n`}
       function generateStaff(){const x=data(staffIds),def=defs[x.role];const parts=['BACOLOD WAREHOUSE','DAILY END-OF-DAY STAFF REPORT','',`Date: ${displayDate(x.workdate)}`,`Name: ${x.employee.trim()}`,`Role: ${def.name}`,`Attendance: ${x.attendance}`,`Schedule: ${x.shift.trim()||'Not specified'}`,''];
-        const metrics=def.labels.map((t,i)=>({label:t,value:x['metric-'+(i+1)]})).filter(o=>o.value!=='');
-        if(metrics.length){parts.push('ACTIVITY TOTALS');metrics.forEach(o=>parts.push(`${o.label}: ${o.value}`));parts.push('')}
         parts.push(section('COMPLETED WORK',x.completed),section('PENDING TASKS',x.pending),section('DISCREPANCIES / CONCERNS',x.issues),section('NEXT WORKING DAY',x.tomorrow));
         return parts.join('\n').replace(/\n{3,}/g,'\n\n').trim()+'\n';
       }
@@ -839,7 +1022,7 @@ html[data-theme="dark"] .staff-activity-group .staff-group-options{border-color:
         const staff=which==='staff',x=data(staff?staffIds:supIds);
         const title=staff?'DAILY END-OF-DAY STAFF REPORT':'CONSOLIDATED END-OF-DAY REPORT';
         const fields=staff?[['Report date',displayDate(x.workdate)],['Employee',x.employee],['Position',defs[x.role].name],['Attendance',x.attendance],['Work schedule',x.shift||'Not specified']]:[['Report date',displayDate(x['s-date'])],['Prepared by',x['s-name']],['Position','Warehouse In-Charge']];
-        const metrics=staff?defs[x.role].labels.map((label,i)=>[label,x['metric-'+(i+1)]]):[['Lines received',x['s-receiving']],['Transfers completed',x['s-transfers']],['Orders / inquiries',x['s-orders']]];
+        const metrics=staff?[]:[['Lines received',x['s-receiving']],['Transfers completed',x['s-transfers']],['Orders / inquiries',x['s-orders']]];
         let html=`<div class="report-head"><img class="report-logo" src="./warehouse-logo.png" alt="" onerror="this.style.display='none'"><div><strong>BACOLOD WAREHOUSE</strong><small>${title}</small></div></div><div class="report-meta">${fields.map(([k,v])=>`<div class="report-meta-item"><small>${escapeReport(k)}</small><strong>${escapeReport(v||'Not specified')}</strong></div>`).join('')}</div>`;
         const filled=metrics.filter(([,v])=>v!=='');
         if(filled.length)html+=`<section class="report-section"><h3>Daily activity totals</h3><div class="report-metrics">${filled.map(([k,v])=>`<div class="report-metric"><strong>${escapeReport(v)}</strong><small>${escapeReport(k)}</small></div>`).join('')}</div></section>`;
@@ -850,7 +1033,7 @@ html[data-theme="dark"] .staff-activity-group .staff-group-options{border-color:
       }
       function showPreview(id,t){const p=$(id);renderReport(id==='staff-preview'?'staff':'supervisor');p.scrollTop=0;p.scrollIntoView({behavior:'smooth',block:'nearest'})}
       function report(which){if(which==='staff'){
-          if(!$('staff-form').reportValidity()){toast('Please complete your name and date.');return ''}
+          if(!$('staff-form').reportValidity()){toast('Please complete required details for selected follow-ups.');return ''}
           staffText=generateStaff();showPreview('staff-preview',staffText);return staffText;
         }
         if(!$('supervisor-form').reportValidity()){toast('Please complete the report date and prepared-by field.');return ''}
@@ -1445,6 +1628,28 @@ html[data-theme="dark"] .staff-activity-group .staff-group-options{border-color:
  field.addEventListener('change',restore);
  document.addEventListener('click',e=>{if(e.target&&e.target.closest&&e.target.closest('[id*="draft"], [id*="load"]'))setTimeout(restore,50)});
  restore();
+})();
+</script>
+<script>
+(function(){
+ function init(){
+  const select=document.getElementById('attendance');if(!select||select.closest('.attendance-widget'))return;
+  const wrap=document.createElement('div');wrap.className='attendance-widget';select.parentNode.insertBefore(wrap,select);wrap.appendChild(select);
+  const trigger=document.createElement('button');trigger.type='button';trigger.className='attendance-trigger';trigger.setAttribute('aria-haspopup','listbox');trigger.setAttribute('aria-expanded','false');
+  trigger.innerHTML='<span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>';
+  const menu=document.createElement('div');menu.className='attendance-menu';menu.setAttribute('role','listbox');
+  for(const option of select.options){const btn=document.createElement('button');btn.type='button';btn.className='attendance-option';btn.textContent=option.textContent;btn.dataset.value=option.value;btn.setAttribute('role','option');btn.addEventListener('click',()=>{select.value=option.value;select.dispatchEvent(new Event('change',{bubbles:true}));close();trigger.focus()});menu.appendChild(btn)}
+  wrap.append(trigger,menu);
+  function sync(){trigger.querySelector('span').textContent=select.selectedOptions[0]?.textContent||'Select status';menu.querySelectorAll('button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.value===select.value)))}
+  function close(){wrap.classList.remove('open');trigger.setAttribute('aria-expanded','false')}
+  trigger.addEventListener('click',()=>{const opening=!wrap.classList.contains('open');wrap.classList.toggle('open',opening);trigger.setAttribute('aria-expanded',String(opening));sync()});
+  document.addEventListener('pointerdown',e=>{if(!wrap.contains(e.target))close()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+  select.addEventListener('change',sync);new MutationObserver(sync).observe(select,{attributes:true,attributeFilter:['value']});
+  // Existing draft restore sets the native select programmatically; refresh its display on focus/open.
+  trigger.addEventListener('focus',sync);sync();
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
 </body>
