@@ -701,9 +701,9 @@ input,select,textarea,button{max-width:100%}
 #staff-view .followup-choice{position:relative;display:flex;align-items:center;gap:10px;min-height:55px;padding:12px 13px;border-radius:12px;border:1px solid #dbe6e8;background:#fff;color:#2c4b56;font-size:12.5px;font-weight:620;line-height:1.4;box-shadow:0 1px 3px rgba(16,37,58,.025);transition:background .18s,border-color .18s,box-shadow .18s,transform .18s;overflow-wrap:anywhere}
 #staff-view .followup-choice:hover{border-color:#7bc9ba;transform:translateY(-1px);box-shadow:0 5px 14px rgba(9,105,88,.08)}
 #staff-view .followup-choice:focus-within{outline:2px solid #159b8c;outline-offset:2px}
-#staff-view .followup-choice input[type=radio]{appearance:none;-webkit-appearance:none;display:grid;place-items:center;width:19px;height:19px;min-width:19px;min-height:19px;flex:0 0 19px;border:1.5px solid #9eb6bc;border-radius:50%;background:transparent;margin:0;padding:0;box-shadow:none}
-#staff-view .followup-choice input[type=radio]:checked{background:#0a806f;border-color:#0a806f}
-#staff-view .followup-choice input[type=radio]:checked:after{content:'';width:7px;height:7px;border-radius:50%;background:white}
+#staff-view .followup-choice input[type=checkbox]{appearance:none;-webkit-appearance:none;display:grid;place-items:center;width:19px;height:19px;min-width:19px;min-height:19px;flex:0 0 19px;border:1.5px solid #9eb6bc;border-radius:5px;background:transparent;margin:0;padding:0;box-shadow:none}
+#staff-view .followup-choice input[type=checkbox]:checked{background:#0a806f;border-color:#0a806f}
+#staff-view .followup-choice input[type=checkbox]:checked:after{content:'';width:7px;height:7px;border-radius:2px;background:white}
 #staff-view .followup-choice:has(input:checked){background:#e9f7f2;border-color:#29a994;color:#145d53;box-shadow:inset 0 0 0 1px rgba(41,169,148,.22)}
 #staff-view .quick-followup .hint{margin:-3px 0 12px;color:#64808b;font-size:11.5px}
 #staff-view .quick-followup .followup-detail{margin-top:12px;border-radius:11px;min-height:82px;line-height:1.55}
@@ -712,8 +712,8 @@ html[data-theme="dark"] #staff-view .quick-followup>label{color:#f0f8fb}
 html[data-theme="dark"] #staff-view .followup-choice{background:#223e4d;border-color:#456472;color:#e9f4f7}
 html[data-theme="dark"] #staff-view .followup-choice:hover{border-color:#54b9aa}
 html[data-theme="dark"] #staff-view .followup-choice:has(input:checked){background:#15564e;border-color:#54d3bd;color:#fff}
-html[data-theme="dark"] #staff-view .followup-choice input[type=radio]{border-color:#9cb7c1}
-html[data-theme="dark"] #staff-view .followup-choice input[type=radio]:checked{background:#22b49d;border-color:#22b49d}
+html[data-theme="dark"] #staff-view .followup-choice input[type=checkbox]{border-color:#9cb7c1}
+html[data-theme="dark"] #staff-view .followup-choice input[type=checkbox]:checked{background:#22b49d;border-color:#22b49d}
 html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
 @media(max-width:650px){#staff-view .followup-options{grid-template-columns:minmax(0,1fr)}#staff-view .followup-choice{min-height:48px;padding:11px 12px}#staff-view .quick-followup{padding:14px;border-radius:14px}}
 @media(prefers-reduced-motion:reduce){#staff-view .followup-choice{transition:none}#staff-view .followup-choice:hover{transform:none}}
@@ -722,13 +722,13 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
 /* Slim, fixed-size follow-up choices across devices */
 #staff-view .followup-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px!important}
 #staff-view .followup-choice{min-height:38px!important;padding:7px 9px!important;gap:7px!important;border-radius:8px!important;font-size:11.5px!important;line-height:1.25!important;transform:none!important;box-shadow:none!important}
-#staff-view .followup-choice input[type=radio]{width:15px!important;height:15px!important;min-width:15px!important;min-height:15px!important;flex-basis:15px!important}
-#staff-view .followup-choice input[type=radio]:checked:after{width:5px;height:5px}
+#staff-view .followup-choice input[type=checkbox]{width:15px!important;height:15px!important;min-width:15px!important;min-height:15px!important;flex-basis:15px!important}
+#staff-view .followup-choice input[type=checkbox]:checked:after{width:5px;height:5px}
 #staff-view .followup-choice:hover{transform:none!important;box-shadow:none!important}
 @media(max-width:650px){#staff-view .followup-options{grid-template-columns:minmax(0,1fr)!important}}
 @media(min-width:651px) and (max-width:850px){#staff-view .followup-options{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 </style>
-</head>
+<style id="multiple-followup-polish">#staff-view .followup-choice input[type=checkbox]{border-radius:5px}#staff-view .followup-choice input[type=checkbox]:checked:after{width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;border-radius:0;background:transparent;transform:rotate(-45deg) translate(1px,-1px)}#staff-view .followup-choice{min-height:38px!important;padding:7px 10px!important}</style></head>
 <body>
   <header class="hero">
     <div class="shell">
@@ -782,22 +782,22 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
               <details class="activity-picker" id="processing-activities"><summary>Choose completed activities <span class="activity-count" id="activity-count">0 selected</span></summary><div class="activity-options" id="activity-options"></div><div class="activity-footer"><span id="activity-progress">0 activities selected</span><button type="button" id="activity-select-all" class="activity-select-all">Select all</button></div></details>
               <div class="field"><label for="completed">Work completed today</label><textarea id="completed" rows="4" maxlength="4000" placeholder="List your tasks completed today, including quantities or reference numbers when appropriate."></textarea><div class="hint">One task per line makes your report easier to review.</div></div>
 <div class="field quick-followup" data-followup="pending"><label>Pending or unfinished tasks</label><div class="followup-options" role="group" aria-label="Pending or unfinished tasks">
-<label class="followup-choice"><input type="radio" name="quick-pending" value="none" checked><span>No pending tasks</span></label>
-<label class="followup-choice"><input type="radio" name="quick-pending" value="delivery" ><span>Pending delivery / dispatch</span></label>
-<label class="followup-choice"><input type="radio" name="quick-pending" value="stocks" ><span>Pending stock preparation / checking</span></label>
-<label class="followup-choice"><input type="radio" name="quick-pending" value="other" ><span>Other pending tasks</span></label>
+<label class="followup-choice"><input type="checkbox" name="quick-pending" value="none" checked><span>No pending tasks</span></label>
+<label class="followup-choice"><input type="checkbox" name="quick-pending" value="delivery" ><span>Pending delivery / dispatch</span></label>
+<label class="followup-choice"><input type="checkbox" name="quick-pending" value="stocks" ><span>Pending stock preparation / checking</span></label>
+<label class="followup-choice"><input type="checkbox" name="quick-pending" value="other" ><span>Other pending tasks</span></label>
 </div><textarea class="followup-detail hide" id="detail-pending" rows="2" maxlength="1500" placeholder="Add specific details (required for this selection)"></textarea><textarea id="pending" class="hide" tabindex="-1" aria-hidden="true"></textarea></div>
 <div class="field quick-followup" data-followup="issues"><label>Discrepancies or concerns</label><div class="followup-options" role="group" aria-label="Discrepancies or concerns">
-<label class="followup-choice"><input type="radio" name="quick-issues" value="none" checked><span>No discrepancies or concerns</span></label>
-<label class="followup-choice"><input type="radio" name="quick-issues" value="stock" ><span>Stock discrepancy / damaged items</span></label>
-<label class="followup-choice"><input type="radio" name="quick-issues" value="delay" ><span>Delivery or operational delays</span></label>
-<label class="followup-choice"><input type="radio" name="quick-issues" value="other" ><span>Other concerns</span></label>
+<label class="followup-choice"><input type="checkbox" name="quick-issues" value="none" checked><span>No discrepancies or concerns</span></label>
+<label class="followup-choice"><input type="checkbox" name="quick-issues" value="stock" ><span>Stock discrepancy / damaged items</span></label>
+<label class="followup-choice"><input type="checkbox" name="quick-issues" value="delay" ><span>Delivery or operational delays</span></label>
+<label class="followup-choice"><input type="checkbox" name="quick-issues" value="other" ><span>Other concerns</span></label>
 </div><textarea class="followup-detail hide" id="detail-issues" rows="2" maxlength="1500" placeholder="Add specific details (required for this selection)"></textarea><textarea id="issues" class="hide" tabindex="-1" aria-hidden="true"></textarea></div>
-<div class="field quick-followup" data-followup="tomorrow"><label>Next working day's priority</label><div class="hint">Suggested automatically from pending tasks. You can change it anytime.</div><div class="followup-options" role="group" aria-label="Next working day's priority">
-<label class="followup-choice"><input type="radio" name="quick-tomorrow" value="routine" checked><span>Continue regular warehouse operations</span></label>
-<label class="followup-choice"><input type="radio" name="quick-tomorrow" value="pending" ><span>Complete pending tasks</span></label>
-<label class="followup-choice"><input type="radio" name="quick-tomorrow" value="delivery" ><span>Prepare scheduled deliveries / replenishment</span></label>
-<label class="followup-choice"><input type="radio" name="quick-tomorrow" value="other" ><span>Other priority</span></label>
+<div class="field quick-followup" data-followup="tomorrow"><label>Next working day's priority</label><div class="hint">Suggested automatically from pending tasks. Select additional priorities if needed.</div><div class="followup-options" role="group" aria-label="Next working day's priority">
+<label class="followup-choice"><input type="checkbox" name="quick-tomorrow" value="routine" checked><span>Continue regular warehouse operations</span></label>
+<label class="followup-choice"><input type="checkbox" name="quick-tomorrow" value="pending" ><span>Complete pending tasks</span></label>
+<label class="followup-choice"><input type="checkbox" name="quick-tomorrow" value="delivery" ><span>Prepare scheduled deliveries / replenishment</span></label>
+<label class="followup-choice"><input type="checkbox" name="quick-tomorrow" value="other" ><span>Other priority</span></label>
 </div><textarea class="followup-detail hide" id="detail-tomorrow" rows="2" maxlength="1500" placeholder="Add specific details (required for this selection)"></textarea><textarea id="tomorrow" class="hide" tabindex="-1" aria-hidden="true"></textarea></div>
             </div>
             <div class="actions hide-print">
@@ -957,57 +957,64 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
           box.replaceChildren();
           for(const [value,label] of Object.entries(choices)){
             const wrapper=document.createElement('label');wrapper.className='followup-choice';
-            const radio=document.createElement('input');radio.type='radio';radio.name='quick-'+id;radio.value=value;
+            const check=document.createElement('input');check.type='checkbox';check.name='quick-'+id;check.value=value;
             const span=document.createElement('span');span.textContent=label;
-            wrapper.append(radio,span);box.append(wrapper);
-            radio.addEventListener('change',()=>{if(id==='tomorrow'&&!syncingPriority)priorityCustomized=true;updateFollowup(id)});
+            wrapper.append(check,span);box.append(wrapper);
+            check.addEventListener('change',()=>{
+              if(check.checked && ['none','routine'].includes(value)){
+                box.querySelectorAll('input').forEach(el=>{if(el!==check)el.checked=false});
+              }else if(check.checked){
+                box.querySelectorAll('input').forEach(el=>{if(['none','routine'].includes(el.value))el.checked=false});
+              }
+              if(!box.querySelector('input:checked'))box.querySelector('input').checked=true;
+              if(id==='tomorrow'&&!syncingPriority)priorityCustomized=true;
+              updateFollowup(id);
+            });
           }
           box.querySelector('input').checked=true;
         }
       }
-      // Keep the next-day suggestion in sync until staff explicitly customize it.
       let priorityCustomized=false;
       let syncingPriority=false;
+      function selectedFollowup(id){
+        return [...document.querySelectorAll(`input[name="quick-${id}"]:checked`)].map(el=>el.value);
+      }
       function syncNextDayPriority(){
         if(priorityCustomized)return;
-        const pendingChoice=document.querySelector('input[name="quick-pending"]:checked')?.value||'none';
-        const pendingDetail=$('detail-pending').value.trim();
-        const nextChoice=pendingChoice==='none'?'routine':'pending';
-        const radio=document.querySelector(`input[name="quick-tomorrow"][value="${nextChoice}"]`);
-        if(radio)radio.checked=true;
-        $('detail-tomorrow').value=nextChoice==='pending'?pendingDetail:'';
-        syncingPriority=true;
-        updateFollowup('tomorrow',false);
-        syncingPriority=false;
+        const pending=selectedFollowup('pending');
+        const hasPending=pending.some(v=>v!=='none');
+        document.querySelectorAll('input[name="quick-tomorrow"]').forEach(el=>{el.checked=el.value===(hasPending?'pending':'routine')});
+        $('detail-tomorrow').value=hasPending?$('detail-pending').value.trim():'';
+        syncingPriority=true;updateFollowup('tomorrow',false);syncingPriority=false;
       }
       function updateFollowup(id,save=true){
-        const selected=document.querySelector(`input[name="quick-${id}"]:checked`);
-        const value=selected?.value||Object.keys(followupConfig[id])[0];
+        const values=selectedFollowup(id);
         const detail=$('detail-'+id);
-        const needsDetail=!['none','routine'].includes(value);
-        detail.classList.toggle('hide',!needsDetail);
-        detail.required=needsDetail;
-        if(!needsDetail)detail.value='';
-        $(id).value=followupConfig[id][value]+(needsDetail&&detail.value.trim()?': '+detail.value.trim():'');
+        const hasActions=values.some(v=>!['none','routine'].includes(v));
+        detail.classList.toggle('hide',!hasActions);
+        detail.required=values.includes('other');
+        if(!hasActions)detail.value='';
+        const labels=values.map(v=>followupConfig[id][v]).filter(Boolean);
+        const extra=detail.value.trim();
+        $(id).value=labels.join('; ')+(hasActions&&extra?': '+extra:'');
         if(id==='pending')syncNextDayPriority();
         if(save)saveStaff();
       }
       function restoreFollowups(){
         for(const [id,choices] of Object.entries(followupConfig)){
           const saved=$(id).value||'';
-          let value=Object.keys(choices).find(key=>saved===choices[key]||saved.startsWith(choices[key]+': '));
-          if(!value)value=Object.keys(choices)[0];
-          const radio=document.querySelector(`input[name="quick-${id}"][value="${value}"]`);
-          if(radio)radio.checked=true;
-          $('detail-'+id).value=saved.startsWith(choices[value]+': ')?saved.slice(choices[value].length+2):'';
+          const values=Object.keys(choices).filter(key=>saved===choices[key]||saved.startsWith(choices[key]+'; ')||saved.startsWith(choices[key]+': ')||saved.includes('; '+choices[key]+'; ')||saved.includes('; '+choices[key]+': ')||saved.endsWith('; '+choices[key]));
+          const selected=values.length?values:[Object.keys(choices)[0]];
+          document.querySelectorAll(`input[name="quick-${id}"]`).forEach(el=>{el.checked=selected.includes(el.value)});
+          const prefix=selected.map(v=>choices[v]).join('; ');
+          $('detail-'+id).value=saved.startsWith(prefix+': ')?saved.slice(prefix.length+2):'';
           updateFollowup(id,false);
         }
-        // Existing saved priorities are respected if they differ from the suggestion.
-        const pending=document.querySelector('input[name="quick-pending"]:checked')?.value||'none';
-        const expected=pending==='none'?'routine':'pending';
-        const selected=document.querySelector('input[name="quick-tomorrow"]:checked')?.value||'routine';
-        const detailExpected=pending==='none'?'':$('detail-pending').value.trim();
-        priorityCustomized=selected!==expected || (selected==='pending' && $('detail-tomorrow').value.trim()!==detailExpected);
+        const pending=selectedFollowup('pending');
+        const expected=pending.some(v=>v!=='none')?'pending':'routine';
+        const selected=selectedFollowup('tomorrow');
+        const detailExpected=expected==='pending'?$('detail-pending').value.trim():'';
+        priorityCustomized=selected.length!==1||selected[0]!==expected||(expected==='pending'&&$('detail-tomorrow').value.trim()!==detailExpected);
         if(!priorityCustomized)syncNextDayPriority();
       }
       for(const id of Object.keys(followupConfig)){
