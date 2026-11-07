@@ -561,6 +561,15 @@ html[data-theme="dark"] .staff-loader-date input{color-scheme:dark}
   #staff-view .report-details-row .field:has(#shift){grid-column:1/-1;}
 }
 
+/* EOD checklist-only reporting */
+.eod-extra{border:1px solid var(--edge);border-radius:12px;padding:12px;background:#f8fbfa}
+.eod-extra-title{font-size:12px;font-weight:750;margin-bottom:9px}
+.eod-extra-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:8px}
+.eod-extra textarea{min-height:72px;margin-bottom:9px}
+.required-mark{color:#b14d3f;font-size:11px}
+html[data-theme="dark"] .eod-extra{background:#1b3543;border-color:#466573}
+html[data-theme="dark"] .required-mark{color:#ffb5a5}
+@media(max-width:480px){.eod-extra-options{grid-template-columns:1fr}}
 /* Mobile-friendly quick follow-up controls */
 .followup-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .followup-choice{display:flex;align-items:center;gap:8px;padding:11px;border:1px solid var(--edge);border-radius:11px;background:var(--white);cursor:pointer;min-width:0;margin:0;font-size:12px;line-height:1.35;color:var(--ink)}
@@ -570,6 +579,78 @@ html[data-theme="dark"] .staff-loader-date input{color-scheme:dark}
 html[data-theme="dark"] .followup-choice{background:#203b49;color:#eaf5f9;border-color:#456270}
 html[data-theme="dark"] .followup-choice:has(input:checked){background:#16544c;border-color:#4cd2bd;color:white}
 @media(max-width:480px){.followup-options{grid-template-columns:1fr}.followup-choice{min-height:42px}}
+
+/* Mobile-first EOD: completed activity choices stay visible without extra taps. */
+#processing-activities > summary{cursor:default;pointer-events:none}
+#processing-activities > summary::after{display:none}
+#activity-options .staff-activity-group > summary{cursor:default;pointer-events:none}
+#activity-options .staff-activity-group > summary::marker{content:""}
+#activity-options .staff-activity-group > summary::-webkit-details-marker{display:none}
+#activity-options .staff-activity-group > summary::after{display:none}
+@media(max-width:600px){
+ #activity-options .staff-group-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ #activity-options .activity-choice{min-height:48px;padding:10px 8px}
+ #activity-options .activity-choice label{min-height:30px}
+ #activity-options .activity-choice input[type=checkbox]{width:19px;height:19px;min-height:19px}
+}
+@media(max-width:410px){#activity-options .staff-group-options{grid-template-columns:minmax(0,1fr)}}
+
+/* Mobile checklist readability: full-width groups, two comfortable activity tiles. */
+@media (max-width: 768px) {
+  #activity-options.staff-activity-groups {
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:10px!important;
+    padding:0 10px 12px!important;
+  }
+  #activity-options .staff-activity-group {width:100%;min-width:0;}
+  #activity-options .staff-activity-group > summary {padding:11px 12px;gap:8px;flex-wrap:wrap;}
+  #activity-options .staff-group-count {white-space:nowrap;margin-left:auto;}
+  #activity-options .staff-group-options {
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+    padding:10px!important;
+  }
+  #activity-options .activity-choice {
+    min-width:0!important;
+    min-height:56px!important;
+    padding:10px 9px!important;
+    gap:8px!important;
+    align-items:center;
+    overflow-wrap:break-word;
+    word-break:normal;
+  }
+  #activity-options .activity-choice input[type=checkbox] {flex:0 0 19px;width:19px;height:19px;min-height:19px;}
+  #activity-options .activity-choice label {min-width:0;min-height:0!important;font-size:12px;line-height:1.35;overflow-wrap:break-word;word-break:normal;}
+}
+@media (max-width: 350px) {
+  #activity-options .staff-group-options {grid-template-columns:minmax(0,1fr)!important;}
+}
+
+/* Pill-style activity selections: accessible, touch-friendly, theme-aware. */
+#activity-options .staff-activity-groups{grid-template-columns:minmax(0,1fr)!important}
+#activity-options .staff-activity-group{min-width:0}
+#activity-options .staff-group-options{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+#activity-options .activity-choice,
+.supervisor-activity-choice{border-radius:999px!important;min-width:0;min-height:48px;transition:background .18s,border-color .18s,box-shadow .18s}
+#activity-options .activity-choice{padding:10px 12px!important;align-content:center}
+#activity-options .activity-choice>label{min-width:0;gap:8px!important;line-height:1.35;overflow-wrap:anywhere}
+#activity-options .activity-choice input[type=checkbox],
+.supervisor-activity-choice input[type=checkbox]{width:19px!important;height:19px!important;min-width:19px!important;min-height:19px!important;flex-shrink:0;accent-color:#0c9988}
+#activity-options .activity-choice:has(.activity-detail:not(.hide)){border-radius:20px!important}
+#activity-options .activity-choice .activity-detail{width:100%;margin-top:9px!important}
+#activity-options .activity-choice .activity-detail input{border-radius:999px!important}
+#activity-options .activity-choice.is-selected{box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)!important}
+.supervisor-activity-choice{align-items:center!important;padding:10px 13px!important}
+.supervisor-activity-choice:has(input:checked){box-shadow:inset 0 0 0 1px rgba(12,153,136,.2)}
+@media(max-width:600px){
+ #activity-options .staff-activity-groups{grid-template-columns:minmax(0,1fr)!important}
+ #activity-options .staff-group-options{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #activity-options .activity-choice{padding:10px 9px!important}
+}
+@media(max-width:370px){#activity-options .staff-group-options{grid-template-columns:minmax(0,1fr)!important}}
+#shift-other[hidden]{display:none!important}
 </style>
 <style>
 .supervisor-activities{border:1px solid var(--line,#d9e5e8);background:var(--card,#f6faf9);padding:14px;border-radius:13px;margin-bottom:2px}
@@ -728,23 +809,302 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
 @media(max-width:650px){#staff-view .followup-options{grid-template-columns:minmax(0,1fr)!important}}
 @media(min-width:651px) and (max-width:850px){#staff-view .followup-options{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 </style>
-<style id="multiple-followup-polish">#staff-view .followup-choice input[type=checkbox]{border-radius:5px}#staff-view .followup-choice input[type=checkbox]:checked:after{width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;border-radius:0;background:transparent;transform:rotate(-45deg) translate(1px,-1px)}#staff-view .followup-choice{min-height:38px!important;padding:7px 10px!important}</style></head>
+<style id="multiple-followup-polish">#staff-view .followup-choice input[type=checkbox]{border-radius:5px}#staff-view .followup-choice input[type=checkbox]:checked:after{width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;border-radius:0;background:transparent;transform:rotate(-45deg) translate(1px,-1px)}#staff-view .followup-choice{min-height:38px!important;padding:7px 10px!important}</style><style id="compact-mobile-header-20261107">
+/* Compact monitoring-style header; desktop stays unchanged. */
+@media(max-width:600px){
+ .hero{padding:9px 0 44px!important;min-height:0!important}
+ .hero .top{gap:7px!important;align-items:center!important}
+ .hero .mark{width:32px!important;height:32px!important;border-radius:8px!important}
+ .hero .mark img{width:100%;height:100%}
+ .hero .brand{font-size:12px!important;gap:8px!important;line-height:1.15!important}
+ .hero .brand small{font-size:9px!important;margin-top:2px!important}
+ .hero .theme-toggle{min-height:30px!important;padding:5px 9px!important;font-size:11px!important}
+ .hero .hero-title{font-size:17px!important;letter-spacing:-.025em!important;margin:9px 0 0!important;line-height:1.2!important}
+ .hero .hero-sub{display:none!important}
+ .hero .header-meta{margin-top:5px!important;gap:5px!important;font-size:10px!important}
+ .hero .header-meta .meta-item:nth-of-type(3),.hero .header-meta .meta-separator{display:none!important}
+ .hero .header-meta .meta-item svg{width:12px!important;height:12px!important}
+ .hero:after{width:105px!important;height:105px!important;top:-12px!important;right:14%!important;opacity:.09!important}
+ .main{margin-top:-32px!important}
+ .tabs{padding:4px!important;margin-bottom:12px!important;border-radius:12px!important}
+ .tab{min-height:34px!important;padding:7px 6px!important;font-size:11px!important}
+ .tab-svg{width:14px!important;height:14px!important}
+}
+@media(max-width:360px){.hero .brand{font-size:11px!important}.hero .hero-title{font-size:16px!important}}
+</style><style id="header-readable-size-fix">
+/* Readable but still compact, with author visible on mobile. */
+.hero .brand .header-author{display:block!important;visibility:visible!important;opacity:1!important;color:#d9f5f3!important;font-weight:650!important;letter-spacing:0!important;text-transform:none!important}
+@media(max-width:600px){.hero{padding-top:13px!important;padding-bottom:54px!important}.hero .brand{font-size:15px!important;line-height:1.3!important}.hero .brand .header-author{font-size:11px!important;margin-top:4px!important}.hero .hero-title{font-size:21px!important;margin-top:12px!important}.hero .header-meta{margin-top:8px!important;font-size:11px!important}.hero .theme-toggle{min-height:36px!important}.main{margin-top:-35px!important}}
+@media(max-width:360px){.hero .brand{font-size:13px!important}.hero .brand .header-author{font-size:10px!important}.hero .hero-title{font-size:19px!important}}
+</style><style id="supervisor-gate-style">.supervisor-access{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:-4px 0 12px}.supervisor-access #supervisor-login-panel{flex-basis:100%;border:1px solid var(--edge);border-radius:12px;padding:12px;background:var(--white)}.supervisor-access .staff-loader-frame{max-width:100%;margin-top:9px}html[data-theme="dark"] .supervisor-access #supervisor-login-panel{background:#152b39;color:#eaf5f9}@media(max-width:600px){.supervisor-access>.btn{min-height:35px;padding:7px 11px;font-size:11px}}</style><style id="supervisor-tab-alignment">
+.tabs{position:relative;align-items:stretch;flex-wrap:wrap}
+.tabs>.tab{flex:1 1 0;min-width:0}
+.tabs>.supervisor-access{flex:1 1 0;min-width:0;margin:0;display:flex;align-items:stretch;gap:6px}
+.tabs>.supervisor-access>.btn{flex:1;min-width:0;width:100%;min-height:39px!important;padding:9px 8px!important;border-radius:10px;font-size:12px;white-space:normal;line-height:1.25}
+.tabs>.supervisor-access #supervisor-login-panel{flex-basis:auto;position:absolute;z-index:20;top:calc(100% + 5px);right:0;width:min(100%,420px);box-shadow:0 12px 25px rgba(0,0,0,.16)}
+.tabs>.supervisor-access #supervisor-logout{flex:1}
+@media(max-width:540px){.tabs>.supervisor-access>.btn{font-size:11px!important;padding:8px 5px!important}.tabs{gap:5px!important}}
+</style><style id="compact-supervisor-nav">
+/* Staff report takes the available navigation space; supervisor is a small icon. */
+.tabs>.tab#tab-staff{flex:1 1 auto!important}
+.tabs>.supervisor-access{flex:0 0 auto!important;width:auto!important}
+.tabs>.supervisor-access>.btn{flex:0 0 auto!important;width:38px!important;min-width:38px!important;max-width:38px!important;min-height:39px!important;padding:7px!important;font-size:18px!important;line-height:1!important;white-space:nowrap!important}
+.tabs>.supervisor-access #supervisor-login-panel{width:min(90vw,420px)}
+@media(max-width:540px){.tabs>.supervisor-access>.btn{width:35px!important;min-width:35px!important;max-width:35px!important;min-height:39px!important}}
+</style><style id="supervisor-access-label-fix">.tabs>.supervisor-access>.btn#supervisor-access-button{width:auto!important;min-width:0!important;max-width:none!important;padding:7px 12px!important;font-size:12px!important;line-height:1.2!important;white-space:nowrap!important;display:inline-flex;align-items:center;justify-content:center;gap:6px}.tabs>.tab#tab-staff{flex:1 1 auto!important}@media(max-width:420px){.tabs>.supervisor-access>.btn#supervisor-access-button{padding:7px 8px!important;font-size:10px!important;gap:4px}}</style>
+<style id="eod-card-circular-check-style">
+/* Card layout with circular tick controls; only staff completed activities. */
+#activity-options .staff-group-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:10px}
+#activity-options .activity-choice{border-radius:12px!important;min-height:60px;padding:12px 10px!important;align-content:center;cursor:pointer;transition:border-color .18s,background .18s,box-shadow .18s}
+#activity-options .activity-choice>label{display:flex!important;align-items:center!important;gap:10px!important;width:100%;min-width:0;cursor:pointer}
+#activity-options .activity-choice>label>span{font-size:12px;line-height:1.4;overflow-wrap:break-word;word-break:normal;min-width:0}
+#activity-options .activity-choice input[type="checkbox"]{appearance:none!important;-webkit-appearance:none!important;display:grid!important;place-items:center!important;width:22px!important;height:22px!important;min-width:22px!important;min-height:22px!important;flex:0 0 22px!important;margin:0!important;padding:0!important;border:2px solid #9cb3bc!important;border-radius:50%!important;background:#fff!important;cursor:pointer;transition:background .16s,border-color .16s}
+#activity-options .activity-choice input[type="checkbox"]::after{content:"";display:block;width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:translateY(-1px) rotate(-45deg) scale(0);transition:transform .14s}
+#activity-options .activity-choice input[type="checkbox"]:checked{background:#0a806f!important;border-color:#0a806f!important}
+#activity-options .activity-choice input[type="checkbox"]:checked::after{transform:translateY(-1px) rotate(-45deg) scale(1)}
+#activity-options .activity-choice input[type="checkbox"]:focus-visible{outline:3px solid #5acbbb!important;outline-offset:3px}
+#activity-options .activity-choice.is-selected{border-color:#0a806f!important;box-shadow:inset 0 0 0 1px #0a806f!important}
+html[data-theme="dark"] #activity-options .activity-choice input[type="checkbox"]{background:#203b49!important;border-color:#8eabb8!important}
+html[data-theme="dark"] #activity-options .activity-choice input[type="checkbox"]:checked{background:#16a994!important;border-color:#16a994!important}
+html[data-theme="dark"] #activity-options .activity-choice.is-selected{border-color:#47cbb9!important;box-shadow:inset 0 0 0 1px #47cbb9!important}
+@media(max-width:600px){#activity-options .staff-activity-groups{grid-template-columns:minmax(0,1fr)!important}#activity-options .staff-group-options{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:365px){#activity-options .staff-group-options{grid-template-columns:minmax(0,1fr)!important}}
+</style>
+<style id="eod-compact-activity-cards">
+/* Compact staff activity cards; preserve circular ticks and optional notes. */
+#activity-options .staff-group-options{gap:7px!important;padding:8px!important}
+#activity-options .activity-choice{min-height:43px!important;padding:7px 8px!important;border-radius:10px!important;gap:4px!important}
+#activity-options .activity-choice>label{gap:7px!important;min-height:28px!important}
+#activity-options .activity-choice>label>span{font-size:11.5px!important;line-height:1.25!important}
+#activity-options .activity-choice input[type="checkbox"]{width:19px!important;height:19px!important;min-width:19px!important;min-height:19px!important;flex-basis:19px!important}
+#activity-options .activity-choice input[type="checkbox"]::after{width:8px!important;height:5px!important}
+#activity-options .activity-choice .activity-detail{margin:3px 0 0!important}
+#activity-options .activity-choice .activity-detail input.activity-note{height:29px!important;min-height:29px!important;padding:4px 9px!important;font-size:11px!important;border-radius:8px!important}
+@media(max-width:600px){#activity-options .activity-choice{padding:7px!important}#activity-options .activity-choice>label>span{font-size:11px!important}}
+@media(max-width:365px){#activity-options .staff-group-options{grid-template-columns:minmax(0,1fr)!important}}
+</style>
+<style id="eod-maintenance-refinements">
+/* Single final source of truth for mobile activity layout. */
+@media(max-width:600px){
+ #activity-options.staff-activity-groups{display:grid!important;grid-template-columns:minmax(0,1fr)!important}
+ #activity-options .staff-group-options{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;padding:8px!important}
+ #activity-options .activity-choice{min-width:0!important;min-height:43px!important;overflow-wrap:anywhere}
+ #activity-options .activity-choice>label{min-width:0!important}
+ #activity-options .activity-choice>label>span{overflow-wrap:anywhere!important}
+}
+@media(max-width:365px){#activity-options .staff-group-options{grid-template-columns:minmax(0,1fr)!important}}
+</style>
+<style id="header-inline-report-alignment">
+/* Keep Warehouse Operations, report heading/date, and theme control in one header row. */
+.hero .top{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr) auto;align-items:center!important;gap:12px!important}
+.hero .brand{min-width:0}
+.hero .header-report-heading{min-width:0;text-align:left;position:relative;z-index:2}
+.hero .header-report-heading .hero-title{margin:0!important;font-size:clamp(15px,1.65vw,21px)!important;line-height:1.18!important;letter-spacing:-.025em!important}
+.hero .header-report-date{display:flex;align-items:center;gap:5px;margin-top:5px;font-size:11px;color:#cce8ec;white-space:nowrap}
+.hero .header-report-date svg{width:13px;height:13px;fill:none;stroke:#4edbd3;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.hero .header-actions{justify-self:end}
+@media(max-width:600px){
+ .hero .top{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:7px!important}
+ .hero .brand{font-size:13px!important;line-height:1.18!important}
+ .hero .brand .header-author{font-size:10px!important;margin-top:3px!important}
+ .hero .header-report-heading .hero-title{font-size:clamp(12px,3.5vw,16px)!important;margin:0!important;overflow-wrap:normal}
+ .hero .header-report-date{font-size:10px;margin-top:4px;gap:3px}
+ .hero .header-report-date svg{width:11px;height:11px}
+ .hero{padding-bottom:46px!important}
+}
+@media(max-width:370px){
+ .hero .top{gap:5px!important}
+ .hero .brand{font-size:11px!important}
+ .hero .header-report-heading .hero-title{font-size:12px!important}
+ .hero .theme-toggle{padding:5px 7px!important}
+ .hero .theme-toggle #theme-label{display:none}
+}
+</style>
+<style id="eod-motion-polish-20261107">
+/* Subtle motion, no layout shift or extra header height */
+.hero .top::after{content:"";position:absolute;bottom:-9px;left:0;width:100%;height:2px;border-radius:3px;background:linear-gradient(90deg,transparent,rgba(77,224,204,.75),transparent);background-size:220% 100%;animation:eodHeaderGlow 10s ease-in-out infinite;pointer-events:none}
+@keyframes eodHeaderGlow{0%,25%,100%{background-position:110% 0;opacity:.22}55%{background-position:-110% 0;opacity:.8}}
+#staff-view .activity-choice,#staff-view .followup-choice{transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease!important}
+#staff-view .activity-choice:active,#staff-view .followup-choice:active{transform:scale(.985)}
+#staff-view .activity-choice input[type=checkbox]{transition:background-color .18s ease,border-color .18s ease,transform .18s ease!important}
+#staff-view .activity-choice input[type=checkbox]:checked{animation:eodTickPop .19s ease-out}
+@keyframes eodTickPop{0%{transform:scale(.78)}70%{transform:scale(1.09)}100%{transform:scale(1)}}
+#staff-view .staff-activity-group{animation:eodGroupReveal .22s ease-out both}
+@keyframes eodGroupReveal{from{opacity:.7;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.eod-progress{margin:0 0 13px;border:1px solid var(--edge);border-radius:12px;padding:10px 12px;background:var(--white);color:var(--ink)}
+.eod-progress-line{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:11px;font-weight:700;margin-bottom:7px}
+.eod-progress-track{height:5px;background:#d9e8e8;border-radius:20px;overflow:hidden}
+.eod-progress-fill{height:100%;width:0;background:linear-gradient(90deg,#0a806f,#42d4bd);border-radius:20px;transition:width .28s ease}
+html[data-theme="dark"] .eod-progress{background:#193442;border-color:#42606f;color:#eaf5f9}
+html[data-theme="dark"] .eod-progress-track{background:#355462}
+html[data-theme="dark"] .eod-progress-fill{background:linear-gradient(90deg,#0e9c8b,#63e5cf)}
+html[data-theme="dark"] .hero .top::after{opacity:.6}
+.eod-confirm-flash{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:200;display:flex;align-items:center;gap:10px;max-width:calc(100vw - 24px);padding:11px 16px;border-radius:12px;background:#0d705f;color:white;box-shadow:0 12px 35px rgba(0,0,0,.25);font-size:13px;font-weight:700;animation:eodSuccessIn .3s ease-out both;pointer-events:none}
+.eod-confirm-flash .eod-success-mark{display:grid;place-items:center;background:#fff;color:#0d705f;border-radius:50%;width:24px;height:24px;flex:none;font-size:16px}
+@keyframes eodSuccessIn{from{opacity:0;transform:translate(-50%,-10px)}to{opacity:1;transform:translate(-50%,0)}}
+@media(prefers-reduced-motion:reduce){.hero .top::after,#staff-view .activity-choice input[type=checkbox]:checked,#staff-view .staff-activity-group,.eod-confirm-flash{animation:none!important}#staff-view .activity-choice,#staff-view .followup-choice,#staff-view .activity-choice input[type=checkbox],.eod-progress-fill{transition:none!important}}
+@media print{.eod-progress,.eod-confirm-flash,.hero .top::after{display:none!important}}
+</style>
+<style id="eod-header-refinements-20261107">
+/* Header polish: compact, aligned and unobtrusive on both themes. */
+.hero .top{align-items:center!important;column-gap:clamp(8px,1.5vw,20px)!important}
+.hero .brand,.hero .header-report-heading{align-self:center;line-height:1.2}
+.hero .brand>span{display:block}
+.hero .brand .header-author{margin-top:5px!important;line-height:1.2!important}
+.hero .header-report-date{margin-top:5px!important;line-height:1.2}
+.hero .header-actions{align-self:center;z-index:3}
+.hero:after{opacity:.065!important;right:-3%!important;top:-65px!important}
+.hero{padding-bottom:57px!important}
+.main{margin-top:-38px!important}
+.tabs{margin-bottom:13px!important}
+.tabs>.supervisor-access>.btn#supervisor-access-button{gap:5px!important;padding:7px 10px!important;border:1px solid #aac3cf!important;border-radius:9px!important;font-size:11px!important;font-weight:700!important;background:#eaf2f5!important;color:#254b60!important;box-shadow:none!important}
+.tabs>.supervisor-access>.btn#supervisor-access-button:hover{background:#dceef0!important;border-color:#64a8ae!important}
+html[data-theme="dark"] .tabs>.supervisor-access>.btn#supervisor-access-button{background:#234454!important;border-color:#527684!important;color:#effbfc!important}
+html[data-theme="dark"] .tabs>.supervisor-access>.btn#supervisor-access-button:hover{background:#305666!important}
+.tabs>.tab#tab-staff{transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease!important}
+.tabs>.tab#tab-staff:hover{box-shadow:inset 0 0 0 1px rgba(104,239,216,.65),0 2px 8px rgba(7,110,101,.12)!important}
+.tabs>.tab#tab-staff:active{filter:brightness(1.06)}
+@media(max-width:600px){
+ .hero{padding-bottom:43px!important}
+ .hero:after{width:110px!important;height:110px!important;right:-34px!important;top:-12px!important;opacity:.045!important}
+ .main{margin-top:-31px!important}
+ .tabs{margin-bottom:11px!important}
+ .tabs>.supervisor-access>.btn#supervisor-access-button{padding:7px 8px!important;font-size:10px!important}
+}
+@media(prefers-reduced-motion:reduce){.tabs>.tab#tab-staff{transition:none!important}}
+</style>
+<style id="report-details-three-aligned">
+/* Keep report date, attendance and work schedule aligned in a single row. */
+#staff-view .report-details-row{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;align-items:start!important}
+#staff-view .report-details-row>.field:has(#workdate),
+#staff-view .report-details-row>.field:has(#attendance),
+#staff-view .report-details-row>.field:has(#shift){grid-column:auto!important;grid-row:auto!important;min-width:0!important;width:100%!important}
+#staff-view .report-details-row>.field label{min-height:20px;display:block}
+#staff-view .report-details-row>.field input,#staff-view .report-details-row>.field select{width:100%;min-width:0;box-sizing:border-box}
+@media(max-width:600px){#staff-view .report-details-row{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}#staff-view .report-details-row>.field:has(#shift){grid-column:1/-1!important}}
+@media(max-width:350px){#staff-view .report-details-row{grid-template-columns:minmax(0,1fr)!important}#staff-view .report-details-row>.field:has(#shift){grid-column:auto!important}}
+</style>
+<style id="report-details-mobile-three-columns">
+/* Keep all three reporter fields in one aligned row, including mobile. */
+@media (max-width:720px){
+  #staff-view .report-details-row{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;align-items:start!important}
+  #staff-view .report-details-row>.field:has(#workdate),
+  #staff-view .report-details-row>.field:has(#attendance),
+  #staff-view .report-details-row>.field:has(#shift){grid-column:auto!important;grid-row:auto!important;min-width:0!important}
+  #staff-view .report-details-row>.field label{font-size:10px!important;line-height:1.25!important;min-height:27px!important;margin-bottom:4px!important;overflow-wrap:anywhere}
+  #staff-view .report-details-row>.field label .optional{font-size:9px!important}
+  #staff-view .report-details-row #workdate,
+  #staff-view .report-details-row #attendance,
+  #staff-view .report-details-row #shift{width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;font-size:11px!important;min-height:40px!important;padding:6px 3px!important}
+  #staff-view .report-details-row #shift-other{font-size:11px!important;padding:6px!important}
+}
+@media(max-width:360px){#staff-view .report-details-row{gap:4px!important}#staff-view .report-details-row>.field label{font-size:9px!important}#staff-view .report-details-row #workdate,#staff-view .report-details-row #attendance,#staff-view .report-details-row #shift{font-size:10px!important;padding-left:2px!important;padding-right:2px!important}}
+</style>
+<style id="report-details-mobile-consistency-fix">
+/* Three evenly aligned fields on mobile without changing desktop or reporting logic. */
+@media(max-width:720px){
+ #staff-view .report-details-row{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;column-gap:7px!important;align-items:start!important}
+ #staff-view .report-details-row>.field{display:grid!important;grid-template-rows:30px auto!important;align-content:start!important;min-width:0!important;width:100%!important;grid-column:auto!important;grid-row:auto!important}
+ #staff-view .report-details-row>.field>label{display:flex!important;align-items:center!important;justify-content:flex-start!important;min-height:30px!important;height:30px!important;margin:0!important;padding:0 1px 5px!important;box-sizing:border-box!important;font-size:10px!important;font-weight:700!important;line-height:1.15!important;white-space:normal!important;overflow-wrap:normal!important}
+ #staff-view .report-details-row>.field>label .optional{display:none!important}
+ #staff-view .report-details-row #workdate,
+ #staff-view .report-details-row #attendance,
+ #staff-view .report-details-row #shift{display:block!important;min-width:0!important;width:100%!important;max-width:100%!important;height:44px!important;min-height:44px!important;margin:0!important;box-sizing:border-box!important;border-radius:11px!important;font-size:11px!important;line-height:1.2!important;padding:6px 6px!important}
+ #staff-view .report-details-row #attendance,
+ #staff-view .report-details-row #shift{padding-right:16px!important;text-overflow:ellipsis!important}
+ #staff-view .report-details-row #shift-other{grid-column:1!important;min-width:0!important;width:100%!important}
+}
+@media(max-width:360px){
+ #staff-view .report-details-row{column-gap:5px!important}
+ #staff-view .report-details-row>.field>label{font-size:9px!important}
+ #staff-view .report-details-row #workdate,
+ #staff-view .report-details-row #attendance,
+ #staff-view .report-details-row #shift{font-size:10px!important;padding-left:4px!important}
+}
+</style>
+<style id="combined-attendance-styles">
+.original-shift-field{display:none!important}
+.attendance-combined-field .attendance-widget{display:none!important}
+.attendance-combined-field #attendance-combined{display:block;width:100%;min-width:0;max-width:100%;font:inherit;text-overflow:ellipsis}
+.attendance-combined-field #shift-other:not([hidden]){display:block;margin-top:8px}
+.report-details-row{grid-template-columns:minmax(0,1fr) minmax(0,2fr)!important}
+.report-details-row>.field{min-width:0}
+@media(max-width:480px){.report-details-row{grid-template-columns:minmax(0,0.85fr) minmax(0,2fr)!important;gap:8px!important}.attendance-combined-field #attendance-combined{font-size:12px!important;padding-left:8px!important;padding-right:20px!important}}
+</style>
+<style id="attendance-only-layout-fix">
+/* Visible staff details: date + one combined attendance dropdown only. */
+#staff-view .report-details-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.45fr)!important;
+  gap:10px!important;
+  align-items:start!important;
+}
+#staff-view .report-details-row>.field.employee-name-hidden,
+#staff-view .report-details-row>.field.original-shift-field{
+  display:none!important;
+}
+#staff-view .report-details-row>.field:has(#workdate),
+#staff-view .report-details-row>.field.attendance-combined-field{
+  display:block!important;
+  min-width:0!important;
+  width:100%!important;
+  grid-column:auto!important;
+  grid-row:auto!important;
+}
+#staff-view .attendance-combined-field>label{
+  display:block!important;
+  min-height:22px!important;
+  height:auto!important;
+  margin:0 0 6px!important;
+  font-size:12px!important;
+  line-height:1.3!important;
+}
+#staff-view #workdate,
+#staff-view #attendance-combined{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  min-height:46px!important;
+  box-sizing:border-box!important;
+}
+#staff-view .attendance-combined-field #attendance-combined{
+  padding:9px 25px 9px 10px!important;
+  font-size:13px!important;
+  text-overflow:ellipsis!important;
+}
+#staff-view .attendance-combined-field #shift-other:not([hidden]){
+  display:block!important;
+  width:100%!important;
+  margin-top:8px!important;
+}
+@media(max-width:480px){
+  #staff-view .report-details-row{grid-template-columns:minmax(0,.9fr) minmax(0,1.35fr)!important;gap:8px!important}
+  #staff-view .report-details-row>.field>label{font-size:11px!important;line-height:1.25!important;min-height:22px!important}
+  #staff-view #workdate,#staff-view #attendance-combined{min-height:44px!important;font-size:12px!important}
+}
+@media(max-width:340px){
+  #staff-view .report-details-row{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr)!important;gap:6px!important}
+  #staff-view #workdate,#staff-view #attendance-combined{font-size:11px!important;padding-left:6px!important}
+}
+</style>
+</head>
 <body>
   <header class="hero">
     <div class="shell">
       <div class="top">
-        <div class="brand"><span class="mark"><img src="./warehouse-logo.png" alt="Warehouse logo" width="48" height="48" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="logo-fallback" aria-hidden="true"><svg viewBox="0 0 52 52"><path d="M6 17 26 5l20 12v24L26 49 6 41z" fill="none" stroke="#079bd1" stroke-width="4"/><path d="m15 22 11-6 11 6v15l-11 6-11-6z" fill="#18374a"/><path d="m15 22 11 6 11-6M26 28v15" fill="none" stroke="#fff" stroke-width="2"/></svg></span></span><span>Warehouse Operations<small>Bacolod · Daily Reporting</small></span></div>
+        <div class="brand"><span>Warehouse Operations<small class="header-author">Prepared by Edwin</small></span></div>
+        <div class="header-report-heading"><h1 class="hero-title">End-of-Day Report</h1><div class="header-report-date"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6M17 2v6M3 10h18"/></svg><span id="today">Today</span></div></div>
         <div class="header-actions"><button type="button" id="theme-toggle" class="theme-toggle" aria-label="Switch to dark mode" title="Switch theme"><span id="theme-symbol" aria-hidden="true">☾</span><span id="theme-label">Dark</span></button></div>
       </div>
-      <h1 class="hero-title">End-of-Day Report</h1>
-      <p class="hero-sub">Track daily activities, deliveries, and warehouse operations in one place.</p>
-      <div class="header-meta"><span class="meta-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6M17 2v6M3 10h18M8 14h2M13 14h2"/></svg><span class="today" id="today">Today</span></span><span class="meta-separator"></span><span class="meta-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3z"/></svg>Prepared by Edwin Peñacuba Jr.</span></div>
+
     </div>
   </header>
   <main class="shell main">
     <div class="tabs hide-print" role="tablist" aria-label="Report mode">
       <button class="tab active" type="button" id="tab-staff" role="tab" aria-selected="true" aria-controls="staff-view"><svg class="tab-svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="8" r="2.5"/><path d="M2 20v-2a7 7 0 0 1 14 0v2H2zm15-7a5 5 0 0 1 5 5v2h-4"/></svg> Staff report</button>
-      <button class="tab" type="button" id="tab-supervisor" role="tab" aria-selected="false" aria-controls="supervisor-view"><svg class="tab-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l4 4v16H6zM14 2v5h4M9 12h6M9 16h6"/></svg> Supervisor summary</button>
+      <button class="tab hide" type="button" id="tab-supervisor" role="tab" aria-selected="false" aria-controls="supervisor-view"><svg class="tab-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l4 4v16H6zM14 2v5h4M9 12h6M9 16h6"/></svg> Supervisor summary</button>
+      <div class="supervisor-access hide-print" id="supervisor-access"><button class="btn" type="button" id="supervisor-access-button" aria-expanded="false" aria-label="Supervisor access" title="Supervisor access">🔒 <span>Supervisor Access</span></button><div id="supervisor-login-panel" class="hide"><p class="hint">Supervisor code is verified by Google Apps Script. Never enter the code in a public website field.</p><iframe id="supervisor-login-frame" title="Google-hosted supervisor verification" referrerpolicy="no-referrer" class="staff-loader-frame" style="height:185px"></iframe><div id="supervisor-login-status" role="status" class="hint"></div></div><button type="button" class="btn hide" id="supervisor-logout" aria-label="Log out supervisor" title="Log out supervisor">↪</button></div>
     </div>
     <section id="staff-view" aria-labelledby="tab-staff">
       <div class="layout">
@@ -772,15 +1132,15 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
               <div class="report-details-row">
                 <div class="field employee-name-hidden"><label for="employee">Full name</label><input id="employee" name="employee" autocomplete="off" readonly required maxlength="90" placeholder="Enter your name"></div>
                 <div class="field"><label for="workdate">Report date</label><input type="date" id="workdate" name="workdate" required></div>
-                <div class="field"><label for="attendance">Attendance status</label><select id="attendance" name="attendance"><option>Present</option><option>Half Day</option><option>On Leave</option><option>Absent</option></select></div>
-                <div class="field"><label for="shift">Work schedule <span class="optional">optional</span></label><input id="shift" name="shift" maxlength="35" placeholder="e.g. 8:00 AM - 5:00 PM"></div>
+                <div class="field attendance-combined-field"><label for="attendance-combined">Attendance</label><select id="attendance-combined" aria-label="Attendance and work schedule"></select><select id="attendance" name="attendance"><option>Present</option><option>Half Day</option><option>On Leave</option><option>Absent</option></select></div>
+                <div class="field original-shift-field"><label for="shift">Work schedule <span class="optional">optional</span></label><select id="shift" name="shift" aria-label="Work schedule"><option value="">Select work schedule (optional)</option><option value="8:00 AM - 5:00 PM">8:00 AM – 5:00 PM (Regular)</option><option value="Outside Delivery - Iloilo">Outside Delivery – Iloilo</option><option value="Outside Delivery - Dumaguete">Outside Delivery – Dumaguete</option></select><input id="shift-other" type="text" maxlength="100" placeholder="Enter actual work hours or assignment" aria-label="Other work schedule details" hidden style="margin-top:8px;width:100%;box-sizing:border-box"></div>
               </div>
             </div>
             <div class="role-note" id="role-note">Record processed transactions, prepared documents and other assigned tasks.</div>
 <div class="section-head"><span class="step">2</span> Work and follow-ups</div>
             <div class="stack">
-              <details class="activity-picker" id="processing-activities"><summary>Choose completed activities <span class="activity-count" id="activity-count">0 selected</span></summary><div class="activity-options" id="activity-options"></div><div class="activity-footer"><span id="activity-progress">0 activities selected</span><button type="button" id="activity-select-all" class="activity-select-all">Select all</button></div></details>
-              <div class="field"><label for="completed">Work completed today</label><textarea id="completed" rows="4" maxlength="4000" placeholder="List your tasks completed today, including quantities or reference numbers when appropriate."></textarea><div class="hint">One task per line makes your report easier to review.</div></div>
+              <details class="activity-picker" id="processing-activities" open><summary>Choose completed activities <span class="activity-count" id="activity-count">0 selected</span></summary><div class="activity-options" id="activity-options"></div><div class="activity-footer"><span id="activity-progress">0 activities selected</span><button type="button" id="activity-select-all" class="activity-select-all hide" tabindex="-1">Select all</button></div></details>
+              <div class="field eod-extra" id="eod-extra"><div class="eod-extra-title">Not listed in the checklist?</div><div class="eod-extra-options"><label class="followup-choice"><input type="checkbox" id="eod-other"><span>Other completed task</span></label><label class="followup-choice"><input type="checkbox" id="eod-none"><span>No completed activities</span></label></div><div id="eod-other-wrap" class="hide"><label for="eod-other-detail">Describe the other completed task <span class="required-mark">Required</span></label><textarea id="eod-other-detail" rows="2" maxlength="500" placeholder="State the actual task completed, including reference numbers if available."></textarea></div><div id="eod-none-wrap" class="hide"><label for="eod-none-detail">Explain why no activities were completed <span class="required-mark">Required</span></label><textarea id="eod-none-detail" rows="2" maxlength="500" placeholder="Provide a specific reason."></textarea></div><div class="hint">Select completed tasks above. Checked activities are added automatically to your report.</div></div><textarea id="completed" class="hide" tabindex="-1" aria-hidden="true"></textarea>
 <div class="field quick-followup" data-followup="pending"><label>Pending or unfinished tasks</label><div class="followup-options" role="group" aria-label="Pending or unfinished tasks">
 <label class="followup-choice"><input type="checkbox" name="quick-pending" value="none" checked><span>No pending tasks</span></label>
 <label class="followup-choice"><input type="checkbox" name="quick-pending" value="delivery" ><span>Pending delivery / dispatch</span></label>
@@ -935,9 +1295,53 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
       function localDate(){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Manila',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const get=t=>parts.find(x=>x.type===t)?.value||'';return `${get('year')}-${get('month')}-${get('day')}`}
       function displayDate(s){if(!s)return 'Not specified';const [y,m,d]=s.split('-');const date=new Date(Number(y),Number(m)-1,Number(d));return Number.isNaN(date.getTime())?s:new Intl.DateTimeFormat('en-PH',{month:'long',day:'numeric',year:'numeric'}).format(date)}
       function toast(t){$('toast').textContent=t;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),3500)}
-      function data(ids){const x={};ids.forEach(id=>x[id]=$(id).value);return x}
-      function hydrate(ids,source){ids.forEach(id=>{if(Object.prototype.hasOwnProperty.call(source||{},id))$(id).value=source[id]})}
-      function roleLabels(){const def=defs[$('role').value];$('role-note').textContent=def.note;renderActivityChoices()}
+      function data(ids){const x={};ids.forEach(id=>x[id]=id==='shift'&&$('shift').value==='Other Schedule'?('Other Schedule: '+$('shift-other').value.trim()):$(id).value);return x}
+      function hydrate(ids,source){ids.forEach(id=>{if(Object.prototype.hasOwnProperty.call(source||{},id)){if(id==='shift'&&String(source[id]).startsWith('Other Schedule: ')){$(id).value='Other Schedule';$('shift-other').value=String(source[id]).slice(16)}else $(id).value=source[id]}})}
+      // One visible attendance/schedule control; preserve original fields for reporting and Apps Script.
+      function syncCombinedAttendance(){
+        const combo=$('attendance-combined');if(!combo)return;
+        const role=$('role').value;
+        const delivery=role==='driver'||role==='warehouse';
+        const options=[['Present|8:00 AM - 5:00 PM','Present – 8:00 AM to 5:00 PM']];
+        if(delivery)options.push(['Present|Outside Delivery - Iloilo','Present – Outside Delivery: Iloilo'],['Present|Outside Delivery - Dumaguete','Present – Outside Delivery: Dumaguete']);
+        options.push(['Present|Other Schedule','Present – Other Schedule'],['Half Day|','Half Day'],['On Leave|','On Leave'],['Absent|','Absent']);
+        combo.replaceChildren(...options.map(([value,label])=>new Option(label,value)));
+        const attendance=$('attendance').value;
+        const shift=$('shift').value;
+        const target=attendance==='Present'?'Present|'+(shift||'8:00 AM - 5:00 PM'):attendance+'|';
+        combo.value=options.some(([v])=>v===target)?target:options[0][0];
+        applyCombinedAttendance(false);
+      }
+      function applyCombinedAttendance(emit=true){
+        const combo=$('attendance-combined');if(!combo)return;
+        const [status,schedule='']=combo.value.split('|');
+        $('attendance').value=status;
+        $('shift').value=schedule;
+        toggleOtherSchedule();
+        const other=$('shift-other');
+        // Show the additional details field only for a selected custom schedule.
+        other.hidden=schedule!=='Other Schedule';
+        other.required=schedule==='Other Schedule';
+        if(emit){$('attendance').dispatchEvent(new Event('change',{bubbles:true}));$('shift').dispatchEvent(new Event('change',{bubbles:true}));}
+      }
+      $('attendance-combined').addEventListener('change',()=>applyCombinedAttendance());
+      $('attendance-combined').insertAdjacentElement('afterend',$('shift-other'));
+      function updateScheduleOptions(){
+        const shift=$('shift');
+        const previous=shift.value;
+        const canDeliver=['driver','warehouse'].includes($('role').value);
+        const options=[['','Select work schedule (optional)'],['8:00 AM - 5:00 PM','8:00 AM – 5:00 PM (Regular)']];
+        if(canDeliver){options.push(['Outside Delivery - Iloilo','Outside Delivery – Iloilo'],['Outside Delivery - Dumaguete','Outside Delivery – Dumaguete']);}
+        options.push(['Other Schedule','Other Schedule (specify)']);
+        shift.replaceChildren(...options.map(([value,label])=>new Option(label,value)));
+        shift.value=options.some(([value])=>value===previous)?previous:'';
+        toggleOtherSchedule();
+        syncCombinedAttendance();
+      }
+      function toggleOtherSchedule(){const other=$('shift-other');const active=$('shift').value==='Other Schedule';other.hidden=!active;other.required=active;if(!active)other.value='';}
+      $('shift').addEventListener('change',()=>{toggleOtherSchedule();staffText='';renderReport('staff')});
+      $('shift-other').addEventListener('input',()=>{staffText='';renderReport('staff')});
+      function roleLabels(){const def=defs[$('role').value];$('role-note').textContent=def.note;updateScheduleOptions();renderActivityChoices()}
       function saveStaff(){storage.set(STAFF_PREFIX+$('role').value,data(staffIds));$('save-state').textContent='Draft saved on this device';staffText='';renderReport('staff')}
       function saveSup(){storage.set(SUPERVISOR_KEY,data(supIds));$('supervisor-save-state').textContent='Draft saved on this device';supervisorText='';renderReport('supervisor')}
       function resetPreview(id,text){const p=$(id);p.textContent=text;p.classList.add('empty');p.classList.remove('report-ready')}
@@ -1023,7 +1427,7 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
           updateFollowup(id);
         });
       }
-      function restoreStaff(role){priorityCustomized=false;const previous=storage.get(STAFF_PREFIX+role);const saved=previous&&previous.workdate===localDate()?previous:null;if(previous&&!saved)storage.remove(STAFF_PREFIX+role);const blank={role,employee:roleFirstNames[role]||'',workdate:localDate(),attendance:'Present',shift:'', completed:'',pending:'',issues:'',tomorrow:''};hydrate(staffIds,Object.assign(blank,saved||{}));$('employee').value=roleFirstNames[role]||'';$('role').value=role;syncEmployeeTiles();roleLabels();syncActivityChoices();buildRoleFollowups(role);restoreFollowups();staffText='';resetPreview('staff-preview','Fill out the form, then review your report.')}
+      function restoreStaff(role){priorityCustomized=false;const previous=storage.get(STAFF_PREFIX+role);const saved=previous&&previous.workdate===localDate()?previous:null;if(previous&&!saved)storage.remove(STAFF_PREFIX+role);const blank={role,employee:roleFirstNames[role]||'',workdate:localDate(),attendance:'Present',shift:'', completed:'',pending:'',issues:'',tomorrow:''};hydrate(staffIds,Object.assign(blank,saved||{}));$('employee').value=roleFirstNames[role]||'';$('role').value=role;syncEmployeeTiles();roleLabels();if(saved&&String(saved.shift||'').startsWith('Other Schedule: ')){$('shift').value='Other Schedule';$('shift-other').value=String(saved.shift).slice(16);toggleOtherSchedule();}syncCombinedAttendance();syncActivityChoices();buildRoleFollowups(role);restoreFollowups();staffText='';resetPreview('staff-preview','Fill out the form, then review your report.')}
       function restoreSup(){const previous=storage.get(SUPERVISOR_KEY);const saved=previous&&previous['s-date']===localDate()?previous:null;if(previous&&!saved)storage.remove(SUPERVISOR_KEY);hydrate(supIds,Object.assign(Object.fromEntries(supIds.map(id=>[id,''])),{'s-date':localDate(),'s-name':'Edwin Peñacuba Jr.'},saved||{}));supervisorText='';resetPreview('supervisor-preview','Fill out the summary, then review it.')}
       function section(name,value){return `${name}\n${(value||'None').trim()||'None'}\n`}
       function generateStaff(){const x=data(staffIds),def=defs[x.role];const parts=['BACOLOD WAREHOUSE','DAILY END-OF-DAY STAFF REPORT','',`Date: ${displayDate(x.workdate)}`,`Name: ${x.employee.trim()}`,`Role: ${def.name}`,`Attendance: ${x.attendance}`,`Schedule: ${x.shift.trim()||'Not specified'}`,''];
@@ -1058,6 +1462,7 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
       }
       function showPreview(id,t){const p=$(id);renderReport(id==='staff-preview'?'staff':'supervisor');p.scrollTop=0;p.scrollIntoView({behavior:'smooth',block:'nearest'})}
       function report(which){if(which==='staff'){
+          if(!validateStaffActivities())return '';
           if(!$('staff-form').reportValidity()){toast('Please complete required details for selected follow-ups.');return ''}
           staffText=generateStaff();showPreview('staff-preview',staffText);return staffText;
         }
@@ -1101,7 +1506,8 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
       function isEmailReady(){return /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(EMAIL_ENDPOINT)}
       function emailReport(which){
         if(!navigator.onLine){toast('Offline: your draft is saved here. Reconnect before submitting.');return}
-        if(which==='staff' && !$('completed').value.trim() && $('attendance').value==='Present'){toast('Select a completed activity or describe the work done.');$('completed').focus();return}
+        if(which==='supervisor' && !supervisorVerified){toast('Supervisor verification required before submitting.');return}
+        if(which==='staff' && !validateStaffActivities())return;
         if(which==='supervisor' && !$('s-summary').value.trim()){toast('Enter your Warehouse In-Charge activities before submitting.');$('s-summary').focus();return}
 
         if(!isEmailReady()){toast('Email is not connected yet. Ask Edwin to complete setup.');return}
@@ -1118,9 +1524,20 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
           'send-code':code
         };
         Object.entries(values).forEach(([id,value])=>$(id).value=value);
+        const review='Review before submitting:\n\n'+
+          'Employee: '+values['send-reporter']+'\n'+
+          'Date: '+values['send-date']+'\n'+
+          'Report: '+(staff?'Staff Daily Report':'Supervisor Summary')+'\n'+
+          (staff?'Attendance: '+$('attendance').value+'\nSelected activities: '+document.querySelectorAll('#activity-options input[type=checkbox]:checked').length+'\n':'')+
+          '\nThe report will be saved to Google Sheets and emailed. Continue?';
+        if(!confirm(review))return;
         const snapshot=values['send-kind']+'|'+values['send-date']+'|'+values['send-reporter']+'|'+text;
         let token=storage.get('bcd-last-submission-token');
         if(!token||token.snapshot!==snapshot){token={snapshot,id:(window.crypto&&crypto.randomUUID?crypto.randomUUID():'eod-'+Date.now()+'-'+Math.random().toString(36).slice(2))};storage.set('bcd-last-submission-token',token)}
+        if(token.pendingAt && Date.now()-token.pendingAt<45000){
+          toast('A submission was just opened. Check its confirmation tab before trying again.');return;
+        }
+        token.pendingAt=Date.now();storage.set('bcd-last-submission-token',token);
         $('send-id').value=token.id;
 
         const form=$('email-transport');form.action=EMAIL_ENDPOINT;
@@ -1128,7 +1545,7 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
         $(which+'-access-code').value='';$('send-code').value='';
         toast('Check the new tab for server confirmation. Do not submit again until you see the result.');
       }
-      function switchMode(to){mode=to;const isStaff=to==='staff';$('staff-view').classList.toggle('hide',!isStaff);$('supervisor-view').classList.toggle('hide',isStaff);$('tab-staff').classList.toggle('active',isStaff);$('tab-supervisor').classList.toggle('active',!isStaff);$('tab-staff').setAttribute('aria-selected',String(isStaff));$('tab-supervisor').setAttribute('aria-selected',String(!isStaff));window.scrollTo({top:0,behavior:'smooth'})}
+      function switchMode(to){if(to==='supervisor'&&!supervisorVerified){toast('Supervisor verification required.');return}mode=to;const isStaff=to==='staff';$('staff-view').classList.toggle('hide',!isStaff);$('supervisor-view').classList.toggle('hide',isStaff);$('tab-staff').classList.toggle('active',isStaff);$('tab-supervisor').classList.toggle('active',!isStaff);$('tab-staff').setAttribute('aria-selected',String(isStaff));$('tab-supervisor').setAttribute('aria-selected',String(!isStaff));window.scrollTo({top:0,behavior:'smooth'})}
       $('today').textContent=new Intl.DateTimeFormat('en-PH',{timeZone:'Asia/Manila',month:'short',day:'numeric',year:'numeric'}).format(new Date());
 
       // Compact role-specific activity choices. The selected descriptions are
@@ -1366,7 +1783,7 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
           });
         },true);
       }
-      enableActivityAccordion('#activity-options','.staff-activity-group');
+      // Staff categories stay visible on mobile; supervisor accordion remains unchanged.
       enableActivityAccordion('#supervisor-activities','.supervisor-activity-group');
       function renderActivityChoices(){
         const container=$('activity-options');container.replaceChildren();
@@ -1374,7 +1791,7 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
         const role=$('role').value;
         const names=staffGroupNames[role]||staffGroupNames.processing;
         const groups=names.map(name=>{
-          const details=document.createElement('details');details.className='staff-activity-group';
+          const details=document.createElement('details');details.className='staff-activity-group';details.open=true;
           const summary=document.createElement('summary');
           const title=document.createElement('span');title.textContent=name;
           const count=document.createElement('span');count.className='staff-group-count';count.textContent='0 selected';
@@ -1384,6 +1801,7 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
         });
         (roleActivities[role]||[]).forEach(([name,description],index)=>{
           const label=document.createElement('div');label.className='activity-choice';label.title=description;
+          label.addEventListener('click',function(ev){if(ev.target.closest('label,input,.activity-detail'))return;const cb=this.querySelector('input[type=checkbox]');if(cb){cb.checked=!cb.checked;cb.dispatchEvent(new Event('change',{bubbles:true}));}});
           const checkbox=document.createElement('input');checkbox.type='checkbox';checkbox.value=name;checkbox.dataset.description=description;
           const span=document.createElement('span');span.textContent=name;
           const toggle=document.createElement('label');toggle.style.cssText='display:flex;align-items:center;gap:8px;margin:0;cursor:pointer;flex:1;min-width:0';toggle.append(checkbox,span);label.append(toggle);
@@ -1393,6 +1811,34 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
         });
         syncActivityChoices();
       }
+      const otherCheck=$('eod-other'),noneCheck=$('eod-none');
+      const otherDetail=$('eod-other-detail'),noneDetail=$('eod-none-detail');
+      function syncExtraUI(){
+        $('eod-other-wrap').classList.toggle('hide',!otherCheck.checked);
+        $('eod-none-wrap').classList.toggle('hide',!noneCheck.checked);
+        otherDetail.required=otherCheck.checked;
+        noneDetail.required=noneCheck.checked;
+      }
+      function restoreExtraFromCompleted(){
+        const lines=$('completed').value.split('\n');
+        const other=lines.find(x=>x.startsWith('• Other completed task — '));
+        const none=lines.find(x=>x.startsWith('• No completed activities — '));
+        otherCheck.checked=!!other;noneCheck.checked=!!none;
+        otherDetail.value=other?other.slice('• Other completed task — '.length):'';
+        noneDetail.value=none?none.slice('• No completed activities — '.length):'';
+        syncExtraUI();
+      }
+      function validateStaffActivities(){
+        if($('attendance').value!=='Present'&&$('attendance').value!=='Half Day')return true;
+        const count=document.querySelectorAll('#activity-options input[type="checkbox"]:checked').length;
+        if(!count&&!otherCheck.checked&&!noneCheck.checked){toast('Select a completed activity or choose No completed activities.');$('processing-activities').open=true;$('processing-activities').scrollIntoView({behavior:'smooth',block:'center'});return false}
+        if(otherCheck.checked&&!otherDetail.value.trim()){toast('Describe the other completed task.');otherDetail.focus();return false}
+        if(noneCheck.checked&&!noneDetail.value.trim()){toast('Explain why no activities were completed.');noneDetail.focus();return false}
+        return true;
+      }
+      otherCheck.addEventListener('change',()=>{if(otherCheck.checked)noneCheck.checked=false;syncExtraUI();updateActivityText()});
+      noneCheck.addEventListener('change',()=>{if(noneCheck.checked){otherCheck.checked=false;document.querySelectorAll('#activity-options input[type="checkbox"]:checked').forEach(box=>{box.checked=false;box.closest('.activity-choice').querySelector('.activity-detail').classList.add('hide')})}syncExtraUI();updateActivityText()});
+      [otherDetail,noneDetail].forEach(el=>el.addEventListener('input',updateActivityText));
       function refreshActivityState(){
         const boxes=[...document.querySelectorAll('#activity-options input[type="checkbox"]')];
         const count=boxes.filter(box=>box.checked).length;
@@ -1405,6 +1851,7 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
       $('activity-select-all').addEventListener('click',()=>{
         const boxes=[...document.querySelectorAll('#activity-options input[type="checkbox"]')];
         const select=boxes.some(box=>!box.checked);
+        if(select){noneCheck.checked=false;syncExtraUI()}
         boxes.forEach(box=>{box.checked=select;box.closest('.activity-choice').querySelector('.activity-detail').classList.toggle('hide',!select)});
         updateActivityText();
       });
@@ -1418,24 +1865,29 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
           box.closest('.activity-choice').querySelector('.activity-detail').classList.toggle('hide',!box.checked);
           if(existing){box.closest('.activity-choice').querySelector('.activity-note').value=existing.note;}
         });
+        restoreExtraFromCompleted();
         refreshActivityState();
       }
       function updateActivityText(){
         const old=$('completed').value.split('\n').filter(x=>x.trim());
         const names=new Set((roleActivities[$('role').value]||[]).map(x=>x[0]));
         const descriptions=new Set((roleActivities[$('role').value]||[]).map(x=>x[1]));
-        const custom=old.filter(line=>{const parsed=parseActivityLine(line);return !(parsed&&names.has(parsed.name))&&!descriptions.has(line.trim())});
+        const custom=old.filter(line=>{const parsed=parseActivityLine(line);return !(parsed&&names.has(parsed.name))&&!descriptions.has(line.trim())&&!line.startsWith('• Other completed task — ')&&!line.startsWith('• No completed activities — ')});
         const selected=[...document.querySelectorAll('#activity-options input[type="checkbox"]:checked')].map(box=>{
           const parent=box.closest('.activity-choice');const note=parent.querySelector('.activity-note').value.trim().replace(/[\[\]\\]/g,'');
           return '• '+box.value+' — '+box.dataset.description+(note?' [Note: '+note+']':'');
         });
-        $('completed').value=[...selected,...custom].join('\n');
+        if(selected.length&&noneCheck.checked){noneCheck.checked=false;syncExtraUI()}
+        const extras=[];
+        if(otherCheck.checked)extras.push('• Other completed task — '+otherDetail.value.trim().replace(/\n/g,' '));
+        if(noneCheck.checked)extras.push('• No completed activities — '+noneDetail.value.trim().replace(/\n/g,' '));
+        $('completed').value=[...selected,...extras,...custom].join('\n');
         saveStaff();staffText=generateStaff();
         renderReport('staff');
         refreshActivityState();
       }
       $('activity-options').addEventListener('change',e=>{
-        if(e.target.matches('input[type="checkbox"]'))e.target.closest('.activity-choice').querySelector('.activity-detail').classList.toggle('hide',!e.target.checked);
+        if(e.target.matches('input[type="checkbox"]')){e.target.closest('.activity-choice').querySelector('.activity-detail').classList.toggle('hide',!e.target.checked);if(e.target.checked){noneCheck.checked=false;syncExtraUI()}}
         updateActivityText();
       });
       $('activity-options').addEventListener('input',e=>{
@@ -1469,7 +1921,7 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
         if($('role').value!==role){$('role').value=role;$('role').dispatchEvent(new Event('change',{bubbles:true}))}
         closeEmployeePicker();pickerSummary.focus({preventScroll:true});
       }));
-      $('role').addEventListener('change',e=>{restoreStaff(e.target.value);toast('Switched to '+defs[e.target.value].name+' draft on this device.')});
+      $('role').addEventListener('change',e=>{restoreStaff(e.target.value);toast('Switched to '+defs[e.target.value].name+' draft saved on this device only.')});
       staffIds.filter(x=>x!=='role').forEach(id=>$(id).addEventListener('input',saveStaff));
       supIds.forEach(id=>$(id).addEventListener('input',saveSup));
       $('staff-form').addEventListener('submit',e=>{e.preventDefault();report('staff')});
@@ -1518,7 +1970,9 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
         const m=event.data;
         if(!m||m.type!=='bcd-eod-submission-v1')return;
         const token=storage.get('bcd-last-submission-token');
-        if(!token||token.id!==m.id)return;
+        if(!token||token.id!==m.id||m.type!=='bcd-eod-submission-v1'||
+           !['Sent','Previously saved'].includes(m.emailStatus) && !String(m.emailStatus||'').startsWith('Failed:'))return;
+        // The backend emits this message only after the report is stored.
         storage.remove('bcd-last-submission-token');
         if(m.kind==='staff'){
           const role=Object.keys(defs).find(k=>defs[k].name===m.role);
@@ -1565,6 +2019,29 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
         if(!isEmailReady()){toast('Configure the new Google Apps Script URL first.');return}
         window.open(EMAIL_ENDPOINT+'?view=dashboard','_blank','noopener');
       });
+      let supervisorVerified=false,supervisorLoginNonce='';
+      const supervisorLoginPanel=$('supervisor-login-panel'),supervisorLoginFrame=$('supervisor-login-frame');
+      function lockSupervisor(){supervisorVerified=false;supervisorLoginNonce='';supervisorLoginFrame.removeAttribute('src');supervisorLoginPanel.classList.add('hide');$('tab-supervisor').classList.add('hide');$('supervisor-logout').classList.add('hide');$('supervisor-access-button').classList.remove('hide');$('supervisor-access-button').setAttribute('aria-expanded','false');switchMode('staff')}
+      $('supervisor-access-button').addEventListener('click',()=>{
+        if(!isEmailReady()){toast('Google Apps Script connection is not configured.');return}
+        const opening=supervisorLoginPanel.classList.contains('hide');
+        supervisorLoginPanel.classList.toggle('hide',!opening);
+        $('supervisor-access-button').setAttribute('aria-expanded',String(opening));
+        if(!opening){supervisorLoginNonce='';supervisorLoginFrame.removeAttribute('src');return}
+        supervisorLoginNonce=Array.from(crypto.getRandomValues(new Uint8Array(16)),x=>x.toString(16).padStart(2,'0')).join('');
+        const date=localDate();
+        supervisorLoginFrame.src=EMAIL_ENDPOINT+'?view=staff-loader&date='+encodeURIComponent(date)+'&nonce='+encodeURIComponent(supervisorLoginNonce)+'&origin='+encodeURIComponent(location.origin);
+        $('supervisor-login-status').textContent='Enter your supervisor code in the Google-hosted verification form.';
+      });
+      window.addEventListener('message',event=>{
+        if(!/^https:\/\/(?:[a-z0-9.-]*googleusercontent\.com|script\.google\.com)$/i.test(event.origin))return;
+        const m=event.data;
+        if(!supervisorLoginNonce||!m||m.type!=='bcd-staff-loader-v1'||m.nonce!==supervisorLoginNonce||m.date!==localDate()||!m.reports||typeof m.reports!=='object')return;
+        supervisorLoginNonce='';supervisorVerified=true;supervisorLoginFrame.removeAttribute('src');supervisorLoginPanel.classList.add('hide');
+        $('tab-supervisor').classList.remove('hide');$('supervisor-logout').classList.remove('hide');$('supervisor-access-button').classList.add('hide');
+        switchMode('supervisor');toast('Supervisor verified. Access available on this page until logout or refresh.');
+      });
+      $('supervisor-logout').addEventListener('click',lockSupervisor);
       $('tab-staff').addEventListener('click',()=>switchMode('staff'));$('tab-supervisor').addEventListener('click',()=>switchMode('supervisor'));
       for(const x of ['staff','supervisor']){
         $(x+'-share').addEventListener('click',()=>share(x));$(x+'-copy').addEventListener('click',()=>copyReport(x));$(x+'-download').addEventListener('click',()=>download(x));$(x+'-print').addEventListener('click',()=>printReport(x));
@@ -1699,6 +2176,38 @@ html[data-theme="dark"] #staff-view .quick-followup .hint{color:#b8ced8}
   trigger.addEventListener('focus',sync);sync();
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+<script id="eod-motion-progress-script">
+(function(){
+  'use strict';
+  const byId=id=>document.getElementById(id);
+  function refresh(){
+    const form=byId('staff-form');if(!form)return;
+    const checked=form.querySelectorAll('#activity-options input[type="checkbox"]:checked').length;
+    const absent=['Absent','On Leave'].includes(byId('attendance')?.value);
+    const activityOK=absent||checked>0||byId('eod-other')?.checked||byId('eod-none')?.checked;
+    const followups=['pending','issues','tomorrow'].map(k=>!!form.querySelector('input[name="quick-'+k+'"]:checked'));
+    const steps=[!!byId('employee')?.value.trim(),!!byId('workdate')?.value,!!byId('attendance')?.value,!!activityOK,...followups];
+    const pct=Math.round(100*steps.filter(Boolean).length/steps.length);
+    if(byId('eod-progress-value'))byId('eod-progress-value').textContent=pct+'%';
+    if(byId('eod-progress-fill'))byId('eod-progress-fill').style.width=pct+'%';
+  }
+  const form=byId('staff-form');
+  if(form){form.addEventListener('input',refresh);form.addEventListener('change',refresh);form.addEventListener('click',()=>requestAnimationFrame(refresh));}
+  document.addEventListener('click',e=>{if(e.target.closest('.employee-tile'))requestAnimationFrame(refresh)});
+  window.addEventListener('message',e=>{
+    if(e.origin!=='https://script.google.com'&&!/^https:\/\/[a-z0-9.-]*googleusercontent\.com$/i.test(e.origin))return;
+    const m=e.data;
+    if(!m||m.type!=='bcd-eod-submission-v1'||!m.id||!['Sent','Previously saved'].includes(m.emailStatus)&&!String(m.emailStatus||'').startsWith('Failed:'))return;
+    // Visual notification only; the existing submission handler remains authoritative.
+    const note=document.createElement('div');note.className='eod-confirm-flash';note.setAttribute('role','status');
+    const tick=document.createElement('span');tick.className='eod-success-mark';tick.textContent='✓';
+    const label=document.createElement('span');label.textContent='EOD report saved · '+m.id;
+    note.append(tick,label);document.body.appendChild(note);
+    setTimeout(()=>note.remove(),4500);requestAnimationFrame(refresh);
+  });
+  refresh();
 })();
 </script>
 </body>
