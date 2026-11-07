@@ -1088,6 +1088,30 @@ html[data-theme="dark"] .tabs>.supervisor-access>.btn#supervisor-access-button:h
   #staff-view #workdate,#staff-view #attendance-combined{font-size:11px!important;padding-left:6px!important}
 }
 </style>
+
+<style id="header-details-readable-size-20261107">
+/* Slightly stronger header hierarchy without increasing the overall header height. */
+@media (min-width:601px){
+  .hero .brand{font-size:16px!important;line-height:1.2!important}
+  .hero .brand .header-author{font-size:11px!important;margin-top:5px!important}
+  .hero .header-report-heading .hero-title{font-size:22px!important;line-height:1.18!important}
+  .hero .header-report-date{font-size:12px!important;margin-top:6px!important}
+  .hero .header-report-date svg{width:14px!important;height:14px!important}
+}
+@media (max-width:600px){
+  .hero .brand{font-size:15px!important}
+  .hero .brand .header-author{font-size:11px!important}
+  .hero .header-report-heading .hero-title{font-size:18px!important}
+  .hero .header-report-date{font-size:11px!important}
+}
+@media (max-width:370px){
+  .hero .brand{font-size:13px!important}
+  .hero .brand .header-author{font-size:10px!important}
+  .hero .header-report-heading .hero-title{font-size:16px!important}
+  .hero .header-report-date{font-size:10px!important}
+}
+</style>
+
 </head>
 <body>
   <header class="hero">
@@ -1303,7 +1327,7 @@ html[data-theme="dark"] .tabs>.supervisor-access>.btn#supervisor-access-button:h
         const role=$('role').value;
         const delivery=role==='driver'||role==='warehouse';
         const options=[['Present|8:00 AM - 5:00 PM','Present – 8:00 AM to 5:00 PM']];
-        if(delivery)options.push(['Present|Outside Delivery - Iloilo','Present – Outside Delivery: Iloilo'],['Present|Outside Delivery - Dumaguete','Present – Outside Delivery: Dumaguete']);
+        if(delivery)options.push(['Present|Outside Delivery','Present – Outside Delivery'],['Present|Outside Delivery - Iloilo','Present – Outside Delivery: Iloilo'],['Present|Outside Delivery - Dumaguete','Present – Outside Delivery: Dumaguete']);
         options.push(['Present|Other Schedule','Present – Other Schedule'],['Half Day|','Half Day'],['On Leave|','On Leave'],['Absent|','Absent']);
         combo.replaceChildren(...options.map(([value,label])=>new Option(label,value)));
         const attendance=$('attendance').value;
@@ -1331,7 +1355,7 @@ html[data-theme="dark"] .tabs>.supervisor-access>.btn#supervisor-access-button:h
         const previous=shift.value;
         const canDeliver=['driver','warehouse'].includes($('role').value);
         const options=[['','Select work schedule (optional)'],['8:00 AM - 5:00 PM','8:00 AM – 5:00 PM (Regular)']];
-        if(canDeliver){options.push(['Outside Delivery - Iloilo','Outside Delivery – Iloilo'],['Outside Delivery - Dumaguete','Outside Delivery – Dumaguete']);}
+        if(canDeliver){options.push(['Outside Delivery','Outside Delivery'],['Outside Delivery - Iloilo','Outside Delivery – Iloilo'],['Outside Delivery - Dumaguete','Outside Delivery – Dumaguete']);}
         options.push(['Other Schedule','Other Schedule (specify)']);
         shift.replaceChildren(...options.map(([value,label])=>new Option(label,value)));
         shift.value=options.some(([value])=>value===previous)?previous:'';
